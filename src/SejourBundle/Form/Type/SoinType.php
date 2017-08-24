@@ -1,6 +1,6 @@
 <?php
 
-namespace SejourBundle\Form;
+namespace SejourBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -1,23 +1,21 @@
 <?php
 
-namespace SejourBundle\Form;
+namespace SejourBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 
-
-class ForumMessageType extends AbstractType
+class ForumCategorieType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('message', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ton message :', 'config_name'=>'bbcode'))
-				->add('Poster la reponse !',      SubmitType::class);
+        $builder->add('nom', null, array('label'=>'Nom de la discussion :'))
+				->add('Creer la discussion !',      SubmitType::class);
     }
     
     /**
@@ -26,7 +24,7 @@ class ForumMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SejourBundle\Entity\ForumMessage'
+            'data_class' => 'SejourBundle\Entity\ForumCategorie'
         ));
     }
 
@@ -35,7 +33,7 @@ class ForumMessageType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'sejourbundle_forummessage';
+        return 'sejourbundle_forumcategorie';
     }
 
 

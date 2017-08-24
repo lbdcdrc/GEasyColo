@@ -2,14 +2,14 @@
  
 // src/UserBundle/Form/RegistrationType.php
  
-namespace UserBundle\Form;
+namespace UserBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use SejourBundle\Form\ImageType;
+use SejourBundle\Form\Type\ImageType;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
  
 class RegistrationType extends AbstractType

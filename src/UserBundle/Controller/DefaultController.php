@@ -2,7 +2,7 @@
 
 namespace UserBundle\Controller;
 
-use UserBundle\Form\ImageType;
+use UserBundle\Form\Type\ImageType;
 use SejourBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

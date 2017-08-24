@@ -1,25 +1,26 @@
 <?php
 
-namespace SejourBundle\Form;
+namespace UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
-
-class ModifierEvenementType extends AbstractType
+class RolesType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('NbPlaces', null, array('label'=>"Nombre de places"))
-				->add('Modifier le nombre de places !',      SubmitType::class);
+		$roles=$options['roles'];
+		$Id=$options['id'];
+        $builder->add('roles', ChoiceType::class, array('label'=> 'Rôles de l\'utilisateur', 'choices' => $roles, 'expanded' => true, 'multiple' => true))
+				->add('id', HiddenType::class, array('data' => $Id))
+				->add('Modifier les droits',      SubmitType::class);	
     }
     
     /**
@@ -28,8 +29,9 @@ class ModifierEvenementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SejourBundle\Entity\Evenement'
-        ));
+            'data_class' => 'UserBundle\Entity\User'
+        ))
+		->setRequired(['roles', 'id']);
     }
 
     /**
@@ -37,8 +39,9 @@ class ModifierEvenementType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'sejourbundle_evenement';
+        return 'userbundle_user';
     }
 
 
 }
+

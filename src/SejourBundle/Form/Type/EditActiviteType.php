@@ -1,6 +1,6 @@
 <?php
 
-namespace SejourBundle\Form;
+namespace SejourBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class ActiviteType extends AbstractType
+class EditActiviteType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -28,7 +28,7 @@ class ActiviteType extends AbstractType
 				->add('nbEnfantMin', null, array('label'=>'Nombre d\'enfants minimum'))
 				->add('nbEnfantMax', null, array('label'=>'Nombre d\'enfants maximum'))
 				->add('nbAnim', null, array('label'=>'Nombre d\'animateur prévisionnel'))
-				->add('Ajouter l\'activite !',      SubmitType::class);
+				->add('Modifier l\'activite !',      SubmitType::class);
     }
     
     /**
@@ -46,7 +46,7 @@ class ActiviteType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'sejourbundle_activite';
+        return 'sejourbundle_editactivite';
     }
 
 
