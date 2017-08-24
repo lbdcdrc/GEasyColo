@@ -50,7 +50,7 @@ class ProfileType extends AbstractType
 														)))
 							->add('psc1', CheckboxType::class, array('label'    => 'PSC1', 'required'=>false))
 							->add('sb', CheckboxType::class, array('label'    => 'Surveillant de Baignade', 'required'=>false)));
-		$builder->add('presentation', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ma présentation'));
+		$builder->add('presentation', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ma présentation', 'config_name'=>'bbcode'));
 
    }
  

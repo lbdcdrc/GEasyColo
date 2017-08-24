@@ -27,6 +27,7 @@
         "dompdf/dompdf": "^0.8.0",
         "egeloen/ckeditor-bundle": "^6.0",
         "friendsofsymfony/user-bundle": "~2.0",
+        "helios-ag/fm-bbcode-bundle": "~7",
         "incenteev/composer-parameter-handler": "^2.0",
         "knplabs/knp-paginator-bundle": "^2.6",
         "liip/imagine-bundle": "^1.8",

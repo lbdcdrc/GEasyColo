@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new AdminBundle\AdminBundle(),
 			new Waldo\DatatableBundle\WaldoDatatableBundle(),
 			new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+			new FM\BbcodeBundle\FMBbcodeBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
