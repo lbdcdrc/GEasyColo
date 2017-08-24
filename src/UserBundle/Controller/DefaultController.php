@@ -39,7 +39,6 @@ class DefaultController extends Controller
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
 		{
-			$em = $this->getDoctrine()->getManager();
 			$user->setImage($Image);
 			$this->getDoctrine()->getManager()->flush();
 			$request->getSession()->getFlashBag()->add('notice', 'L\'avatar a bien été modifié');
@@ -49,10 +48,6 @@ class DefaultController extends Controller
 				$cacheManager->remove($URLImage->getwebPath(), 'my_thumb');
 				$cacheManager->remove($URLImage->getwebPath(), 'md_thumb');
 				$cacheManager->remove($URLImage->getwebPath(), 'lg_thumb');
-			
-			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $URLImage->getwebPath(), 'my_thumb');
-			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $URLImage->getwebPath(), 'md_thumb');
-			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $URLImage->getwebPath(), 'lg_thumb'); 
 			
 		  return $this->redirectToRoute('fos_user_profile_show');
 		}		

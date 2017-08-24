@@ -157,10 +157,6 @@ class DefaultController extends Controller
 	public function CreerSejourAction(Request $request){
 		$sejour = new Sejour();
 		$form   = $this->get('form.factory')->create(SejourType::class, $sejour);
-		
-		$repository = $this->getDoctrine()
-					->getManager()
-					->getRepository('SejourBundle:AnimConges');
 		$repository6 = $this->getDoctrine()
 					->getManager()
 					->getRepository('SejourBundle:idMoment');
@@ -260,10 +256,7 @@ class DefaultController extends Controller
 		  ->getManager()
 		  ->getRepository('SejourBundle:Enfant')
 		;
-
-
 		$enfant = $repository->find($id);
-		$Sejour = $enfant->getSejour();
 		//verification des droits
 		$this->AllowedUser($id);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
@@ -326,7 +319,7 @@ class DefaultController extends Controller
 		  ->getRepository('SejourBundle:Sejour')
 		;		
 		$activite = $repository->find($idActi);
-		$Sejour = $repository->find($id);
+		$Sejour = $repository2->find($id);
 		//verification des droits
 		$this->AllowedUser($id);
 		// Ici, l'utilisateur est validé
@@ -941,10 +934,6 @@ class DefaultController extends Controller
 			$repository4 = $this->getDoctrine()
 					->getManager()
 					->getRepository('SejourBundle:Jour');
-			
-			$repository5 = $this->getDoctrine()
-					->getManager()
-					->getRepository('SejourBundle:AnimConges');
 			$repository6 = $this->getDoctrine()
 					->getManager()
 					->getRepository('SejourBundle:idMoment');
@@ -1147,11 +1136,6 @@ class DefaultController extends Controller
 			$Date=$jour->getDate();
 			$Sejour=$jour->getSejour();
 			
-			$ListeJour=$repository2->findBy(
-			array('sejour' => $Sejour), // Critere
-			array('date' => 'desc'));
-			
-
 			$NewDate=$Date;
 			$NewDate = $NewDate->modify('+1 day');
 			
