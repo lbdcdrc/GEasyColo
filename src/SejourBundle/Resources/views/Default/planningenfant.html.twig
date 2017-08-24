@@ -1,0 +1,60 @@
+{% extends "AdminBundle:TableUtilisateurs:modal.html.twig" %}
+{% block modal %}  
+  <table style="width:100%;">
+    <thead>
+	<tr>
+		<th> Jour </th>
+		<th> Matin 1 </th>
+		<th> Matin 2 </th>
+		<th> Après Midi </th>
+		<th> Journée </th>
+    </thead>
+    <tbody>
+	{%for jour in listeJours %}
+	<tr>
+		<td>{{ jour.date|date('d/m/Y') }}</td>
+			<td>
+			{% for ev in listeInscriptions %}
+				{% if ev.jour == jour %}
+					{% if ev.moment == 1 %}
+						{{ ev.activite.nom }}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+			</td>
+			
+			<td>			
+			{% for ev in listeInscriptions %}
+				{% if ev.jour == jour %}
+					{% if ev.moment == 2 %}
+						{{ ev.activite.nom }}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+			</td>			
+			
+			<td>
+			{% for ev in listeInscriptions %}
+				{% if ev.jour == jour %}
+					{% if ev.moment == 3 %}
+						{{ ev.activite.nom }}
+					{% endif %}
+				{% endif %}
+
+			{% endfor %}
+			</td>
+			
+			<td>
+			{% for ev in listeInscriptions %}
+				{% if ev.jour == jour %}
+					{% if ev.moment == 4 or ev.moment == 5 %}
+						{{ ev.activite.nom }}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+			</td>
+	</tr>
+	{% endfor %}
+    </tbody>
+  </table>
+{% endblock modal %}

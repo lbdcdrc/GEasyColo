@@ -1,0 +1,26 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% block subject %}
+{%- autoescape false -%}
+{{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+{%- endautoescape -%}
+{% endblock %}
+
+{% block body_text %}
+{% autoescape false %}
+
+Salut {{ user.username }},
+
+Tu souhaites créer un compte sur easy colo, c'est bien !
+Il ne te reste plus qu'une seule étape afin d'y parvenir : valider ton adresse mail en cliquant sur ce lien :
+{{ confirmationUrl }}
+
+Attention, ce lien n'est valable qu'une seule fois ! Réfléchis bien avant de cliquer dessus, après, tu seras inscris !
+
+À très bientôt sur EasyColo,
+
+Cédric
+
+Ps. Ceci est un mail automatique, tu ne peux pas y répondre.
+{% endautoescape %}
+{% endblock %}
+{% block body_html %}{% endblock %}

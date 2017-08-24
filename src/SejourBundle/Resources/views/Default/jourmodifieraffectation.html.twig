@@ -1,0 +1,32 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+<center>
+<h2> Modification des inscriptions de {{enfant.prenom}} {{enfant.nom}} aux activités le {{ jour.date|date('d/m/Y') }}</h2>
+	  <h4> Séjour {{ jour.sejour.NomThema }} </h4>
+	  <h4> Du {{ jour.sejour.DateDebut|date('d/m/Y') }} au {{ jour.sejour.DateFin|date('d/m/Y') }} </h4>
+	  <hr/>
+ <div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+  {% if matinbloque %}
+  <div class="alert alert-warning">
+  <strong>Attention!</strong> Les affectations du matin sont bloquées car l'enfant est inscrit à une activité la veille qui se termine ce jour à midi !
+</div>
+  {% endif %}
+  {{ form(form) }}
+  
+  </div>
+  <div class="col-sm-2"></div>
+</div> 
+</center>
+
+<center>
+<a href="{{ path('jour_indexjour', { 'id': jour.id }) }}" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+</center>
+
+{% endblock %}
+
+
+

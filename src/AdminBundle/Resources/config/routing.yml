@@ -1,0 +1,15 @@
+index_admin:
+    path:     /index
+    defaults: { _controller: AdminBundle:Default:indexAdmin }
+user_list:
+    path:   /users
+    defaults: { _controller: AdminBundle:Default:index }
+datatable:
+    path:   /json/user/datatable
+    defaults: { _controller: AdminBundle:Default:grid }
+show_roles:
+    path:   /users/{id}/roles
+    defaults: { _controller: AdminBundle:Default:roles }
+voir_profil:
+    path:   /users/{id}/profile
+    defaults: { _controller: AdminBundle:Default:profile }

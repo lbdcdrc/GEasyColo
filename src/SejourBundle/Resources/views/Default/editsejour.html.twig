@@ -1,0 +1,60 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block planning %} class="current" {%endblock%}
+
+{% block titre %}Planning journalier {% endblock titre %}
+
+{% block coeur %}
+
+	{% set difference = date(Sejour.DateDebut|date('Y/m/d')).diff(date(Sejour.DateFin|date('Y/m/d'))) %}
+	{% set NbJour = difference.days %}
+
+	{% if "now"|date('Ymd')  < Sejour.DateDebut|date('Ymd') %}
+	{% set difference3 = date('now'|date('Y/m/d')).diff(date(Sejour.DateDebut|date('Y/m/d'))) %}
+	{% set NbJour2 = difference3.days %}
+	<div id="progress">
+		<progress value="0" min="0" max="100">0%</progress>
+		<center><div class="percent">Le séjour commence dans : {{ NbJour2 }} jours.</div ></center>
+		
+	</div>
+	{% elseif "now"|date('Ymd')  > Sejour.DateFin|date('Ymd') %}
+	<div id="progress">
+		<progress value="100" min="0" max="100">0%</progress>
+		<center><div class="percent">Le séjour est terminé !</div ></center>
+		
+	</div>
+	{% else %}
+	{% set difference2 = date(Sejour.DateDebut|date('Y/m/d')).diff(date('now'|date('Y/m/d'))) %}
+	{% set pourcent = ((difference2.days / NbJour)*100) | number_format(0) %}
+	<div id="progress">
+		<progress value="{{ pourcent }}" min="0" max="100">0%</progress>
+		<center><div class="percent">{{ pourcent }} % passés</div ></center>
+	</div>
+	{% endif %}
+	<center><a href="{{ path('sejour_planning_conges', { 'id': Sejour.id }) }}" class="button" role="button"><i class="fa fa-calendar" aria-hidden="true"> Planning des Congés</i></a></center>
+	<section id="pricePlans"><center>
+		<ul id="plans">
+			{% for jour in listeJours %}
+				<li class="plan">		
+					<ul class="planContainer">
+						<li class="title"><h2 {% if "now"|date('Ymd')  > jour.date|date('Ymd') %} class="bestPlanTitle" {% endif %} >{{ jour.date|date('d/m/Y') }}</h2></li>
+						<li class="price"><p>{{ jour.NbActM1 + jour.NbActM2 + jour.NbActAM + jour.NbActJourMatin + jour.NbActJour}}<span> activités </span></p></li>
+						<li>
+							<ul class="options">
+								<li>Matin 1 : <span>{{ jour.NbActM1 }}</span></li>
+								<li>Matin 2 : <span>{{ jour.NbActM2 }}</span></li>
+								<li>Après-midi : <span>{{ jour.NbActAM }}</span></li>
+								<li>Journée : <span>{{ jour.NbActJourMatin }}</span></li>
+								<li>Journée + 1/2 : <span>{{ jour.NbActJour }}</span></li>
+							</ul>
+						</li>
+						<li class="button-card"><a href="{{ path('jour_indexjour', { 'id': jour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
+					</ul>
+				</li>
+			{% endfor %}
+		</ul> <!-- End ul#plans --></center>
+	</section>
+	
+{% endblock %}
+
+
+

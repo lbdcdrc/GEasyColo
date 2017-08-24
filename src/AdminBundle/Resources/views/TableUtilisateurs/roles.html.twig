@@ -1,0 +1,45 @@
+<!-- Trigger/Open The Modal -->
+<button id="{{ dt_obj.username }}"><i class="fa fa-gavel" aria-hidden="true"></i></button>
+<a class="button" href="{{ path('voir_profil', {'id':dt_item}) }}"><i class="fa fa-user" aria-hidden="true"></i></a>
+
+<!-- The Modal -->
+<div id="{{ dt_item }}" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" id="{{ dt_item }}.{{ dt_item }}">&times;</span>
+      <h2>Gestion des droits pour {{ dt_obj.username }}</h2>
+    </div>
+    <div class="modal-body">
+      {{ render(controller('AdminBundle:Default:roles',{ 'id': dt_item })) }}
+    </div>
+    <div class="modal-footer">
+      <h3>{{ dt_obj.nom }} {{ dt_obj.prenom }}</h3>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get the modal
+var modal{{ dt_item }} = document.getElementById('{{ dt_item }}');
+
+// Get the button that opens the modal
+var btn{{ dt_item }} = document.getElementById("{{ dt_obj.username }}");
+
+// Get the <span> element that closes the modal
+var span{{ dt_item }} = document.getElementById("{{ dt_item }}.{{ dt_item }}");
+
+// When the user clicks the button, open the modal 
+btn{{ dt_item }}.onclick = function() {
+    modal{{ dt_item }}.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span{{ dt_item }}.onclick = function() {
+    modal{{ dt_item }}.style.display = "none";
+}
+
+</script>
+

@@ -1,0 +1,30 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - Modifier mon avatar
+{% endblock title %}
+{% block header %}
+Modifier mon <p id="logo">Avatar</p>
+{% endblock header %}
+{% block body %}
+<div id="main-wrapper">
+	<div id="main" class="container">
+		<div class="row">
+			<div class="12u">
+				<div class="content">
+					<!-- Content -->
+						<article class="box page-content">
+							<center>
+							<header>
+								<h2>Sélectionne un fichier =)</h2>
+							</header>
+							{{ form(form) }}
+							</center>
+						</article>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock body %}
+
+

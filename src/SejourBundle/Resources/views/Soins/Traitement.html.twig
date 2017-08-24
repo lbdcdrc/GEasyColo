@@ -1,0 +1,254 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block infirmerie %} class="current" {%endblock%}
+
+{% block titre %}Registre des traitements journaliers{% endblock titre %}
+
+
+
+{% block coeur %}
+
+<table>
+	<tr>
+		<th colspan="2"> / </th>
+		{% for jour in ListeJour %}
+			<th colspan="5"> {{ jour.date|date('d/m') }} </th>
+		{% endfor %}
+	</tr>
+	<tr>
+		<td> Enfant </td>
+		<td> Traitement </td>
+		{% for jour in ListeJour %}
+			<td> Matin </td>
+			<td> Midi </td>
+			<td> Soir </td>
+			<td> Couché </td>
+			<td> Autre </td>
+		{% endfor %}
+	</tr>
+	<tr>
+		{% for traitement in ListeTraitement %}
+			<td> {{ traitement.enfant.prenomnom }} </td>
+			<td> Midi </td>
+			<td> Soir </td>
+			<td> Couché </td>
+			<td> Autre </td>
+		{% endfor %}
+	</tr>
+
+</table>
+
+<form id="formulaire" method="post">
+	<input type="hidden" name="nbligne" id="nbligne" value="1">
+	<div id="formpattern">
+		<table width="100%">
+			<thead>
+				<tr>
+					<th colspan="5">Nouveau traitement</th>
+				</tr>
+			</thead>
+			<tr>
+				<td>
+					<label for="enfant" id="enfant" name="enfant">Enfant</label>
+					<select id="enfant" name="enfant" required>
+					{% for enfant in ListeEnfant %}
+						<option value="{{ enfant.id }}">{{ enfant.prenomnom }}</option>
+					{% endfor %}
+					</select>
+				</td>
+				<td>
+					<label for="datedebut" id="datedebut" name="datedebut">Date de début</label>
+					<select id="datedebut" name="datedebut" required onchange="validation();">
+					{% for jour in ListeJour %}
+						<option value="{{jour.id }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+					{% endfor %}
+					</select>
+				</td>
+				<td>
+					<label for="datefin" id="datefin" name="datefin">Date de fin</label>
+					<select id="datefin" name="datefin" required onchange="validation();">
+					{% for jour in ListeJour %}
+						<option value="{{jour.id }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+					{% endfor %}
+					</select>
+				</td>
+				<td colspan="2">
+					<label for="objet" id="objet" name="objet">Traitement à prendre</label>
+					<textarea id="objet" name="objet" placeholder="Décrire ici le traitement à prendre : nom du médicament, moyen d'administration, etc..." required></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td width="20%">
+					<label for="matin" id="matinl" name="matinlabel">Matin</label>
+					<input id="matin" type="checkbox" name="matin" onclick="updateTemp(this.id);"/>
+				</td>
+				<td width="20%">
+					<label for="midi" id="midil" name="midilabel"">Midi</label>
+					<input id="midi" type="checkbox" name="midi" onclick="updateTemp(this.id);"/>
+				</td>
+				<td width="20%">
+					<label for="soir" id="soirl" name="soirlabel">Soir</label>
+					<input id="soir" type="checkbox" name="soir" onclick="updateTemp(this.id);"/>
+				</td>
+				<td width="20%">
+					<label for="couche" id="couchel" name="couchelabel">Couché</label>
+					<input id="couche" type="checkbox" name="couche" onclick="updateTemp(this.id);"/>
+				</td>
+				<td width="20%">
+					<label for="autre" id="autrel" name="autrelabel" >Autre</label>
+					<input id="autre" type="checkbox" name="autre" onclick="updateTemp(this.id);"/>
+				</td>
+			</tr>
+			<tr>
+				<td width="20%">
+					<label for="matinposologie" id="matinposologielabel" name="matinposologielabel" style="display: none;" >Posologie</label>
+					<input type="text" id="matinposologie" name="matinposologie" style="display: none;">
+				</td>
+				<td width="20%">
+					<label for="midiposologie" id="midiposologielabel" name="midiposologielabel" style="display: none;" >Posologie</label>
+					<input type="text" id="midiposologie" name="midiposologie" style="display: none;">
+				</td>
+				<td width="20%">
+					<label for="soirposologie" id="soirposologielabel" name="soirposologielabel" style="display: none;" >Posologie</label>
+					<input type="text" id="soirposologie" name="soirposologie" style="display: none;">
+				</td>
+				<td width="20%">
+					<label for="coucheposologie" id="coucheposologielabel" name="coucheposologielabel" style="display: none;" >Posologie</label>
+					<input type="text" id="coucheposologie" name="coucheposologie" style="display: none;">
+				</td>
+				<td width="20%">
+					<label for="autreposologie" id="autreposologielabel" name="autreposologielabel" style="display: none;" >Posologie</label>
+					<input type="text" id="autreposologie" name="autreposologie" style="display: none;">
+				</td>
+			</tr>
+			<tr>
+				<th colspan="5"> <br> </th>
+			</tr>
+		</table>
+	</div>
+	<div id="formAdd"> </div>
+	<INPUT TYPE="submit" NAME="nom" VALUE=" Envoyer ">
+</form>
+
+<button type="submit" onclick="clone()">Ajout Ligne</button>
+<button type="submit" onclick="remove()" id="removebtn" disabled>Enlever Ligne</button>
+<button type="submit" form="formulaire" value="Submit">Submit</button>
+
+
+<script>
+var ligne = 1;
+function updateTemp(Id) {
+
+	  if (document.getElementById(Id).checked) 
+	  {
+		document.getElementById(Id.concat('posologie')).disabled = false;
+		document.getElementById(Id.concat('posologie')).required = true;
+		document.getElementById(Id.concat('posologie')).style.display = 'block';		
+		document.getElementById(Id.concat('posologielabel')).style.display = 'block';	
+	  } else {
+		document.getElementById(Id.concat('posologie')).disabled = true;
+		document.getElementById(Id.concat('posologie')).required = false;
+		document.getElementById(Id.concat('posologie')).style.display = 'none';	
+		document.getElementById(Id.concat('posologielabel')).style.display = 'none';	
+	  }
+				  
+        }
+function clone() {
+var x=document.getElementById('formpattern');
+
+var elms1 = x.getElementsByTagName("select");
+for (var i = 0; i < elms1.length; i++) {
+}
+
+var clone=x.cloneNode(true);
+clone.id= "formpattern"+ligne.toString();
+var elms = clone.getElementsByTagName("select");
+for (var i = 0; i < elms.length; i++) {
+	var idnom = elms[i].name;
+	elms[i].name = ligne.toString().concat(idnom);
+	elms[i].id = ligne.toString().concat(idnom);
+}
+
+var elms1 = clone.getElementsByTagName("input");
+for (var i1 = 0; i1 < elms1.length; i1++) {
+	var idnom1 = elms1[i1].name;
+	var id1 = elms1[i1].id;
+	if(elms1[i1].type=="checkbox")
+	{
+		elms1[i1].checked = false;
+	}
+	elms1[i1].setAttribute("name",ligne.toString().concat(idnom1));
+	elms1[i1].id = ligne.toString().concat(id1);	
+}
+
+var elms2 = clone.getElementsByTagName("label");
+for (var i2 = 0; i2 < elms2.length; i2++) {
+	var idnom2 = elms2[i2].getAttribute("name");
+	var id2 = elms2[i2].id;
+	elms2[i2].setAttribute("name",ligne.toString().concat(idnom2));
+	elms2[i2].id = ligne.toString().concat(id2);	
+}
+
+var elms3 = clone.getElementsByTagName("textarea");
+for (var i3 = 0; i3 < elms3.length; i3++) {
+	elms3[i3].value = null;
+	var idnom3 = elms3[i3].getAttribute("name");
+	var id3 = elms3[i3].id;
+	elms3[i3].setAttribute("name",ligne.toString().concat(idnom3));
+	elms3[i3].id = ligne.toString().concat(id3);	
+	
+}
+
+
+document.getElementById('formAdd').appendChild(clone);
+ligne+=1;
+document.getElementById('nbligne').value=ligne;
+for (var i1 = 0; i1 < elms1.length; i1++) {
+	if(elms1[i1].type=="checkbox")
+	{
+		updateTemp(elms1[i1].id);
+	}	
+}
+if(ligne>=2)
+{
+document.getElementById("removebtn").disabled = false;
+}
+else{
+document.getElementById("removebtn").disabled = true;
+}
+}
+
+function remove() {
+ligne-=1;
+document.getElementById('nbligne').value=ligne;
+var pattern= document.getElementById("formpattern"+ligne.toString());
+document.getElementById('formAdd').removeChild(pattern);
+if(ligne>=2)
+{
+document.getElementById("removebtn").disabled = false;
+}
+else{
+document.getElementById("removebtn").disabled = true;
+}
+
+}
+
+function validation(){
+var elms = document.getElementsByTagName("select")
+var error = false;
+for (var i = 0; i < elms.length; i+=3) {
+	if(parseInt(elms[i+2].value) < parseInt(elms[i+1].value))
+	{
+		elms[i+2].setCustomValidity("La date de fin ne peut être inferieure à la date de début !");
+		error = true;
+	}
+	else
+	{
+		elms[i+2].setCustomValidity('');
+	}
+
+}
+}
+</script>
+
+{% endblock %}
+

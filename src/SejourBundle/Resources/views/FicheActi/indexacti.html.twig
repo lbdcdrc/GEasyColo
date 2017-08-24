@@ -1,0 +1,86 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - Mes fiches d'activités
+{% endblock title %}
+{% block header %}
+Mes fiches d'<p id="logo">Activité</p>
+{% endblock header %}
+{% block body %}
+<div id="main-wrapper">
+	<div id="main" class="container">
+		<div class="row 200%">
+			<div class="12u">
+				<section class="box highlight">
+					<header>
+						    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.9/datatables.min.css"/>
+							{{ datatable_html({
+								'id' : 'dta-offres',
+								})
+							}}
+							<button id="Actibtn" class="openmodal">Créer une fiche d'activité</button>
+							<div id="Actimodal" class="modal">
+
+							  <!-- Modal content -->
+							  <div class="modal-content">
+								<div class="modal-header">
+									<span class="close" id="closeActi" >&times;</span>
+								  <center><h2>Ajout d'une fiche d'activité :</h2></center>
+								</div>
+								<center>
+								<div style="width:80%;">
+								{{ form(form) }}
+								</br>
+								</div>
+								</center>
+								<div class="modal-footer">
+								</div>
+							  </div>
+								
+
+							</div>
+					</header>
+				</section>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+// Get the modal
+var varActimodal = document.getElementById('Actimodal');
+
+// Get the button that opens the modal
+var varActibtn = document.getElementById("Actibtn");
+
+// Get the <span> element that closes the modal
+var varcloseActi = document.getElementById("closeActi");
+
+// When the user clicks the button, open the modal 
+varActibtn.onclick = function() {
+	varActimodal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+varcloseActi.onclick = function() {
+	varActimodal.style.display = "none";
+}
+</script>
+
+
+{% endblock body %}
+
+
+{% block javascripts %}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+{{ datatable_js({
+        'id' : 'dta-offres',
+        'js' : {
+            'dom': '<"clearfix"lf>rtip',
+            'ajax': path('table_acti_util'),
+        }
+    })
+}}
+{% endblock javascripts %}

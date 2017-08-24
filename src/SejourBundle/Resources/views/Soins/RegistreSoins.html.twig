@@ -1,0 +1,225 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block infirmerie %} class="current" {%endblock%}
+
+{% block titre %}Registre des soins quotidiens{% endblock titre %}
+{% block soustitre %} Journée du {{ JourEnCours.date| localizeddate('full', 'none') }} {% endblock soustitre %}
+{% block style %}
+<style>
+
+tr:nth-child(even) {background-color: #f2f2f2}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+</style>
+{% endblock style %}
+
+{% block coeur %}
+
+{% if JourEnCours.SoinValide %}
+<center>
+<h4> Le registre pour cette journée à été cloturé </h4>
+<h1> Tu ne peux donc plus y ajouter de soins </h1>
+<i><u> Journée cloturée par {{ JourEnCours.SoinValidePar.PN }} le {{ JourEnCours.SoinValideDate |date('d/m/Y à H:i:s') }} </u></i>
+</center>
+{% endif %}
+
+
+ <center>
+ <table>
+	<tr>
+		<td>
+			Voir les soins pour la journée du :
+		</td>
+		<td>
+			<form>
+				<select id="select-id" name="someoptions">
+				<option value="{{ path('sejour_soins', { 'id': Sejour.id, 'jour' : JourEnCours.id }) }}" style="color:red;">{{ JourEnCours.date | localizeddate('full', 'none') }}</option>
+				{% for jour in ListeJourComplet %}
+					{% if jour.id != JourEnCours.id %}
+					<option value="{{ path('sejour_soins', { 'id': Sejour.id, 'jour' : jour.id }) }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			</form>
+		</td>
+	</tr>
+</table>
+</center>
+
+
+<center>
+<table>
+<tr>
+	<th> Soin donné à </th>
+	<th> Enregistré par </th>
+	<th> Motif de la visite </th>
+	<th> T° </th>
+	<th> Soins donnés </th>
+	<th> Observations </th>
+</tr>
+{% for soin in ListeSoins %}
+<tr>
+	<td> {{ soin.enfant.prenomnom }} <br> le {{ soin.jour.date|date('d/m') }} à {{ soin.heure|date(' H:i') }} </td>
+	<td> <i>{{ soin.User.PN }} <br> le {{ soin.date|date('d/m/Y à H:i:s') }} </i> </td>
+	<td> {{ soin.objet }} </td>
+	<td> {% if soin.temperature == null %} NC {% else %}{{ soin.temperature }} °C {% endif %} </td>
+	<td> {{ soin.soinsDispenses }} </td>
+	<td> {{ soin.observations }} </td>
+</tr>
+{% endfor %}
+</table>
+</center>
+
+{% if is_granted('ROLE_DIRECTEUR') %}
+{% if JourEnCours.SoinValide == false %}
+<center>
+<a href="{{ path('sejour_soins_cloture', { 'id': Sejour.id, 'jour' : JourEnCours.id }) }}" onclick="return confirm('Tu vas clotûrer cette journée. Cette action n\'est pas réversible.\n L\'assistant sanitaire ne pourra plus ajouter de soins... \n Clotûrer la journée ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
+ Clotûrer cette journée</button></a>
+ </br>
+ </center>
+ <br>
+ {% endif %}
+ {% endif %}
+<hr>
+
+<center>
+{{ form_start(form) }}
+<table >
+<tr>
+	<th colspan="6"> Nouveau Soin </th>
+</tr>
+<tr>
+	<td> Enfant : </td>
+	<td colspan="5"> 
+		{% set Var = attribute(form, 'enfant') %}
+		{{ form_widget(Var) }}
+	</td>
+</tr>
+<tr>
+	<td> Donné le </td>
+	<td> 
+		{% set Var = attribute(form, 'jour') %} {{ form_widget(Var) }} 
+	</td>
+	<td> À </td>
+	<td> 
+		{% set Var = attribute(form, 'heure') %}
+		{% set Var = attribute(Var, 'hour') %}
+		{{ form_widget(Var) }}	
+	</td>
+	<td> h : </td>
+	<td>
+		{% set Var = attribute(form, 'heure') %}
+		{% set Var = attribute(Var, 'minute') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<th colspan="6"> Motif de la visite </th>
+</tr>
+<tr>
+	<td colspan="6">
+		{% set Var = attribute(form, 'objet') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		Température (en °C)
+	</td>
+	<td id="myspan" style="color:green;">
+		37 °C
+	</td>
+	<td colspan="2">
+		{% set Var = attribute(form, 'temperature') %}
+		{{ form_widget(Var) }}	
+		
+	</td>
+	<td>
+		Non prise :
+	</td>
+	<td>
+		<input id="checkBox" type="checkbox" name="check" onclick="updateTemp(this.value);"/>
+	</td>
+</tr>
+<tr>
+	<th colspan="6">
+	Compte rendu des soins
+	</th>
+</tr>
+<tr>
+	<td>
+	 Soins donnés :
+	</td>
+	<td colspan="5">
+		{% set Var = attribute(form, 'soinsDispenses') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td>
+	 Observations :
+	</td>
+	<td colspan="5">
+		{% set Var = attribute(form, 'observations') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td colspan="6">
+	{{ form_end(form) }}
+	</td>
+</tr>
+<tr>
+	<th colspan="6"></br>
+	</th>
+</tr>
+
+</table>
+</center>
+<script>
+function updateTextInput(val) {
+
+	if(val < 35.5 ){
+    document.getElementById("myspan").style.color = 'red';
+  } else if(val < 36.5 && val > 35.5){
+    document.getElementById("myspan").style.color = 'orange';
+  } else if(val >= 36.5 && val <= 37.5){
+    document.getElementById("myspan").style.color = 'green';
+  } else if(val > 37.5 && val <= 40){
+    document.getElementById("myspan").style.color = 'orange';
+  } else if(val > 40){
+    document.getElementById("myspan").style.color = 'red';
+  }
+
+			document.getElementById("myspan").textContent=val.concat("°C");		  
+        }
+		
+function updateTemp(Pris) {
+
+	  if (document.getElementById('checkBox').checked) 
+	  {
+		document.getElementById("myspan").textContent="Non Prise";
+		document.getElementById("myspan").style.color = 'black';
+		document.getElementById("sejourbundle_soin_temperature").value = "null";
+		document.getElementById("sejourbundle_soin_temperature").disabled = true; 
+	  } else {
+		document.getElementById("myspan").textContent="37°C";
+		document.getElementById("myspan").style.color = 'green';		
+		document.getElementById("sejourbundle_soin_temperature").value = "37";
+		document.getElementById("sejourbundle_soin_temperature").disabled = false; 
+	  }
+				  
+        }		
+</script>	
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script> 
+$('#select-id').change(function() {
+   url = $('#select-id').val();
+   window.location.href = url;
+});
+</script>		
+{% endblock %}
+
+
+

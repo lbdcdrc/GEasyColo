@@ -1,0 +1,39 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+
+
+		{% block fos_user_content %}
+<script src="https://use.typekit.net/ayg4pcz.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<head>
+<title> Demande de nouveau mot de passe </title>
+</head>
+<body>
+<div class="container">
+<center>
+<h1 class="welcome text-center">Demande confirmée</h1>
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+</center>
+	<div class="card card-container">
+	<h2 class='login_title text-center'>Vérifie tes mails !</h2>
+	<hr>
+
+			<center>
+			<p>
+			{{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime})|nl2br }}
+			</p>
+			</center>
+
+			
+	</div><!-- /card-container -->
+</div><!-- /container -->
+</body>
+		{% endblock fos_user_content %}

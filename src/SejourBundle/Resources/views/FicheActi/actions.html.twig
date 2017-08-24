@@ -1,0 +1,84 @@
+<!-- Trigger/Open The Modal -->
+<button id="btnfiche{{ dt_item }}"><i class="fa fa-newspaper-o " aria-hidden="true"></i></button>
+
+<button id="btnEditfiche{{ dt_item }}"><i class="fa fa-pencil-square-o " aria-hidden="true"></i></button>
+<div id="modalEditfiche{{ dt_item }}" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" id="spanEditacti{{ dt_item }}">&times;</span>
+      <h2>{{ dt_obj.nom }}</h2>
+    </div>
+    <div class="modal-body">
+		{{ render(controller('SejourBundle:Default:editActiviteUtil', {'idActi': dt_item })) }}
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get the modal
+var varmodalEditfiche{{ dt_item }} = document.getElementById('modalEditfiche{{ dt_item }}');
+
+// Get the button that opens the modal
+var varbtnEditfiche{{ dt_item }} = document.getElementById("btnEditfiche{{ dt_item }}");
+
+// Get the <span> element that closes the modal
+var varspanEditacti{{ dt_item }} = document.getElementById("spanEditacti{{ dt_item }}");
+
+// When the user clicks the button, open the modal 
+varbtnEditfiche{{ dt_item }}.onclick = function() {
+    varmodalEditfiche{{ dt_item }}.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+varspanEditacti{{ dt_item }}.onclick = function() {
+    varmodalEditfiche{{ dt_item }}.style.display = "none";
+}
+</script>
+
+
+<!-- The Modal -->
+<div id="modalfiche{{ dt_item }}" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" id="spanacti{{ dt_item }}">&times;</span>
+      <h2>{{ dt_obj.nom }}</h2>
+    </div>
+    <div class="modal-body">
+      <h4> Description de l'activité </h4>
+	  <p>{{ dt_obj.description | raw }}</p>
+	  <h4> Matériel </h4>
+	  <p>{{ dt_obj.materiel }}</p>
+	  <h4> Nb d'Animateurs / Nb mini d'enfants / Nb maxi d'enfants </h4>
+	  <p>{{ dt_obj.nbAnim }}/{{ dt_obj.nbEnfantMin }}/{{ dt_obj.nbEnfantMax }}</p>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+// Get the modal
+var varmodalfiche{{ dt_item }} = document.getElementById('modalfiche{{ dt_item }}');
+
+// Get the button that opens the modal
+var varbtnfiche{{ dt_item }} = document.getElementById("btnfiche{{ dt_item }}");
+
+// Get the <span> element that closes the modal
+var varspanacti{{ dt_item }} = document.getElementById("spanacti{{ dt_item }}");
+
+// When the user clicks the button, open the modal 
+varbtnfiche{{ dt_item }}.onclick = function() {
+    varmodalfiche{{ dt_item }}.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+varspanacti{{ dt_item }}.onclick = function() {
+    varmodalfiche{{ dt_item }}.style.display = "none";
+}
+
+</script>

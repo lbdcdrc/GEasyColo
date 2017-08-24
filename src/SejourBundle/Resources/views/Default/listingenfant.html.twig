@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	</style>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+	</style>
+
+	<center>
+		<img src="/Logo_telligo.png" alt="LogoTelligo" style="width:204px">
+		<h1> Séjour : {{ sejour.nomThema }} </h1>
+		<h2> Du {{ sejour.dateDebut| localizeddate('full', 'none') }} au {{ sejour.dateFin| localizeddate('full', 'none') }}  </h2>  
+	</center>
+	<hr/>	
+		
+	
+
+	
+<div class="row">
+	<div class="col-sm-12">
+		<div class="container"> 
+		<h2> Liste des Inscrits : </h2>		
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Photo</th>
+						<th>Nom</th>
+						<th>Prénom</th>
+						<th>Âge</th>
+						<th>Chambre</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for enfant in listeEnfant %}
+					<tr><td>
+{% if enfant.image %}					
+<img 
+  src="{{ enfant.image| imagine_filter('my_thumb')}}"
+  alt="PhotoEnfant"
+  style="height:70px"
+/>
+{% else %}
+<img 
+  src="/anonyme.jpg"
+  alt="PhotoEnfant"
+  style="height:70px"
+/>
+{%endif %}</td>
+						<td>{{ enfant.nom }}</td>
+						<td>{{ enfant.prenom }}</td>
+						<td>{{ enfant.age }}</td>
+						<td>{{ enfant.chambre }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>  
+		</div>
+	</div>
+</div>
+
+
+
+</html>
+
+

@@ -1,0 +1,33 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<script src="https://use.typekit.net/ayg4pcz.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<head>
+<title> EasyColo </title>
+</head>
+<body>
+<div class="container">
+<center>
+<h1 class="welcome text-center">Modification du mot de passe</h1>
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+</center>
+	<div class="card card-container">
+	<h2 class='login_title text-center'>Tapes ton nouveau mot de passe</h2>
+	<hr>
+
+{{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+    {{ form_widget(form) }}
+	<div>
+		<center><button class="btn btn-lg btn-primary" type="submit" value="{{ 'resetting.reset.submit'|trans }}"> Valider </button></center>
+	</div>
+	{{ form_end(form) }}
+
+			
+	</div><!-- /card-container -->
+</div><!-- /container -->
+</body>

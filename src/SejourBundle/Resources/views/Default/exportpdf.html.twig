@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	</style>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+	</style>
+
+	<center>
+		<img src="/Logo_telligo.png" alt="LogoTelligo" style="width:204px">
+		<h1> Activité : {{ evenement.activite.nom }} </h1>
+		<h3> {{ jour.date|date('D d F Y') }} </h2>  
+		<h3> {{ evenement.NbInscrits }} inscrits </h3>
+		<h3> {% if evenement.moment == 1 %}
+				Matin Premier Créneau
+				{% elseif evenement.moment ==2 %}
+				Matin Deuxième Créneau
+				{% elseif evenement.moment == 3 %}
+				Après-Midi
+				{% elseif evenement.moment ==4 %}
+				Journée plus matinée du lendemain
+				{% else %}
+				Journée entière
+				{% endif %}</h3>
+	</center>
+	<hr/>	
+	
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-warning">
+			<strong>Rappel :</strong> <br/>
+			Avant de partir en activité, je pense à prendre une trousse à pharmacie, de l'eau, un téléphone (ou le talkie) et éventuellement le goûter !<br/>
+			Tout au long de l'activité, je suis attentif à la sécurité des enfants, et je pense à les compter régulièrement !<br/><br/>
+			<center><h3> En cas d'urgence </h3>
+			Cédric : 06 28 01 04 05 <br/>
+			SAMU : 15<br/>
+			Pompier : 18 (112)<br/>
+			Police : 17<br/></center>  
+		</div>
+		<p>Ce document contient des informations sensibles. Merci de ne pas le laisser trainer et de ne pas le jetter n'importe où !</p>
+	</div>
+</div>	
+	
+	
+	<h2> Liste des Inscrits : </h2>
+
+	
+<div class="row">
+	<div class="col-sm-12">
+		<div class="container">      
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Photo</th>
+						<th>Nom</th>
+						<th>Prenom</th>
+						<th>Âge</th>
+						<th>Infos</th>
+						<th>Chambre</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for enfant in listeEnfant %}
+					<tr><td>
+{% if enfant.image %}					
+<img 
+  src="{{ enfant.image| imagine_filter('my_thumb') }}"
+  alt="PhotoEnfant"
+  style="height:70px"
+/>
+{% endif %}</td>
+						<td>{{ enfant.nom }}</td>
+						<td>{{ enfant.prenom }}</td>
+						<td>{{ enfant.age }}</td>
+						<td>{{ enfant.info }}</td>
+						<td>{{ enfant.chambre }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>  
+		</div>
+	</div>
+</div>
+
+
+
+</html>
+
+

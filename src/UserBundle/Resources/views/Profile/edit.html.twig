@@ -1,0 +1,10 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - Éditer mon profil
+{% endblock title %}
+{% block header %}
+<p id="logo">Éditer mon profil</p>
+{% endblock header %}
+{% block body %}
+{% include "@FOSUser/Profile/edit_content.html.twig" %}
+{% endblock body %}

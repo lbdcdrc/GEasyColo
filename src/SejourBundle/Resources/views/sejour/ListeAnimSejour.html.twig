@@ -1,0 +1,286 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block equipe %} class="current" {%endblock%}
+
+{% block titre %}L'équipe ! {% endblock titre %}
+
+
+
+{% block coeur %}
+<section id="pricePlans"><center>
+		<ul id="plans">
+				<li class="plan">		
+					<ul class="planContainer">
+						<li class="title"><img class=card" src={% if Sejour.directeur.image %} "{{ Sejour.directeur.image.webPath| imagine_filter('md_thumb') }}" {% else %} "{{'/anonyme.jpg' | imagine_filter('md_thumb')}}" {% endif %}alt="Avatar" style="width:100%"></li>
+						<li class="price"><p>{{ Sejour.directeur.prenom }} <span> {{ Sejour.directeur.nom }} </span></p></li>
+						<li>
+							<ul class="options">
+								<li>{{ Sejour.directeur.age }} ans  <span>Directeur</span></li>
+
+							</ul>
+						</li>
+						<li> {{ Sejour.directeur.telephone }} </li>
+						<li> {{ Sejour.directeur.email }} </li>
+												<li>
+						{% if Sejour.directeur.diplome == 0 %}
+						Non Diplomé
+						{% elseif Sejour.directeur.diplome == 1 %}
+						BAFA Stage 1 Fait 
+						{% elseif Sejour.directeur.diplome == 2 %}
+						BAFA Stage Pratique Fait
+						{% elseif Sejour.directeur.diplome == 3 %}
+						BAFA Stage 2 Fait 
+						{% elseif Sejour.directeur.diplome == 4 %}
+						Diplômé BAFA
+						{% elseif Sejour.directeur.diplome == 5 %}
+						Équivalence BAFA
+						{% elseif Sejour.directeur.diplome == 6 %}
+						BAFD Stage 1 Fait
+						{% elseif Sejour.directeur.diplome == 7 %}
+						BAFD Stage Pratique 1 Fait
+						{% elseif Sejour.directeur.diplome == 8 %}
+						BAFD Stage 2 Fait
+						{% elseif Sejour.directeur.diplome == 9 %}
+						BAFD Stage Pratique 2 Fait
+						{% elseif Sejour.directeur.diplome == 10 %}
+						BAFD Diplômé
+						{% elseif Sejour.directeur.diplome == 11 %}
+						Équivalence BAFD
+						{% endif %}
+						</li>
+						<li>
+						{% if Sejour.directeur.psc1 == 1 %}
+						<i class="fa fa-check-square-o" aria-hidden="true">  PSC1</i>
+						{% else %}
+						<i class="fa fa-times-circle-o" aria-hidden="true">  PSC1</i>
+						{% endif %}
+						-
+						{% if Sejour.directeur.sb == 1 %}
+						<i class="fa fa-check-square-o" aria-hidden="true">  SB</i>
+						{% else %}
+						<i class="fa fa-times-circle-o" aria-hidden="true">  SB</i>
+						{% endif %}
+						</li>
+						<li id ="modaldirecteurbutton" class="button-card"><a href="#"><i class="fa fa-commenting" aria-hidden="true"></i></a></li>
+					</ul>
+				</li>
+		{% for animateur in listeAnim %}			
+				<li class="plan">		
+					<ul class="planContainer">
+						<img class="card" {% if animateur.user.image %} 
+												src="{{ animateur.user.image.webPath| imagine_filter('md_thumb') }}" 
+										{% else %} 
+												src="{{ '/anonyme.jpg'|imagine_filter('md_thumb') }}"
+										{% endif %} alt="Avatar" style="width:100%">
+						<li class="price"><p>{{ animateur.user.prenom }} <span> {{ animateur.user.nom }} </span></p></li>
+						<li>
+							<ul class="options">
+								<li>{{ animateur.user.age }} ans  <span>
+								{% if animateur.role == 1 %}
+								Animateur
+								{% elseif animateur.role == 2 %}
+								Assistant Sanitaire
+								{% elseif animateur.role ==3 %}
+								Adjoint
+								{% endif %}</span></li>
+
+							</ul>
+						</li>
+						{% if is_granted('ROLE_ADJOINT') %}
+						<li> {{ animateur.user.telephone }} </li>
+						<li> {{ animateur.user.email }} </li>
+						{% endif %}
+						<li>
+						{% if animateur.user.diplome == 0 %}
+						Non Diplomé
+						{% elseif animateur.user.diplome == 1 %}
+						BAFA Stage 1 Fait 
+						{% elseif animateur.user.diplome == 2 %}
+						BAFA Stage Pratique Fait
+						{% elseif animateur.user.diplome == 3 %}
+						BAFA Stage 2 Fait 
+						{% elseif animateur.user.diplome == 4 %}
+						Diplômé BAFA
+						{% elseif animateur.user.diplome == 5 %}
+						Équivalence BAFA
+						{% elseif animateur.user.diplome == 6 %}
+						BAFD Stage 1 Fait
+						{% elseif animateur.user.diplome == 7 %}
+						BAFD Stage Pratique 1 Fait
+						{% elseif animateur.user.diplome == 8 %}
+						BAFD Stage 2 Fait
+						{% elseif animateur.user.diplome == 9 %}
+						BAFD Stage Pratique 2 Fait
+						{% elseif animateur.user.diplome == 10 %}
+						BAFD Diplômé
+						{% elseif animateur.user.diplome == 11 %}
+						Équivalence BAFD
+						{% endif %}
+						</li>
+						<li>
+						{% if animateur.user.psc1 == 1 %}
+						<i class="fa fa-check-square-o" aria-hidden="true">  PSC1</i>
+						{% else %}
+						<i class="fa fa-times-circle-o" aria-hidden="true">  PSC1</i>
+						{% endif %}
+						-
+						{% if animateur.user.sb == 1 %}
+						<i class="fa fa-check-square-o" aria-hidden="true">  SB</i>
+						{% else %}
+						<i class="fa fa-times-circle-o" aria-hidden="true">  SB</i>
+						{% endif %}
+						</li>
+						<li id ="modalanimbutton{{ animateur.user.id }}" class="button-card"><a href="#"><i class="fa fa-commenting" aria-hidden="true"></i></a></li>
+						{% if is_granted('ROLE_ADJOINT') %}
+						<li><a href="{{ path('derecrute', { 'id': animateur.id }) }}" onclick="return confirm('Confirmer le dérecrutement ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
+ Dérecruter?</button></a></li>
+						{% endif %}
+					</ul>
+				</li>
+		<div id="modalanim{{ animateur.user.id }}" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="modalanimclose{{ animateur.user.id }}" >&times;</span>
+		  <center><h4>{{ animateur.user.prenom }} {{ animateur.user.nom }}</h4></center>
+		</div>
+		</br>
+		<center>
+		<div style="width:80%;">
+		{% if animateur.user.presentation%}
+		{{ animateur.user.presentation | raw }}
+		{% else %}
+		Ooow... Cet animateur n'as pas écris de présentation...
+		{% endif %}
+		</div>
+		</center>
+		</br>
+		</div>
+
+		</div>
+
+		<script>
+		// Get the modal
+		var modalvaranim{{ animateur.user.id }} = document.getElementById('modalanim{{ animateur.user.id }}');
+
+		// Get the button that opens the modal
+		var varbtnanim{{ animateur.user.id }} = document.getElementById("modalanimbutton{{ animateur.user.id }}");
+
+		// Get the <span> element that closes the modal
+		var varspananim{{ animateur.user.id }} = document.getElementById("modalanimclose{{ animateur.user.id }}");
+
+		// When the user clicks the button, open the modal 
+		varbtnanim{{ animateur.user.id }}.onclick = function() {
+		modalvaranim{{ animateur.user.id }}.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		varspananim{{ animateur.user.id }}.onclick = function() {
+		modalvaranim{{ animateur.user.id }}.style.display = "none";
+		}
+		</script>
+		
+		{% endfor %}
+		</ul> <!-- End ul#plans --></center>
+	</section>
+		<div id="modaldirecteur" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="modaldirecteurclose" >&times;</span>
+		  <center><h4>{{ Sejour.directeur.prenom }} {{ Sejour.directeur.nom }}</h4></center>
+		</div>
+		</br>
+		<center>
+		<div style="width:80%;">
+		{% if Sejour.directeur.presentation%}
+		{{ Sejour.directeur.presentation | raw }}
+		{% else %}
+		Ooow... Cet animateur n'as pas écris de présentation...
+		{% endif %}
+		</div>
+		</center>
+		</br>
+		</div>
+
+		</div>
+
+		<script>
+		// Get the modal
+		var modalvardirecteur = document.getElementById('modaldirecteur');
+
+		// Get the button that opens the modal
+		var varbtndirecteur = document.getElementById("modaldirecteurbutton");
+
+		// Get the <span> element that closes the modal
+		var varspandirecteur = document.getElementById("modaldirecteurclose");
+
+		// When the user clicks the button, open the modal 
+		varbtndirecteur.onclick = function() {
+		modalvardirecteur.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		varspandirecteur.onclick = function() {
+		modalvardirecteur.style.display = "none";
+		}
+		</script>
+
+
+	{% if is_granted('ROLE_ADJOINT') %}
+	<button id="recrutementboutton">Recruter un animateur</button>
+		<div id="recrutement" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="closerecrutement" >&times;</span>
+		  <center><h4>Recrutement sur le séjour {{ Sejour.nomThema }}</h4></center>
+		</div>
+		</br>
+		<center>
+		<div style="width:80%;">
+		{{ form(form) }}
+		</div>
+		</center>
+		</br>
+		</div>
+
+		</div>
+
+		<script>
+		// Get the modal
+		var modalRe = document.getElementById('recrutement');
+
+		// Get the button that opens the modal
+		var btnRe = document.getElementById("recrutementboutton");
+
+		// Get the <span> element that closes the modal
+		var spanRe = document.getElementById("closerecrutement");
+
+		// When the user clicks the button, open the modal 
+		btnRe.onclick = function() {
+		modalRe.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		spanRe.onclick = function() {
+		modalRe.style.display = "none";
+		}
+		</script>
+	
+	
+	
+	{% endif %}
+															
+{% endblock %}
+
+
+
+
+
+
+
+{% block javascripts %}
+{% endblock javascripts %}

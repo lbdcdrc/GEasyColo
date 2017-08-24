@@ -1,0 +1,5 @@
+{% extends "AdminBundle:TableUtilisateurs:modal.html.twig" %}
+{% block modal %}
+{{ form_start(form, {'action': path('enfant_edit', { 'id':enfant.id } ), 'method': 'POST'}) }}
+{{ form_end(form)}}
+{% endblock modal %}

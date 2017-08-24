@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<title>{% block title %}EasyColo V2 !{% endblock %}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="/assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="/assets/css/ie8.css" /><![endif]-->
+		{% block style %}
+		{% endblock %}
+	</head>
+	<body class="homepage">
+	{% block modal %}
+	{% endblock modal %}
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<div class="logo container">
+						<div>
+							{% block header %}
+							{% endblock %}
+						</div>
+					</div>
+					<i>{% block subheader %} {% endblock %}</i>
+							{% for flashMessage in app.session.flashbag.get('notice') %}
+								<i>
+									{{ flashMessage }}
+								</i>
+							{% endfor %}
+				</header>
+
+			<!-- Nav -->
+			{% block nav %}
+				<nav id="nav">
+					<ul>
+						<li {% if app.request.get('_route') == 'sejour_homepage' %}class="current"{% endif %}><a href="{{ path('sejour_homepage') }}">Accueil</a></li>
+						<li {% if 	app.request.get('_route') == 'fos_user_profile_show' or
+									app.request.get('_route') == 'fos_user_profile_edit' or
+									app.request.get('_route') == 'edit_picture' or
+									app.request.get('_route') == 'fos_user_change_password' %}class="current"{% endif %}>
+							<a href="#">Mon Compte</a>
+							<ul>
+								<li><a href="{{ path('fos_user_profile_show') }}">Voir mon profil</a></li>
+								<li><a href="{{ path('fos_user_change_password') }}">Modifier mon mot de passe</a></li>
+								<li><a href="{{ path('fos_user_security_logout') }}"><span class="icon fa-sign-out"></span> Déconnexion</a></li>
+							</ul>
+						</li>
+						<li {% if 	app.request.get('_route') == 'sejour_indexsejour' or
+									app.request.get('_route') == 'sejour_liste_enfants' or
+									app.request.get('_route') == 'enfant_probleme_list' or
+									app.request.get('_route') == 'sejour_equipe' or
+									app.request.get('_route') == 'sejour_activite' or
+									app.request.get('_route') == 'sejour_forum' or 
+									app.request.get('_route') == 'sejour_planning_conges' or
+									app.request.get('_route') == 'sejour_discussion' or
+									app.request.get('_route') == 'sejour_soins' or
+									app.request.get('_route') == 'sejour_traitement' or
+									app.request.get('_route') == 'sejour_edit' %}class="current"{% endif %}><a href="{{ path('sejour_indexsejour') }}">Mes Séjours</a></li>
+						<li {% if app.request.get('_route') == 'activite_util' %}class="current"{% endif %}><a href="{{ path('activite_util') }}">Mes Fiches d'Activités</a></li>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li {% if 	app.request.get('_route') == 'index_admin'  or
+										app.request.get('_route') == 'voir_profil'  or
+										app.request.get('_route') == 'user_list' %}class="current"{% endif %}><a href="{{ path('index_admin') }}">Administration</a></li>
+						{% endif %}
+					</ul>
+				</nav>
+			{% endblock %}
+			<!-- Main -->
+			{% block body %}
+			{% endblock %}
+			<!-- Footer -->
+			{% block footer %}
+			{% endblock %}
+			<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/jquery.dropotron.min.js"></script>
+			<script src="/assets/js/skel.min.js"></script>
+			<script src="/assets/js/skel-viewport.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="/assets/js/main.js"></script>
+			{% block javascripts %}
+			{% endblock %}
+			
+	</body>
+</html>

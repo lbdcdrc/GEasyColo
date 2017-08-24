@@ -1,0 +1,10 @@
+{# XXXMyBundle:Renderers:_actions.html.twig #}
+<center>
+{% if dt_obj.image %}
+<img src="{{ dt_obj.image.webPath| imagine_filter('md_thumb') }}" style="border-radius:10%;" width="100" alt="{{ dt_obj.nom}}.jpg" />
+{% else %}
+<img src="/anonyme.jpg" style="border-radius:10%;" width="100" alt="Anonyme" />
+{% endif %}
+</br>
+{{ dt_obj.age }} ans
+</center>

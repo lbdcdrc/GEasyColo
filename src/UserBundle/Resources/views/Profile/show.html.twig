@@ -1,0 +1,10 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - Mon compte
+{% endblock title %}
+{% block header %}
+<p id="logo">Mon Compte</p>
+{% endblock header %}
+{% block body %}
+{% include "@FOSUser/Profile/show_content.html.twig" %}
+{% endblock body %}

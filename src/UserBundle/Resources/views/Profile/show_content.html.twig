@@ -1,0 +1,126 @@
+{% trans_default_domain 'FOSUserBundle' %}
+				<div id="main-wrapper">
+					<div id="main" class="container">
+
+						<div class="row 200%">
+							<div class="12u">
+<!-- Blog -->
+									<section class="box blog">
+										<div>
+											<div class="row">
+												<div class="9u 12u(mobile)">
+													<div class="content content-left">
+
+														<!-- Featured Post -->
+															<article class="box post">
+																<header>
+																	<h3>Profil de {{ user.username }}</a></h3>
+																	<p>Animateur - {{ user.age }} ans - 
+																	{% if user.diplome == 0 %}
+																	Non Diplomé
+																	{% elseif user.diplome == 1 %}
+																	BAFA Stage 1 Fait 
+																	{% elseif user.diplome == 2 %}
+																	BAFA Stage Pratique Fait
+																	{% elseif user.diplome == 3 %}
+																	BAFA Stage 2 Fait 
+																	{% elseif user.diplome == 4 %}
+																	Diplômé BAFA
+																	{% elseif user.diplome == 5 %}
+																	Équivalence BAFA
+																	{% elseif user.diplome == 6 %}
+																	BAFD Stage 1 Fait
+																	{% elseif user.diplome == 7 %}
+																	BAFD Stage Pratique 1 Fait
+																	{% elseif user.diplome == 8 %}
+																	BAFD Stage 2 Fait
+																	{% elseif user.diplome == 9 %}
+																	BAFD Stage Pratique 2 Fait
+																	{% elseif user.diplome == 10 %}
+																	BAFD Diplômé
+																	{% elseif user.diplome == 11 %}
+																	Équivalence BAFD
+																	{% endif %}
+																	 - 
+																	{% if user.psc1 == 1 %}
+																	<i class="fa fa-check-square-o" aria-hidden="true">  PSC1</i>
+																	{% else %}
+																	<i class="fa fa-times-circle-o" aria-hidden="true">  PSC1</i>
+																	{% endif %}
+																	-
+																	{% if user.sb == 1 %}
+																	<i class="fa fa-check-square-o" aria-hidden="true">  SB</i>
+																	{% else %}
+																	<i class="fa fa-times-circle-o" aria-hidden="true">  SB</i>
+																	{% endif %}
+																	</p>
+																</header>
+																<p>
+																<div style="float:left; margin-right:1%; margin-bottom:1%;">
+																{% if user.image %}					
+																<img 
+																  src="{{ user.image.webPath| imagine_filter('md_thumb')}}"
+																  alt="{{user.nom}}"
+																  style="float:left; margin-right:1%; margin-bottom:1%;  max-width: 100%; height: auto;"
+																/>
+																{% endif %}
+																<center><a href="{{ path('edit_picture') }}" class="button alt">Modifier mon avatar</a></center>
+																</div>
+																<h4> Ma présentation </h4>
+																{% if user.presentation %}	
+																	{{ user.presentation | raw}}
+																{% else %}
+																<h2> Ooooow... Tu n'as pas mis de présentation ! </h2>
+																<p> Penses à éditer ton profil et à en écrire une afin que tes équipes puissent te connaître un peu mieux !</p>
+																{% endif %}
+																</p>
+															
+															</article>
+
+													</div>
+												</div>
+												<div class="3u 12u(mobile)">
+													<div class="sidebar">
+
+														<!-- Archives -->
+															<ul class="divided">
+																<h2>Informations Personnelles</h2>
+																<li>
+																	<article class="box post-summary">
+																		<h3><a href="#">Nom Prénom</a></h3>
+																		<ul class="meta">
+																			{{ user.nom }} {{ user.prenom }}
+																		</ul>
+																	</article>
+																</li>
+																<li>
+																	<article class="box post-summary">
+																		<h3><a href="#">Coordonnées</a></h3>
+																		<ul class="meta">
+																			Mail : {{ user.email }} </br>
+																			Téléphone : {{ user.telephone }}
+																		</ul>
+																	</article>
+																</li>
+																<li>
+																	<article class="box post-summary">
+																		<h3><a href="#">Adresse Postale</a></h3>
+																		<ul class="meta">
+																			{{ user.adresse1 }} </br>
+																			{{ user.adresse2 }} </br>
+																			{{ user.codepostal }} {{ user.ville }}
+																		</ul>
+																	</article>
+																</li>
+															</ul>
+															<a href="{{ path('fos_user_profile_edit') }}" class="button alt">Éditer mon profil</a>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</section>
+									</div>
+									</div>
+									</div>
+									</div>

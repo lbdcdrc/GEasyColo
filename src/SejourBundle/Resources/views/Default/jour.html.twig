@@ -1,0 +1,249 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+	  <center>
+	  <h1> Gestion du séjour {{ jour.sejour.id }} </h1>
+	  <h4> Débute le {{ jour.sejour.DateDebut|date('d/m/Y') }} se termine le {{ jour.sejour.DateFin|date('d/m/Y') }} </h4>
+	  <h4> Thématiques : {{ jour.sejour.NomThema }} </h4>
+		{% for flashMessage in app.session.flashbag.get('notice') %}
+			<div class="alert alert-info">
+				{{ flashMessage }}
+			</div>
+		{% endfor %}
+		{% for flashMessage in app.session.flashbag.get('alert') %}
+			<div class="alert alert-danger">
+				{{ flashMessage }}
+			</div>
+		{% endfor %}
+		
+	  </center>
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+
+
+
+<div class="container">
+  <h2>Liste des activités prévues le {{ jour.date|date('D d F Y') }} <a href="{{ path('jour_addevent', {'id' : jour.id }) }}" class="btn btn-info" role="button"><span class="glyphicon glyphicon-plus"</span></a> </h2>         
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+		<th>Activité</th>
+		<th>Moment</th>
+		<th>Nb Inscrits / Nb places</th>
+		<th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+	{% for evenement in listeEvenements %}
+		<tr {% if evenement.NbInscrits > evenement.NbPlaces %} class="danger" {% endif %}>
+		<td>{{ evenement.id }}</td>
+		<td>{{ evenement.activite.nom }}</td>
+		<td>
+			{% if evenement.Moment == 1 %}
+			Matin Premier Créneau
+			{% elseif evenement.Moment == 2 %}
+			Matin Deuxième Créneau
+			{% elseif evenement.Moment == 3 %}
+			Après Midi
+			{% elseif evenement.Moment == 4 %}
+			Jour + Matin
+			{% else %}
+			Journée
+			{% endif %}
+		</td>
+		<td>{{ evenement.NbInscrits }} / {{ evenement.NbPlaces }}</td>
+		<td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#{{evenement.id}}"><span class="glyphicon glyphicon-user"></span></button>
+
+			<!-- Modal -->
+			<div id="{{evenement.id}}" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Liste des Inscrits à l'activité {{ evenement.activite.nom }}</h4>
+				  </div>
+				  <div class="modal-body">
+					{% for enfant in evenement.enfant %}
+						{{enfant.nom}} {{enfant.prenom}} </br>
+					{% endfor %}
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+				  </div>
+				</div>
+
+			  </div>
+			</div>		
+		<a href="{{ path('evenement_toPdf', { 'idEv': evenement.id }) }}" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span></a>
+		<a href="{{ path('jour_dellevent', { 'id': evenement.id }) }}" class="btn btn-danger" role="button" {% if evenement.estlie %} disabled {% endif %}><span class="glyphicon glyphicon-trash"></span></a>
+		<a href="{{ path('jour_editevent', { 'id': evenement.id }) }}" class="btn btn-warning" role="button" ><span class="glyphicon glyphicon-pencil"></span></a>
+		</td>
+		</tr>
+	{% endfor %}
+    </tbody>
+	</table>
+
+	
+	<h3>Liste des Enfants inscrits sur le séjour : </h3> 
+	
+	
+
+  
+<div class="container">
+  <div class="panel-group">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse3">Enfants non inscrits aux activités ({{ listeEnfantsNulle|length }})</a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+        
+			<table class="table table-striped">
+			<thead>
+			  <tr>
+				<th>IdEnfant</th>
+				<th>Nom</th>
+				<th>Prénom</th>
+				<th>Age</th>
+				<th>Séjour</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for enfant in listeEnfantsNulle %}
+				<tr>
+				<td>{{ enfant.id }}</td>
+				<td>{{ enfant.Nom }}</td>
+				<td>{{ enfant.Prenom }}</td>
+				<td>{{ enfant.Age }}</td>
+				<td>{{ enfant.Sejour.nomThema }}</td>
+				<td><a href="{{ path('jour_affecterenfant', { 'idJour': jour.id, 'idEnfant' : enfant.id }) }}" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-pencil"></span></a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+        
+        
+        </div>
+        <div class="panel-footer">{{ listeEnfantsNulle|length }} enfants non inscrits aux activités</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+ 
+<div class="container">
+  <div class="panel-group">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse2">Enfants inscrits partiellement aux activités ({{ listeEnfantsIncomplet|length }})</a>
+        </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse">
+        <div class="panel-body">
+        
+		    <table class="table table-striped">
+			<thead>
+			  <tr>
+				<th>IdEnfant</th>
+				<th>Nom</th>
+				<th>Prénom</th>
+				<th>Age</th>
+				<th>Séjour</th>
+				<th>Action</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for enfant in listeEnfantsIncomplet %}
+				<tr>
+				<td>{{ enfant.id }}</td>
+				<td>{{ enfant.Nom }}</td>
+				<td>{{ enfant.Prenom }}</td>
+				<td>{{ enfant.Age }}</td>
+				<td>{{ enfant.Sejour.nomThema }}</td>
+				<td><a href="{{ path('jour_modifenfant', { 'idJour': jour.id, 'idEnfant' : enfant.id }) }}" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-edit"></span></a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		  </table>
+
+        
+        
+        </div>
+        <div class="panel-footer">{{ listeEnfantsIncomplet|length }} enfants partiellement inscrits </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ 
+<div class="container">
+  <div class="panel-group">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse1">Enfants inscrits complètement aux activités ({{ listeEnfantsComplet|length }})</a>
+        </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse">
+        <div class="panel-body">
+        
+        <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>IdEnfant</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+		<th>Age</th>
+		<th>Séjour</th>
+		<th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+	{% for enfant in listeEnfantsComplet %}
+		<tr>
+		<td>{{ enfant.id }}</td>
+		<td>{{ enfant.Nom }}</td>
+		<td>{{ enfant.Prenom }}</td>
+		<td>{{ enfant.Age }}</td>
+		<td>{{ enfant.Sejour.nomThema }}</td>
+		<td><a href="{{ path('jour_modifenfant', { 'idJour': jour.id, 'idEnfant' : enfant.id }) }}" class="btn btn-success" role="button"><span class="glyphicon glyphicon-check"></span></a></td>
+		</tr>
+	{% endfor %}
+    </tbody>
+  </table>
+        
+        </div>
+        <div class="panel-footer"> {{ listeEnfantsComplet|length }} enfants inscrits complètement</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    
+  
+  
+</div>
+
+<center>
+<a href="{{ path('sejour_edit', { 'id': jour.sejour.id }) }}" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+</center>
+{% endblock %}
+
+
+

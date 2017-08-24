@@ -1,0 +1,15 @@
+{# app/Resources/views/Emails/registration.html.twig #}
+<h3>Bonjour {{ forum.user.prenom }}</h3>
+
+<u>Une réponse vient d'être postée sur le fil de discussion "{{forum.categorie.nom}}". </u></br>
+
+Tu peux aller la consulter à l'adresse suivante :
+
+<a href="https://easycolo.fr{{ path('sejour_forum', { 'id': id }) }}"> {{forum.categorie.nom}} </a> </br>
+
+À bientôt,</br>
+L'équipe d'EasyColo</br>
+<hr>
+<i>Tu reçois ce mail car tu es abonné aux notifications sur ce fil de discussion. Pour te désabonner, cliques
+sur ce lien : <a href="https://easycolo.fr{{ path('abonnement_forum', { 'id': id, 'forum': forum.categorie.id }) }}"> Me désabonner </a> </br>
+Ps. Ceci est un mail automatique, en cas de problème, contacte le directeur du séjour !</i>

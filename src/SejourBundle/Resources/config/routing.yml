@@ -1,0 +1,123 @@
+sejour_homepage:
+    path:     /
+    defaults: { _controller: SejourBundle:Default:Index }
+sejour_indexsejour:
+    path:   /sejour
+    defaults: { _controller: SejourBundle:Default:IndexSejour }
+table_acti_util:
+    path:   /json/activite/datatable
+    defaults: { _controller: SejourBundle:Default:tableActiUtil }
+activite_util:
+    path:   /activite
+    defaults: { _controller: SejourBundle:Default:ActiviteUtil }
+util_activite_edit:
+    path:   /activite/{idActi}/edit
+    defaults: { _controller: SejourBundle:Default:editActiviteUtil }
+sejour_creer:
+    path:   /sejour/creer
+    defaults: { _controller: SejourBundle:Default:CreerSejour }
+sejour_edit:
+    path:   /sejour/{id}
+    defaults: { _controller: SejourBundle:Default:AccueilSejour }
+sejour_liste_enfants:
+    path:   /sejour/{id}/enfants
+    defaults: { _controller: SejourBundle:Default:listeEnfantSejour }
+sejour_equipe:
+    path:   /sejour/{id}/equipe
+    defaults: { _controller: SejourBundle:Default:listeAnimSejour }
+sejour_forum:
+    path:   /sejour/{id}/forum
+    defaults: { _controller: SejourBundle:Default:AccueilForum }
+abonnement_forum:
+    path:   /sejour/{id}/forum/{forum}/gestionAbo
+    defaults: { _controller: SejourBundle:Default:forumAbonnement }
+sejour_discussion:
+    path:   /sejour/{id}/forum{idForum}/{page}
+    defaults: { _controller: SejourBundle:Default:Discussion, page: 1}
+sejour_activite:
+    path:   /sejour/{id}/activite
+    defaults: { _controller: SejourBundle:Default:FichesActiSejour }
+sejour_planning_conges:
+    path:   /sejour/{id}/conges
+    defaults: { _controller: SejourBundle:Default:PlanningConges }
+sejour_soins:
+    path:   /sejour/{id}/soins/{jour}
+    defaults: { _controller: SejourBundle:Default:RegistreSoins, jour:null }
+sejour_traitement:
+    path:   /sejour/{id}/traitement
+    defaults: { _controller: SejourBundle:Default:Traitement }
+sejour_soins_cloture:
+    path:   /sejour/{id}/soins/{jour}/cloture
+    defaults: { _controller: SejourBundle:Default:ClotureSoins}
+sejour_activite_edit:
+    path:   /sejour/{id}/activite/{idActi}/edit
+    defaults: { _controller: SejourBundle:Default:editActiviteSejour }
+sejour_add_activite:
+    path:   /sejour/{id}/activite/add
+    defaults: { _controller: SejourBundle:Default:AjouterFichesActiSejour }
+sejour_suppr_activite:
+    path:   /sejour/{id}/suppr/{idActi}
+    defaults: { _controller: SejourBundle:Default:SupprFichesActiSejour }
+table_acti_sejour:
+    path:   /json/sejour/{id}/activite/datatable
+    defaults: { _controller: SejourBundle:Default:tableActi }
+derecrute:
+    path:   /sejour/derecrute/{id}
+    defaults: { _controller: SejourBundle:Default:derecrute }
+table_enfants:
+    path:   /json/sejour/{id}/datatable
+    defaults: { _controller: SejourBundle:Default:tableEnfants }
+listing_toPdf:
+    path:   /sejour/{idSej}/trombi/simple
+    defaults:  { _controller: SejourBundle:Default:ListingtoPdf }
+listingComplet_toPdf:
+    path:   /sejour/{idSej}/trombi/complet
+    defaults:  { _controller: SejourBundle:Default:ListingCompletToPdf }
+listingRegimes_toPdf:
+    path:   /sejour/{idSej}/trombi/regimes
+    defaults:  { _controller: SejourBundle:Default:ListingRegimeToPdf }
+sejour_supprimer:
+    path:   /sejour/supprimer/{id}
+    defaults: { _controller: SejourBundle:Default:SupprimerSejour }
+enfant_edit:
+    path:   /enfant/edit/{id}
+    defaults: { _controller: SejourBundle:Default:editEnfant }
+enfant_probleme_list:
+    path:   /sejour/enfant/{id}
+    defaults: { _controller: SejourBundle:Default:problemeEnfant }
+enfant_check_probleme:
+    path:   /enfant/{id}/check
+    defaults: { _controller: SejourBundle:Default:problemeEnfantCheck }
+enfant_supprimer:
+    path:   /enfant/supprimer/{id}
+    defaults: { _controller: SejourBundle:Default:supprimerEnfant }
+enfant_planning_enfant:
+    path:   /enfant/{id}/planning
+    defaults: { _controller: SejourBundle:Default:PlanningEnfant }
+activite_indexactivite:
+    path: /activite/
+    defaults: { _controller: SejourBundle:Default:activite }
+activite_creer:
+    path:   /activite/creer
+    defaults: { _controller: SejourBundle:Default:creerActivite }
+jour_indexjour:
+    path:   /jour/{id}
+    defaults: { _controller: SejourBundle:Default:jour }
+jour_addevent:
+    path:   /jour/{id}/add
+    defaults: { _controller: SejourBundle:Default:jourAddEvent }
+jour_dellevent:
+    path:   /jour/{id}/dell
+    defaults: { _controller: SejourBundle:Default:jourDellEvent }
+jour_editevent:
+    path:   /evenement/{id}/edit
+    defaults: { _controller: SejourBundle:Default:jourEditEvent }
+jour_affecterenfant:
+    path:   /jour/{idJour}/affecter/{idEnfant}
+    defaults: { _controller: SejourBundle:Default:jourAffecterEnfant }
+jour_modifenfant:
+    path:   /jour/{idJour}/modifier/{idEnfant}
+    defaults: { _controller: SejourBundle:Default:jourModifierEnfant }
+evenement_toPdf:
+    path:   /{idEv}/pdf
+    defaults:  { _controller: SejourBundle:Default:EvenementtoPdf }

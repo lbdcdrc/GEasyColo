@@ -1,0 +1,51 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+	  <center>
+	  <h1> Gestion des Activités  </h1>
+		{% for flashMessage in app.session.flashbag.get('notice') %}
+			<div class="alert alert-info">
+				{{ flashMessage }}
+			</div>
+		{% endfor %}
+	  </center>
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+
+
+
+<div class="container">
+  <h2>Liste des Activités <a href="{{ path('activite_creer') }}" class="btn btn-info" role="button"><span class="glyphicon glyphicon-plus"</span></a> </h2>         
+  <table class="table table-striped">
+    <thead>
+      <tr>
+		<th>Id</th>
+        <th>Nom</th>
+		<th>Description</th>
+		<th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+	{% for activite in listeActivite %}
+		<tr>
+		<td>{{ activite.id }}</td>
+		<td>{{ activite.Nom }}</td>
+		<td>{{ activite.Description }}</td>
+		<td>
+		</td>
+		</tr>
+	{% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,20 @@
+{# app/Resources/views/Emails/registration.html.twig #}
+<h3>Bienvenue {{ anim.prenom }}</h3>
+
+{{ anim.prenom }}, tu viens d'être recruté sur le séjour suivant : {{ sejour.nomThema }}. </br>
+
+Le séjour commencera le {{ sejour.DateDebut|date('d/m/Y') }} et se terminera le {{ sejour.DateFin|date('d/m/Y') }}. </br>
+
+Tu as été recruté en tant qu'{% if role == 1 %} animateur {% elseif role == 2 %} assistant sanitaire {% else %} adjoint {% endif %}. </br>
+
+La préparation de ce séjour à déjà commencé ! N'hésite pas à te lancer ! 
+
+Voici également les coordonnées de ton directeur : </br>
+
+{{ sejour.Directeur.prenom }} {{ sejour.Directeur.nom }} </br>
+{{ sejour.Directeur.email }} </br>
+{{ sejour.Directeur.telephone }} </br>
+</br>
+Bonne préparation ! </br>
+
+Ps. Ceci est un mail automatique, en cas de problème, contacte le directeur du séjour !

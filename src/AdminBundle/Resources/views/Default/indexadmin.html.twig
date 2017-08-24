@@ -1,0 +1,28 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - Administration
+{% endblock title %}
+{% block header %}
+Espace d'<p id="logo">Administration</p>
+{% endblock header %}
+{% block body %}
+<div id="main-wrapper">
+	<div id="main" class="container">
+		<div class="row 200%">
+			<div class="12u">
+				<section class="box highlight">
+					<ul class="special">
+						<li><a href="{{ path('user_list') }}" class="icon fa fa-users"><span class="label">Utilisateurs</span></a></li>
+						<li><a href="#" class="icon fa-cog"><span class="label">Application</span></a></li>
+					</ul>
+					<header>
+						<h2>Administrer l'application</h2>
+					</header>
+				</section>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock body %}
+
+

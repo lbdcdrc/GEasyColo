@@ -1,0 +1,23 @@
+{% extends "::base.html.twig" %}
+{% block title %}
+EasyColo V2 - #Erreur ! 
+{% endblock title %}
+{% block header %}
+Oh... <p id="logo">Mince !</p>
+{% endblock header %}
+{% block body %}
+<br>
+<center>
+<img src="/ane.jpg" alt="ane" style="width:150px">
+</center>
+
+  <center><strong><h3>Erreur inconnue !</h3></strong> 
+  <br/>
+  <h4>Voilà ce qu'il se passe quand on laisse un âne coder une application... : Une Erreur !
+	  <br/>Pour info, le serveur il dit :
+	  <br/>
+	  "{{ status_text }}"</h4>
+  </center>
+
+  
+{% endblock body %}

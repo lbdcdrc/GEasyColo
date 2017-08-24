@@ -1,0 +1,40 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+
+
+<script src="https://use.typekit.net/ayg4pcz.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<head>
+<title> Demande de nouveau mot de passe </title>
+</head>
+<body>
+<div class="container">
+<center>
+<h1 class="welcome text-center">Merci de compléter le formulaire suivant</h1>
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+</center>
+	<div class="card card-container">
+	<h2 class='login_title text-center'>Mot de passe oublié !</h2>
+	<hr>
+
+<center>
+<form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+    <div>
+        <label for="username">{{ 'resetting.request.username'|trans }}</label>
+        <input type="text" id="username" name="username" required="required" class="login_box"  />
+    </div>
+    <div>
+        <input  class="btn btn-lg btn-primary" type="submit" value="{{ 'resetting.request.submit'|trans }}" />
+    </div>
+</form>
+</center>
+			
+	</div><!-- /card-container -->
+</div><!-- /container -->
+</body>

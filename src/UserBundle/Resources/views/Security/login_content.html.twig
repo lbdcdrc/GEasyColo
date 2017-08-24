@@ -1,0 +1,53 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+
+
+<script src="https://use.typekit.net/ayg4pcz.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<head>
+<title> Connexion à EasyColo </title>
+</head>
+<body>
+<div class="container">
+<center>
+<h1 class="welcome text-center">Bienvenue sur <br> EasyColo</h1>
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+	  <center>
+	    {% if error %}
+			<div class="alert alert-warning">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
+	  </center>
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+</center>
+	<div class="card card-container">
+	<h2 class='login_title text-center'>Login</h2>
+	<hr>
+
+		<form class="form-signin" action="{{ path("fos_user_security_check") }}" method="post">
+			{% if csrf_token %}
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+			{% endif %}
+			<span id="reauth-email" class="reauth-email"></span>
+			<p class="input_title">Nom d'utilisateur</p>
+			<input type="text" id="username"  name="_username" class="login_box" placeholder="JeSuisUneTruite" required autofocus>
+			<p class="input_title">Mot de passe</p>
+			<input type="password" id="password" name="_password" class="login_box" placeholder="******" required>
+			<div id="remember" class="checkbox">
+				<label>
+					
+				</label>
+			    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+			</div>
+			<button class="btn btn-lg btn-primary" type="submit">Connexion</button>
+		</form><!-- /form -->
+		<center><a href="{{ path("fos_user_resetting_request") }}">Mot de passe oublié</a> - 
+		<a href="{{ path("fos_user_registration_register") }}">Créer un compte</a></center>
+	</div><!-- /card-container -->
+</div><!-- /container -->
+</body>

@@ -1,0 +1,101 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block forum %}class="current"{% endblock forum %}
+{% block titre %}Forum : {{ Categorie.nom }} {% endblock titre %}
+{% block soustitre %} <a href="{{ path('abonnement_forum', { 'id': Sejour.id, 'forum' : Categorie.id }) }}" class="button">{% if notif == false %}S'abonner aux notifications{% else %} Se désabonner des notifications {% endif %} </a> {% endblock soustitre %}
+						
+{% block style %}
+<style>
+
+tr:nth-child(even) {background-color: #f2f2f2}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+</style>
+<style>
+.pagination {
+    display: inline-block;
+    list-style-type: none;
+}
+
+.pagination li {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    font-size: 1em;
+font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.pagination li.active {
+    background-color: #ABCADD;
+    color: white;
+    border: 1px solid #ABCADD;
+}
+
+.pagination li {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.pagination a {
+    color: #000;
+    text-decoration: none;
+}
+
+.pagination li:hover a {
+    color: #FFF;
+    text-decoration: none;
+}
+.pagination li:hover:not(.active):not(.disabled) {background-color: #ddd;}
+.forumtable td p {
+    text-align: left;
+}
+</style>
+{% endblock style %}
+
+{% block coeur %}
+	<h3> Messages </h3>
+	<table class="forumtable" style="width:100%">
+	<thead>
+		<th scope='col' style="width:15%"> Auteur</th>
+		<th scope='col' style="width:85%"> Message </th>
+	</thead>
+	{% for messages in Messages %}
+	<tr>
+		<td date-label="Auteur">{{ messages.user.PN }} </br>  
+		{% if messages.user.image %}
+		<img src="{{ messages.user.image.webPath| imagine_filter('md_thumb') }}" style="border-radius:10%;" width="100" alt="{{ messages.user.nom}}.jpg" />
+		{% else %}
+		<img src="/anonyme.jpg" style="border-radius:10%;" width="100" alt="Anonyme" />
+		{% endif %}
+		</br>{{ messages.DateCreation|date('d/m/Y à H:i:s') }}		</td>
+		<td data-label="Message"><i>{{ Categorie.nom }}</i></br>{{ messages.Message|raw }}</td>
+
+	</tr>
+	{% endfor %}
+	
+	
+	</table>
+
+<div class="navigation">
+   <center> {{ knp_pagination_render(Messages) }} </center>
+</div>
+{% if Messages.currentPageNumber >= Messages.getPaginationData.endPage %}
+	{{form(form)}}	
+{% endif %}	
+{% endblock %}
+
+
+
+
+
+
+
+{% block javascripts %}
+{% endblock javascripts %}

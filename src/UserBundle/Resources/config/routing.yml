@@ -1,0 +1,3 @@
+edit_picture:
+    path:     /profile/picture
+    defaults: { _controller: UserBundle:Default:photo }

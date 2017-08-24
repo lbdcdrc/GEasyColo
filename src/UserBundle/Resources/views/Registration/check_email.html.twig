@@ -1,0 +1,36 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+
+		{% block fos_user_content %}
+<script src="https://use.typekit.net/ayg4pcz.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+<head>
+<title> Inscription à EasyColo </title>
+</head>
+<body>
+<div class="container">
+<center>
+<h1 class="welcome text-center">Inscription Enregistrée</h1>
+ <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4"></div>
+</div> 
+</center>
+	<div class="card card-container">
+	<h2 class='login_title text-center'>Encore une étape...</h2>
+	<hr>
+
+
+			<p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
+
+
+			
+	</div><!-- /card-container -->
+</div><!-- /container -->
+</body>
+		{% endblock fos_user_content %}

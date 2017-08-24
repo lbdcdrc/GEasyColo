@@ -1,0 +1,73 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block enfants %} class="current" {%endblock%}
+
+{% block titre %}Listing enfants {% endblock titre %}
+
+{% block coeur %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.9/datatables.min.css"/>
+    {{ datatable_html({
+            'id' : 'dta-offres',
+        })
+    }}
+	{% if is_granted('ROLE_ADJOINT') %}
+
+	<button id="myBtnModal" class="openmodal">Ajouter un enfant</button>
+															<div id="AjoutEnfant" class="modal">
+
+															  <!-- Modal content -->
+															  <div class="modal-content">
+																<div class="modal-header">
+																	<span class="close" id="closeModal" >&times;</span>
+																  <center><h2>Ajout d'un enfant :</h2></center>
+																</div>
+																<center>
+																<div style="width:80%;">
+																{{ form(form) }}
+																</br>
+																</div>
+																</center>
+																<div class="modal-footer">
+																</div>
+															  </div>
+															    
+
+															</div>
+
+															<script>
+															// Get the modal
+															var modalModal = document.getElementById('AjoutEnfant');
+
+															// Get the button that opens the modal
+															var btnModal = document.getElementById("myBtnModal");
+
+															// Get the <span> element that closes the modal
+															var spanModal = document.getElementById("closeModal");
+
+															// When the user clicks the button, open the modal 
+															btnModal.onclick = function() {
+																modalModal.style.display = "block";
+															}
+
+															// When the user clicks on <span> (x), close the modal
+															spanModal.onclick = function() {
+																modalModal.style.display = "none";
+															}
+															</script>
+{% endif %}
+															
+{% endblock %}
+
+
+
+{% block javascripts %}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+{{ datatable_js({
+        'id' : 'dta-offres',
+        'js' : {
+            'dom': '<"clearfix"lf>rtip',
+            'ajax': path('table_enfants', { 'id': Sejour.id }),
+        }
+    })
+}}
+{% endblock javascripts %}

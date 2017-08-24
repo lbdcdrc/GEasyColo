@@ -1,0 +1,24 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+
+<center>
+<h2> Ajout d'une activité le {{ jour.date|date('d/m/Y') }}</h2>
+	  <h4> Séjour {{ jour.sejour.NomThema }} </h4>
+	  <h4> Du {{ jour.sejour.DateDebut|date('d/m/Y') }} au {{ jour.sejour.DateFin|date('d/m/Y') }} </h4>
+ <div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">{{ form(form) }}</div>
+  <div class="col-sm-2"></div>
+</div> 
+</center>
+
+<center>
+<a href="{{ path('jour_indexjour', { 'id': jour.id }) }}" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+</center>
+
+{% endblock %}
+
+
+

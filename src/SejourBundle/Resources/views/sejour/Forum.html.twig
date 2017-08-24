@@ -1,0 +1,95 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block forum %}class="current"{% endblock forum %}
+{% block titre %}Forum ! {% endblock titre %}
+{% block style %}
+<style>
+
+tr:nth-child(even) {background-color: #f2f2f2}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+</style>
+{% endblock style %}
+
+{% block coeur %}
+	<h3> Liste des discussions en cours : </h3>
+	
+	<table style="width:100%">
+	<thead>
+		<th scope='col' style="width:5%"> Abonné </th>
+		<th scope='col' style="width:5%"> État </th>
+		<th scope='col' style="width:55%"> Sujet </th>
+		<th scope='col' style="width:5%"> Réponses </th>
+		<th scope='col' style="width:15%"> Auteur </th>
+		<th scope='col' style="width:5%"> Vues </th>
+		<th scope='col' style="width:15%"> Dernier Messages </th>
+	</thead>
+	{% for cate in Categorie %}
+	<tr>
+		<td data-label="Abonné"> <i class="fa {% if cate.notif == true %}fa-check-square-o{% else %}fa-times{% endif %} fa-3x" aria-hidden="true" ></i> 
+		<td data-label="État" ><i class="fa fa-comment-o fa-3x" aria-hidden="true" {% if cate.vu == false %}  style="color:#f49b42;" {% endif %}></i></td>  
+		<td data-label="Sujet" ><a href="{{ path('sejour_discussion', { 'id': Sejour.id, 'idForum' : cate.categorie.id, 'page':cate.page }) }}">{{ cate.categorie.nom }}</a></td>
+		<td data-label="Réponses"> {{ cate.categorie.reponses }} </td>
+		<td data-label="Auteur"> {{ cate.categorie.createur.PN }} </td>
+		<td data-label="Vues"> {{ cate.categorie.vues }} </td>
+		<td data-label="Dernier Message"> {% if cate.categorie.dernierMessage %} {{ cate.categorie.dernierMessage.DateCreation|date('d/m/Y à H:i:s') }} </br> {{ cate.categorie.dernierMessage.user.PN }} {% else %} Pas de message {% endif %}</td>
+	</tr>
+	{% endfor %}
+	
+	
+	
+	</table>
+	
+	<button id="myBtnModal" class="openmodal">Créer une discussion</button>
+															<div id="AjoutEnfant" class="modal">
+
+															  <!-- Modal content -->
+															  <div class="modal-content">
+																<div class="modal-header">
+																	<span class="close" id="closeModal" >&times;</span>
+																  <center><h2>Création d'une discussion</h2></center>
+																</div>
+																<center>
+																<div style="width:80%;">
+																{{ form(form) }}
+																</br>
+																</div>
+																</center>
+																<div class="modal-footer">
+																</div>
+															  </div>
+															    
+
+															</div>
+
+															<script>
+															// Get the modal
+															var modalModal = document.getElementById('AjoutEnfant');
+
+															// Get the button that opens the modal
+															var btnModal = document.getElementById("myBtnModal");
+
+															// Get the <span> element that closes the modal
+															var spanModal = document.getElementById("closeModal");
+
+															// When the user clicks the button, open the modal 
+															btnModal.onclick = function() {
+																modalModal.style.display = "block";
+															}
+
+															// When the user clicks on <span> (x), close the modal
+															spanModal.onclick = function() {
+																modalModal.style.display = "none";
+															}
+															</script>									
+{% endblock %}
+
+
+
+
+
+
+
+{% block javascripts %}
+{% endblock javascripts %}
