@@ -10,6 +10,9 @@ namespace SejourBundle\Repository;
  */
 class TraitementJourRepository extends \Doctrine\ORM\EntityRepository
 {
+	/**
+	* Récupération des traitement/jour/séjour.
+	*/
 	function traitementsejour($id, $jour)
     {
         $query = 	$this->createQueryBuilder('p')
