@@ -16,7 +16,7 @@ class ForumMessageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('message', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ton message :'))
+        $builder->add('message', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ton message :', 'config_name'=>'bbcode'))
 				->add('Poster la reponse !',      SubmitType::class);
     }
     

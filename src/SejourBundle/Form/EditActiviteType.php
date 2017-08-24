@@ -23,7 +23,7 @@ class EditActiviteType extends AbstractType
 														'expanded' => false,
 														'label' => 'Catégorie d\'activité'
 														))
-				->add('description', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Description du déroulement'))
+				->add('description', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Description du déroulement', 'config_name'=>'bbcode'))
 				->add('materiel', null, array('label'=>'Matéreil necessaire'))
 				->add('nbEnfantMin', null, array('label'=>'Nombre d\'enfants minimum'))
 				->add('nbEnfantMax', null, array('label'=>'Nombre d\'enfants maximum'))
