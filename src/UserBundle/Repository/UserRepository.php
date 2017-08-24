@@ -12,7 +12,6 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 {
 	public function animRecrute($id)
 	{
-		//$query = $this->_em->createQuery('SELECT * FROM UserBundle\Entity\User u WHERE NOT EXISTS (SELECT user_id FROM SejourBundle\Entity\AnimSejour a WHERE sejour_id=4 and a.user_id=u.id)');
 		$qb = $this->createQueryBuilder('j')
 		->select('j.id', 'j.nom', 'j.prenom');
 
@@ -21,9 +20,6 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 		$sub->from("SejourBundle\Entity\AnimSejour","u");
 		$sub->andWhere('u.user = j.id');
 		$sub->andWhere('u.sejour = :sejour_id');
-
-
-		// Your query builder:
 		$qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
 		$qb->setParameter('sejour_id', $id)->orderBy('j.prenom', 'ASC');
 		$results = $qb->getQuery()->getResult(); // 
