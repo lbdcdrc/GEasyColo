@@ -1,5 +1,6 @@
 {
     "name": "root/telligo",
+	"description": "Gestion de l'organisation d'un séjour de vacances",
     "license": "proprietary",
     "type": "project",
     "autoload": {
