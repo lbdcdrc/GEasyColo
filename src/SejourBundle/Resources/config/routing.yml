@@ -44,8 +44,11 @@ sejour_soins:
     path:   /sejour/{id}/soins/{jour}
     defaults: { _controller: SejourBundle:Default:RegistreSoins, jour:null }
 sejour_traitement:
-    path:   /sejour/{id}/traitement
-    defaults: { _controller: SejourBundle:Default:Traitement }
+    path:   /sejour/{id}/traitement/{jour}
+    defaults: { _controller: SejourBundle:Default:Traitement, jour:null }
+sejour_traitement_check:
+    path:   /sejour/{id}/traitement/check/{jour}/{traitement}/{moment}
+    defaults: { _controller: SejourBundle:Default:CheckTraitement }    
 sejour_soins_cloture:
     path:   /sejour/{id}/soins/{jour}/cloture
     defaults: { _controller: SejourBundle:Default:ClotureSoins}

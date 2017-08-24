@@ -6,36 +6,108 @@
 
 
 {% block coeur %}
+<style>
 
-<table>
+tr:nth-child(even) {background-color: #f2f2f2}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+</style>
+
+
+<center>
+<table class="Matable" border="1px">
 	<tr>
-		<th colspan="2"> / </th>
-		{% for jour in ListeJour %}
-			<th colspan="5"> {{ jour.date|date('d/m') }} </th>
-		{% endfor %}
+		<th> Aller au jour :  </th>
+		<th>
+		<form>
+			<select id="select-id" name="someoptions">
+				<option value="{{ path('sejour_traitement', { 'id': Sejour.id, 'jour' : Jour.id }) }}" style="color:red;">{{ Jour.date | localizeddate('full', 'none') }}</option>
+				{% for jour in ListeJour %}
+					{% if jour.id != Jour.id %}
+					<option value="{{ path('sejour_traitement', { 'id': Sejour.id, 'jour' : jour.id }) }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+		</form>
+		</th>
+		<th colspan="5"> {{ Jour.date|date('d/m') }} </th>
+
 	</tr>
 	<tr>
-		<td> Enfant </td>
-		<td> Traitement </td>
-		{% for jour in ListeJour %}
-			<td> Matin </td>
-			<td> Midi </td>
-			<td> Soir </td>
-			<td> Couché </td>
-			<td> Autre </td>
-		{% endfor %}
+		<th> Enfant </th>
+		<th> Traitement </th>
+		<th> Matin </th>
+		<th> Midi </th>
+		<th> Soir </th>
+		<th> Couché </th>
+		<th> Autre </th>
 	</tr>
+	{% for traitement in ListeTraitement %}
 	<tr>
-		{% for traitement in ListeTraitement %}
-			<td> {{ traitement.enfant.prenomnom }} </td>
-			<td> Midi </td>
-			<td> Soir </td>
-			<td> Couché </td>
-			<td> Autre </td>
-		{% endfor %}
-	</tr>
+			<td> {{traitement.Traitement.enfant.prenom }} {{traitement.Traitement.enfant.nom }} </td>
+			<td> {{traitement.Traitement.traitement }} </td>
+			<td width="10%"> 	{% if traitement.Traitement.Matin %}
+						{% if traitement.MatinCheck %}
+							<i class="fa fa-check" aria-hidden="true"></i>
+						{% else %}
+							<input id="checkBoxMatin{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.MatinPosologie }}" title="{{ traitement.Traitement.MatinPosologie }}"  onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 1 }) }}">
+						{% endif %}
+					{% else %}
+						<i class="fa fa-times" aria-hidden="true"></i>
+					{% endif %}
+			</td>
+			<td width="10%"> 	{% if traitement.Traitement.Midi %}
+						{% if traitement.MidiCheck %}
+							<i class="fa fa-check" aria-hidden="true"></i>
+						{% else %}
+							<input id="checkBoxMidi{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.MidiPosologie }}" title="{{ traitement.Traitement.MidiPosologie }}" onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 2 }) }}">
+						{% endif %}
+					{% else %}
+						<i class="fa fa-times" aria-hidden="true"></i>
+					{% endif %}
+			</td>
+			<td width="10%"> 	{% if traitement.Traitement.Soir %}
+						{% if traitement.SoirCheck %}
+							<i class="fa fa-check" aria-hidden="true"></i>
+						{% else %}
+							<input id="checkBoxSoir{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.SoirPosologie }}" title="{{ traitement.Traitement.SoirPosologie }}" onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 3 }) }}">
+						{% endif %}
+					{% else %}
+						<i class="fa fa-times" aria-hidden="true"></i>
+					{% endif %}
+			</td>
+			<td width="10%"> 	{% if traitement.Traitement.Couche %}
+						{% if traitement.CoucheCheck %}
+							<i class="fa fa-check" aria-hidden="true"></i>
+						{% else %}
+							<input id="checkBoxCouche{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.CouchePosologie }}" title="{{ traitement.Traitement.CouchePosologie }}" onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 4 }) }}">
+						{% endif %}
+					{% else %}
+						<i class="fa fa-times" aria-hidden="true"></i>
+					{% endif %}
+			</td>
+			<td width="10%"> 	{% if traitement.Traitement.Autre %}
+						{% if traitement.AutreCheck %}
+							<i class="fa fa-check" aria-hidden="true"></i>
+						{% else %}
+							<input id="checkBoxAutre{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.AutrePosologie }}" title="{{ traitement.Traitement.AutrePosologie }}" onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 5 }) }}">
+						{% endif %}
+					{% else %}
+						<i class="fa fa-times" aria-hidden="true"></i>
+					{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
 
 </table>
+</center>
+
+<br>
+<hr>
+<br>
 
 <form id="formulaire" method="post">
 	<input type="hidden" name="nbligne" id="nbligne" value="1">
@@ -82,7 +154,7 @@
 					<input id="matin" type="checkbox" name="matin" onclick="updateTemp(this.id);"/>
 				</td>
 				<td width="20%">
-					<label for="midi" id="midil" name="midilabel"">Midi</label>
+					<label for="midi" id="midil" name="midilabel">Midi</label>
 					<input id="midi" type="checkbox" name="midi" onclick="updateTemp(this.id);"/>
 				</td>
 				<td width="20%">
@@ -126,12 +198,12 @@
 		</table>
 	</div>
 	<div id="formAdd"> </div>
-	<INPUT TYPE="submit" NAME="nom" VALUE=" Envoyer ">
+	<INPUT TYPE="submit" NAME="nom" VALUE=" Enregistrer les traitements ">
 </form>
-
+<br>
 <button type="submit" onclick="clone()">Ajout Ligne</button>
 <button type="submit" onclick="remove()" id="removebtn" disabled>Enlever Ligne</button>
-<button type="submit" form="formulaire" value="Submit">Submit</button>
+
 
 
 <script>
@@ -235,7 +307,7 @@ document.getElementById("removebtn").disabled = true;
 function validation(){
 var elms = document.getElementsByTagName("select")
 var error = false;
-for (var i = 0; i < elms.length; i+=3) {
+for (var i = 1; i < elms.length; i+=3) {
 	if(parseInt(elms[i+2].value) < parseInt(elms[i+1].value))
 	{
 		elms[i+2].setCustomValidity("La date de fin ne peut être inferieure à la date de début !");
@@ -248,7 +320,32 @@ for (var i = 0; i < elms.length; i+=3) {
 
 }
 }
-</script>
 
+function check(id, Moment, idTraitement)
+{
+var cb = document.getElementById(id)
+	if (cb.checked) 
+		{
+			if(confirm("Ce traitement a t'il bien été donné ?"))
+				{
+					window.location.href = cb.name;
+				}
+			else
+				{
+					cb.checked = false;
+				}	
+		}
+	else{
+			return false;
+		}
+}
+</script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script> 
+$('#select-id').change(function() {
+   url = $('#select-id').val();
+   window.location.href = url;
+});
+</script>	
 {% endblock %}
 

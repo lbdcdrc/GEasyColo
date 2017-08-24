@@ -193,7 +193,9 @@ class DefaultController extends Controller
 					->setJour($Jour)
 					->setMoment($MomentTravail);
 		$em->persist($LigneConges);
-	
+		$em->flush();	
+
+
 		for($i = 1; $i < $Days+1; $i += 1)
 		{
 			$NewDate = $DateTravail->modify('+1 day');
@@ -201,15 +203,16 @@ class DefaultController extends Controller
 			$Jour->setDate($NewDate);
 			$Jour->setSejour($sejour);		
 			$em->persist($Jour);
+			$em->flush();
 			$LigneConges=new AnimConges();
 			$LigneConges->setUser($this->getUser())
 						->setJour($Jour)
 						->setMoment($MomentTravail);
-			$em->persist($LigneConges);	
+			$em->persist($LigneConges);
+			$em->flush();	
 
 		}
 		
-		$em->flush();
 		$request->getSession()->getFlashBag()->add('notice', 'Le séjour a bien été créé.');
 
 		return $this->redirectToRoute('sejour_indexsejour');
@@ -245,10 +248,13 @@ class DefaultController extends Controller
 	foreach($listJours as $Jours)
 	{
 		$em->remove($Jours);
+		$em->flush();
 	}
+	
 	
 	$em->remove($sejour);
 	$em->flush();
+	
 	
 	$request->getSession()->getFlashBag()->add('notice', 'Le séjour a été supprimé.');
 	return $this->redirectToRoute('sejour_indexsejour');
@@ -611,6 +617,7 @@ class DefaultController extends Controller
 						->setNotifie(false);
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($NewDernier);
+			$em->flush();
 			$ListeCategorieAvecVues[]= array(
 										'categorie' => $Cate,
 										'vu' => false,
@@ -665,7 +672,6 @@ class DefaultController extends Controller
 		}
 		
 	}
-	$em->flush();
 	
 	$Categorie = new ForumCategorie();
 	$Categorie->setSejour($Sejour);
@@ -758,10 +764,10 @@ class DefaultController extends Controller
 
 						$this->get('mailer')->send($message);
 						$Utilisateur->setNotifie(true);
+						$em->flush();
 						}
 					}
 				}
-				$em->flush();
 				
 				$Page=ceil($Categorie->getReponses()/10);
 				$request->getSession()->getFlashBag()->add('notice', 'La réponse a été postée !');
@@ -958,9 +964,11 @@ class DefaultController extends Controller
 			$LigneConges->setUser($AnimEnCours)
 						->setJour($j)
 						->setMoment($MomentTravail);
-			$em->persist($LigneConges);		
-			}
+			$em->persist($LigneConges);
 			$em->flush();
+			
+			}
+			
 			
 			$request->getSession()->getFlashBag()->add('notice', 'L\'animateur a été recruté !');
 
@@ -1003,8 +1011,11 @@ class DefaultController extends Controller
 		$listeJour = $repository5->findBy(array('user'=>$Anim));
 		
 		foreach($listeJour as $j){
-		$em->remove($j);	
+		$em->remove($j);
+		$em->flush();
+		
 		}
+		
 		$em->flush();
 		return $this->redirectToRoute('sejour_equipe', array('id' => $Sejour->getId()));
 	}
@@ -1949,16 +1960,20 @@ class DefaultController extends Controller
 					$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()));
 					$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
 					$Travail=$data[$NomForm];
-					$CongesAnim -> setMoment($Travail);	
+					$CongesAnim -> setMoment($Travail);
+					$em->flush();
+					
 				}
 			}
 			foreach($listeJour as $Jour){
 				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()));
 				$NomForm="A".$Directeur->getId()."J".$Jour->getId();
 				$Travail=$data[$NomForm];
-				$CongesAnim -> setMoment($Travail);	
+				$CongesAnim -> setMoment($Travail);
+				$em->flush();
+				
 			}
-			$em->flush();
+			
 			$request->getSession()->getFlashBag()->add('notice', 'Les modifications ont étés enregistrées');
 			return $this->redirectToRoute('sejour_planning_conges', array('id' => $Sejour->getId()));	
 			
@@ -2048,7 +2063,7 @@ class DefaultController extends Controller
 		$em->flush();
 		return $this->redirectToRoute('sejour_soins', array('id' => $id, 'jour'=>$jour));
 	}
-	public function TraitementAction($id, Request $request){
+	public function TraitementAction($id, $jour, Request $request){
 		// Verification des droits
 		// Seul le Directeur et les admins ont accès à cette page
 		$this->AllowedUser($id);
@@ -2076,15 +2091,16 @@ class DefaultController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:TraitementJour');	
 		
-		$ListeTraitements = $repository4->traitementsejour($id);
-		$ListeTraitementsJour = array();
 		
-		foreach($ListeTraitements as $Traitement)
+		if($jour == null)
 		{
-		
-		$ListeTraitementsJour[$Traitement['Traitement']['id']] = $Traitement;
+			$JourEnCours = current($ListeJour);
 		}
-
+		else
+		{
+			$JourEnCours = $repository3->findOneById($jour);
+		}
+		$ListeTraitements = $repository4->traitementsejour($id, $JourEnCours->getId());
 		
 		if ($request->isMethod('POST')) {
 			$data = $request->request->all();
@@ -2177,7 +2193,7 @@ class DefaultController extends Controller
 			$NbJours = date_diff($DateDebut, $DateFin);
 			$Days=$NbJours->format("%a");		
 			$DateTravail = $DateDebut;
-			$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail));
+			$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail, 'sejour'=>$Sejour->getId()));
 			$TraitementJour = new TraitementJour();
 			$TraitementJour->setJour($JourTravail);
 			$TraitementJour->setTraitement($Traitement);
@@ -2194,7 +2210,7 @@ class DefaultController extends Controller
 			for($i = 1; $i < $Days+1; $i += 1)
 			{
 				$NewDate = $DateTravail->modify('+1 day');
-				$JourTravail = $repository3->findOneBy(array('date'=>$NewDate));
+				$JourTravail = $repository3->findOneBy(array('date'=>$NewDate, 'sejour'=>$Sejour->getId()));
 				$TraitementJour = new TraitementJour();
 				$TraitementJour->setJour($JourTravail);
 				$TraitementJour->setTraitement($Traitement);
@@ -2203,9 +2219,9 @@ class DefaultController extends Controller
 				$TraitementJour->setSoirCheck(false);
 				$TraitementJour->setCoucheCheck(false);
 				$TraitementJour->setAutreCheck(false);
-				$em->persist($TraitementJour);			
+				$em->persist($TraitementJour);
+				$em->flush();			
 			}
-			$em->flush();
 			if($NbLigne>1)
 			{
 				for($j = 1; $j < $NbLigne; $j += 1)
@@ -2283,9 +2299,8 @@ class DefaultController extends Controller
 					$Traitement->setEnfant($Enfant);
 					
 					$em = $this->getDoctrine()->getManager();
-					$em->persist($Traitement);		
-					echo($j.'datedebut');
-					echo($data[$j.'datedebut']);
+					$em->persist($Traitement);
+					$em->flush();		
 					$JourDebut=$data[$j.'datedebut'];
 					$JourFin=$data[$j.'datefin'];
 					
@@ -2297,7 +2312,7 @@ class DefaultController extends Controller
 					$NbJours = date_diff($DateDebut, $DateFin);
 					$Days=$NbJours->format("%a");		
 					$DateTravail = $DateDebut;
-					$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail));
+					$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail, 'sejour'=>$Sejour->getId()));
 					$TraitementJour = new TraitementJour();
 					$TraitementJour->setJour($JourTravail);
 					$TraitementJour->setTraitement($Traitement);
@@ -2309,11 +2324,12 @@ class DefaultController extends Controller
 					$TraitementJour->setAutreCheck(false);
 					
 					$em->persist($TraitementJour);
+					$em->flush();
 					
 					for($i = 1; $i < $Days+1; $i += 1)
 					{
 						$NewDate = $DateTravail->modify('+1 day');
-						$JourTravail = $repository3->findOneBy(array('date'=>$NewDate));
+						$JourTravail = $repository3->findOneBy(array('date'=>$NewDate, 'sejour'=>$Sejour->getId()));
 						$TraitementJour = new TraitementJour();
 						$TraitementJour->setJour($JourTravail);
 						$TraitementJour->setTraitement($Traitement);
@@ -2322,18 +2338,64 @@ class DefaultController extends Controller
 						$TraitementJour->setSoirCheck(false);
 						$TraitementJour->setCoucheCheck(false);
 						$TraitementJour->setAutreCheck(false);
-						$em->persist($TraitementJour);			
+						$em->persist($TraitementJour);
+						$em->flush();			
 					}
 	
 				}
 
 			}
-			$em->flush();
 			$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');
 			return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour));
 		}
 		
-		return $this->render('SejourBundle:Soins:Traitement.html.twig', array('Sejour'=>$Sejour,'ListeEnfant' => $ListeEnfant, 'ListeJour' => $ListeJour, 'ListeTraitement' => $ListeTraitementsJour));
+		return $this->render('SejourBundle:Soins:Traitement.html.twig', array('Sejour'=>$Sejour,'ListeEnfant' => $ListeEnfant, 'ListeJour' => $ListeJour,'Jour'=>$JourEnCours, 'ListeTraitement' => $ListeTraitements));
+	}
+	public function CheckTraitementAction($id, $jour, $traitement, $moment){
+
+	$repository = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:Sejour');
+	$Sejour = $repository->findOneById($id);
+
+	$repository3 = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:Jour');
+	$Jour = $repository3->findOneById($jour);
+	$repository4 = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:TraitementJour');
+	$Traitement = $repository4->findOneById($traitement);	
+	
+	if( $moment ==1 )
+	{
+		$Traitement->setMatinCheck(true);
+		$Traitement->setMatinDateCheck( new \DateTime('now'));
+	}
+	elseif ( $moment ==2 )
+	{
+		$Traitement->setMidiCheck(true);
+		$Traitement->setMidiDateCheck( new \DateTime('now'));		
+	}
+	elseif ( $moment ==3 )
+	{
+		$Traitement->setSoirCheck(true);
+		$Traitement->setSoirDateCheck( new \DateTime('now'));		
+	}
+	elseif ( $moment ==4 )
+	{
+		$Traitement->setCoucheCheck(true);
+		$Traitement->setCoucheDateCheck( new \DateTime('now'));		
+	}
+	elseif ( $moment ==5 )
+	{
+		$Traitement->setAutreCheck(true);
+		$Traitement->setAutreDateCheck( new \DateTime('now'));		
+	}
+
+	$em = $this->getDoctrine()->getManager();	
+	$em->flush();
+	return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour, 'jour' =>$Jour->getId()));
 	}
 }
 

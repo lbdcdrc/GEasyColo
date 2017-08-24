@@ -10,18 +10,20 @@ namespace SejourBundle\Repository;
  */
 class TraitementJourRepository extends \Doctrine\ORM\EntityRepository
 {
-	function traitementsejour($id)
+	function traitementsejour($id, $jour)
     {
         $query = 	$this->createQueryBuilder('p')
 						->addSelect('t')
+						->addSelect('e')
 						->join('p.Traitement', 't')
 						->join('t.enfant', 'e')
 						->join('e.sejour', 's')
 						->andWhere('s.id = :id')
+						->andWhere('p.jour = :jour')
 						->addOrderBy('e.prenom', 'ASC')
 						->addOrderBy('p.jour', 'ASC')
 						->setParameters(array(
-							'id'  => $id));
+							'id'  => $id, 'jour' => $jour));
 
         return $query->getQuery()->getArrayResult();
     }
