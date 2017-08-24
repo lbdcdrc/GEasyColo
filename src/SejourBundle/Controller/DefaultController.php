@@ -66,7 +66,7 @@ class DefaultController extends Controller
 		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
 		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
 				
-		if( $ListeDir == null and $ListeAnim == null and !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
+		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
 		}
@@ -561,7 +561,7 @@ class DefaultController extends Controller
 		if (null === $Activite) {
 			throw new NotFoundHttpException("La fiche d'activité n'existe pas !");
 		}		
-		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT') AND !$this->getUser()->getId() == $Activite->getCreateur()->getId()) 
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT') && !$this->getUser()->getId() == $Activite->getCreateur()->getId()) 
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');	
 		}
@@ -739,7 +739,7 @@ class DefaultController extends Controller
 				
 				foreach($ListeUtilisateur as $Utilisateur)
 				{
-					if($Utilisateur->getNotifie() == false  and $Utilisateur->getAccepteNotifications() == true )
+					if($Utilisateur->getNotifie() == false  && $Utilisateur->getAccepteNotifications() == true )
 					{
 						if( $Utilisateur->getUser()->getId() != $this->getUser()->getId() )
 						{
@@ -1103,11 +1103,11 @@ class DefaultController extends Controller
 			}
 		}
 		
-		if( $NbMatin1 == 0 and $NbMatin2 ==0 and $NbAM == 0 and $NbJour12 ==0 and $NbJour==0)
+		if( $NbMatin1 == 0 && $NbMatin2 ==0 && $NbAM == 0 && $NbJour12 ==0 && $NbJour==0)
 		{
 			$listInscriptionsNulle[] = $enfant;
 		}
-		elseif( (($NbMatin1 == 1 and $NbMatin2 ==1 and $NbAM == 1) xor $NbJour12 ==1) xor $NbJour==1)
+		elseif( (($NbMatin1 == 1 && $NbMatin2 ==1 && $NbAM == 1) xor $NbJour12 ==1) xor $NbJour==1)
 		{
 			$listInscriptionsComplete[] = $enfant;
 		}
@@ -1280,7 +1280,7 @@ class DefaultController extends Controller
 			$Journee=$form->get('Journee')->getData();
 			$em = $this->getDoctrine()->getManager();
 			
-			if(($Matin1 or $Matin2 or $AM) and ($Jour12 or $Journee))
+			if(($Matin1 || $Matin2 || $AM) && ($Jour12 || $Journee))
 			{
 				$request->getSession()->getFlashBag()->add('alert', 'Les inscriptions n\'ont pas étés enregistrés (Inscriptions incohérentes)');
 				return $this->redirectToRoute('jour_indexjour', array('id' => $idJour));

@@ -40,7 +40,7 @@ class ModifierAffectationType extends AbstractType
 		'choice_label' => 'activite.nom', 'expanded' => true, 'required' => false));	
 		
 		
-		if($options['Matin2'] and $options['Matin2']->getNbInscrits() >= $options['Matin2']->getNbPlaces() )
+		if($options['Matin2'] && $options['Matin2']->getNbInscrits() >= $options['Matin2']->getNbPlaces() )
 		{
 		$builder
 		->add('Matin2', EntityType::class, array(
@@ -82,7 +82,7 @@ class ModifierAffectationType extends AbstractType
 	
 	elseif($options['Matin1']->getEstlie()==false)
 	{
-		if($options['Matin1'] and $options['Matin1']->getNbInscrits() >= $options['Matin1']->getNbPlaces() )
+		if($options['Matin1'] && $options['Matin1']->getNbInscrits() >= $options['Matin1']->getNbPlaces() )
 		{
         $builder
 		->add('Matin1', EntityType::class, array(
@@ -125,7 +125,7 @@ class ModifierAffectationType extends AbstractType
 		
 		
 		
-		if($options['Matin2'] and $options['Matin2']->getNbInscrits() >= $options['Matin2']->getNbPlaces() )
+		if($options['Matin2'] && $options['Matin2']->getNbInscrits() >= $options['Matin2']->getNbPlaces() )
 		{
 		$builder
 		->add('Matin2', EntityType::class, array(
@@ -163,7 +163,7 @@ class ModifierAffectationType extends AbstractType
     'choice_label' => 'activite.nom', 'expanded' => true, 'required' => false));		
 		}
 	}
-		if($options['AM'] and $options['AM']->getNbInscrits() >= $options['AM']->getNbPlaces() )
+		if($options['AM'] && $options['AM']->getNbInscrits() >= $options['AM']->getNbPlaces() )
 		{
 		$builder
 			->add('AM', EntityType::class, array(
@@ -198,7 +198,7 @@ class ModifierAffectationType extends AbstractType
     },
     'choice_label' => 'activite.nom', 'expanded' => true, 'required' => false));
 		}
-		if($options['Jour12'] and $options['Jour12']->getNbInscrits() >= $options['Jour12']->getNbPlaces() )
+		if($options['Jour12'] && $options['Jour12']->getNbInscrits() >= $options['Jour12']->getNbPlaces() )
 		{
 		$builder
 		->add('Jour12', EntityType::class, array(
@@ -233,7 +233,7 @@ class ModifierAffectationType extends AbstractType
     },
     'choice_label' => 'activite.nom', 'expanded' => true, 'required' => false));			
 		}
-		if($options['Journee'] and $options['Journee']->getNbInscrits() >= $options['Journee']->getNbPlaces() )
+		if($options['Journee'] && $options['Journee']->getNbInscrits() >= $options['Journee']->getNbPlaces() )
 		{
 		$builder
 			->add('Journee', EntityType::class, array(
