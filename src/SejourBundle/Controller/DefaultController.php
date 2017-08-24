@@ -203,16 +203,13 @@ class DefaultController extends Controller
 			$Jour->setDate($NewDate);
 			$Jour->setSejour($sejour);		
 			$em->persist($Jour);
-			$em->flush();
 			$LigneConges=new AnimConges();
 			$LigneConges->setUser($this->getUser())
 						->setJour($Jour)
 						->setMoment($MomentTravail);
-			$em->persist($LigneConges);
-			$em->flush();	
-
+			$em->persist($LigneConges);	
 		}
-		
+		$em->flush();		
 		$request->getSession()->getFlashBag()->add('notice', 'Le séjour a bien été créé.');
 
 		return $this->redirectToRoute('sejour_indexsejour');
@@ -248,10 +245,7 @@ class DefaultController extends Controller
 	foreach($listJours as $Jours)
 	{
 		$em->remove($Jours);
-		$em->flush();
 	}
-	
-	
 	$em->remove($sejour);
 	$em->flush();
 	
@@ -617,7 +611,6 @@ class DefaultController extends Controller
 						->setNotifie(false);
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($NewDernier);
-			$em->flush();
 			$ListeCategorieAvecVues[]= array(
 										'categorie' => $Cate,
 										'vu' => false,
@@ -672,6 +665,7 @@ class DefaultController extends Controller
 		}
 		
 	}
+	$em->flush();
 	
 	$Categorie = new ForumCategorie();
 	$Categorie->setSejour($Sejour);
@@ -764,11 +758,10 @@ class DefaultController extends Controller
 
 						$this->get('mailer')->send($message);
 						$Utilisateur->setNotifie(true);
-						$em->flush();
 						}
 					}
 				}
-				
+				$em->flush();
 				$Page=ceil($Categorie->getReponses()/10);
 				$request->getSession()->getFlashBag()->add('notice', 'La réponse a été postée !');
 
@@ -964,11 +957,9 @@ class DefaultController extends Controller
 			$LigneConges->setUser($AnimEnCours)
 						->setJour($j)
 						->setMoment($MomentTravail);
-			$em->persist($LigneConges);
-			$em->flush();
-			
+			$em->persist($LigneConges);		
 			}
-			
+			$em->flush();
 			
 			$request->getSession()->getFlashBag()->add('notice', 'L\'animateur a été recruté !');
 
@@ -1011,11 +1002,8 @@ class DefaultController extends Controller
 		$listeJour = $repository5->findBy(array('user'=>$Anim));
 		
 		foreach($listeJour as $j){
-		$em->remove($j);
-		$em->flush();
-		
+		$em->remove($j);	
 		}
-		
 		$em->flush();
 		return $this->redirectToRoute('sejour_equipe', array('id' => $Sejour->getId()));
 	}
@@ -1955,14 +1943,13 @@ class DefaultController extends Controller
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$data = $form->getData();	
-			foreach($listeAnim as $Anim){
+			foreach($listeAnim as $Anim)
+			{
 				foreach($listeJour as $Jour){
 					$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()));
 					$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
 					$Travail=$data[$NomForm];
-					$CongesAnim -> setMoment($Travail);
-					$em->flush();
-					
+					$CongesAnim -> setMoment($Travail);				
 				}
 			}
 			foreach($listeJour as $Jour){
@@ -1970,10 +1957,8 @@ class DefaultController extends Controller
 				$NomForm="A".$Directeur->getId()."J".$Jour->getId();
 				$Travail=$data[$NomForm];
 				$CongesAnim -> setMoment($Travail);
-				$em->flush();
-				
 			}
-			
+			$em->flush();
 			$request->getSession()->getFlashBag()->add('notice', 'Les modifications ont étés enregistrées');
 			return $this->redirectToRoute('sejour_planning_conges', array('id' => $Sejour->getId()));	
 			
@@ -2219,9 +2204,9 @@ class DefaultController extends Controller
 				$TraitementJour->setSoirCheck(false);
 				$TraitementJour->setCoucheCheck(false);
 				$TraitementJour->setAutreCheck(false);
-				$em->persist($TraitementJour);
-				$em->flush();			
+				$em->persist($TraitementJour);			
 			}
+			$em->flush();
 			if($NbLigne>1)
 			{
 				for($j = 1; $j < $NbLigne; $j += 1)
@@ -2299,8 +2284,7 @@ class DefaultController extends Controller
 					$Traitement->setEnfant($Enfant);
 					
 					$em = $this->getDoctrine()->getManager();
-					$em->persist($Traitement);
-					$em->flush();		
+					$em->persist($Traitement);		
 					$JourDebut=$data[$j.'datedebut'];
 					$JourFin=$data[$j.'datefin'];
 					
@@ -2323,9 +2307,7 @@ class DefaultController extends Controller
 					$TraitementJour->setCoucheCheck(false);
 					$TraitementJour->setAutreCheck(false);
 					
-					$em->persist($TraitementJour);
-					$em->flush();
-					
+					$em->persist($TraitementJour);					
 					for($i = 1; $i < $Days+1; $i += 1)
 					{
 						$NewDate = $DateTravail->modify('+1 day');
@@ -2338,13 +2320,13 @@ class DefaultController extends Controller
 						$TraitementJour->setSoirCheck(false);
 						$TraitementJour->setCoucheCheck(false);
 						$TraitementJour->setAutreCheck(false);
-						$em->persist($TraitementJour);
-						$em->flush();			
+						$em->persist($TraitementJour);			
 					}
 	
 				}
 
 			}
+			$em->flush();
 			$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');
 			return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour));
 		}
