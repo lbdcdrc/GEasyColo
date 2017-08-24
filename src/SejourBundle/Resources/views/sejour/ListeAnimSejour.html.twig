@@ -148,7 +148,7 @@
 		<center>
 		<div style="width:80%;">
 		{% if animateur.user.presentation%}
-		{{ animateur.user.presentation | raw }}
+		{{ animateur.user.presentation|bbcode_filter('my_default_filter') }}
 		{% else %}
 		Ooow... Cet animateur n'as pas écris de présentation...
 		{% endif %}
@@ -195,7 +195,7 @@
 		<center>
 		<div style="width:80%;">
 		{% if Sejour.directeur.presentation%}
-		{{ Sejour.directeur.presentation | raw }}
+		{{ Sejour.directeur.presentation|bbcode_filter('my_default_filter') }}
 		{% else %}
 		Ooow... Cet animateur n'as pas écris de présentation...
 		{% endif %}

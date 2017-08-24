@@ -68,7 +68,7 @@
 																</div>
 																<h4> Ma présentation </h4>
 																{% if user.presentation %}	
-																	{{ user.presentation | raw}}
+																	{{ user.presentation|bbcode_filter('my_default_filter')}}
 																{% else %}
 																<h2> Ooooow... Tu n'as pas mis de présentation ! </h2>
 																<p> Penses à éditer ton profil et à en écrire une afin que tes équipes puissent te connaître un peu mieux !</p>

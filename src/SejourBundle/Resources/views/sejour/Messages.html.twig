@@ -75,7 +75,7 @@ font-family: 'Open Sans Condensed', sans-serif;
 		<img src="/anonyme.jpg" style="border-radius:10%;" width="100" alt="Anonyme" />
 		{% endif %}
 		</br>{{ messages.DateCreation|date('d/m/Y à H:i:s') }}		</td>
-		<td data-label="Message"><i>{{ Categorie.nom }}</i></br>{{ messages.Message|raw }}</td>
+		<td data-label="Message"><i>{{ Categorie.nom }}</i></br>{{ messages.Message|bbcode_filter('my_default_filter') }}</td>
 
 	</tr>
 	{% endfor %}

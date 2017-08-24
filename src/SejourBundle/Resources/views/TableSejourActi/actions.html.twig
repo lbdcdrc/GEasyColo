@@ -53,7 +53,7 @@ varspanEditacti{{ dt_item }}.onclick = function() {
     </div>
     <div class="modal-body">
       <h4> Description de l'activité </h4>
-	  <p>{{ dt_obj.description | raw }}</p>
+	  <p>{{ dt_obj.description|bbcode_filter('my_default_filter') }}</p>
 	  <h4> Matériel </h4>
 	  <p>{{ dt_obj.materiel }}</p>
 	  <h4> Nb d'Animateurs / Nb mini d'enfants / Nb maxi d'enfants </h4>
