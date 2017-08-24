@@ -119,10 +119,10 @@ fos_user:
         mailer: fos_user.mailer.twig_swift
     profile:
         form:
-            type: UserBundle\Form\ProfileType
+            type: UserBundle\Form\Type\ProfileType
     registration:
         form:
-            type: UserBundle\Form\RegistrationType
+            type: UserBundle\Form\Type\RegistrationType
         confirmation:
             enabled: true
             template:   FOSUserBundle:Registration:email.txt.twig
@@ -130,7 +130,7 @@ fos_user:
         email:
             from_email:
                 address:        register@easycolo.fr
-                sender_name:    Cédric LOMBARD
+                sender_name:    Cédric d'EasyColo
                 
     service:
         mailer:               fos_user.mailer.default

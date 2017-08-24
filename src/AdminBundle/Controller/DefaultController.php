@@ -9,8 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use UserBundle\Form\RolesType;
-use AdminBundle\Form\ProfileType;
+use UserBundle\Form\Type\RolesType;
+use AdminBundle\Form\Type\ProfileType;
 use UserBundle\Entity\User;
 
 class DefaultController extends Controller
