@@ -5,13 +5,10 @@
 {% block soustitre %} {% if is_granted('ROLE_ADJOINT') %} Pour modifier les congés, cliquer sur le nom de l'animateur. {% endif %}{% endblock soustitre %}
 {% block style %}
 <style>
-
 tr:nth-child(even) {background-color: #f2f2f2}
-
 th, td {
     border-bottom: 1px solid #ddd;
 }
-
 #table_detail tr:hover
 {
  background-color:#F2F2F2;
@@ -20,7 +17,6 @@ th, td {
 {
  display:none;
 }
-
 </style>
 {% endblock style %}
 
@@ -28,74 +24,21 @@ th, td {
 {% if is_granted('ROLE_ADJOINT') %}
 {{ form_start(form, {'action': path('sejour_planning_conges', { 'id': Sejour.id }), 'method': 'POST'}) }}
 {% endif %}
-  <table style="width:100%;" id="table_detail">
-    <thead>
-	<tr>
-		<th> Animateur </th>
-		{% for jour in listeJours %}
-		<th> {{ jour.date|date('d/m') }} </th>
-		{% endfor %}
-    </thead>
-    <tbody>
-	
-	<tr onclick="show_hide_row('{{Directeur.id}}');" >
-		<td data-label="Directeur"> {{ Directeur.PN }} </td>
-		{% for jour in listeJours %}
-		<td data-label="{{Directeur.PN}} le {{ jour.date |date('d/m') }}" style="background-color:#{{ jourDir[Directeur.id][jour.id].couleur }};" >{{ jourDir[Directeur.id][jour.id].moment }}</td>
-		
-		{% endfor %}
-	</tr>
-	{% if is_granted('ROLE_ADJOINT') %}
-	<tr id="{{Directeur.id}}" class="hidden_row" >
-		<td> Changer </td>
-		{% for jour in listeJours %}
-		{% set Var = attribute(form, 'A'~ Directeur.id ~ 'J' ~ jour.id) %}
-		<td data-label="{{Directeur.PN}} le {{ jour.date |date('d/m') }}" >{{ form_widget(Var) }}</td>
-		
-		{% endfor %}
-	</tr>
-	{% endif %}
-	
-	
-	
-	
-	
-	
-	
-	{%for Anim in listeAnim %}
-	<tr onclick="show_hide_row('{{Anim.user.id}}');" >
-		<td data-label="Animateur"> {{ Anim.user.PN }} </td>
-		{% for jour in listeJours %}
-		<td data-label="{{Anim.user.PN}} le {{ jour.date |date('d/m') }}" style="background-color:#{{ listeconges[Anim.user.id][jour.id].couleur }};" >{{ listeconges[Anim.user.id][jour.id].moment }}</td>
-		
-		{% endfor %}
-	</tr>
-	{% if is_granted('ROLE_ADJOINT') %}
-	<tr id="{{Anim.user.id}}" class="hidden_row" >
-		<td> Changer </td>
-		{% for jour in listeJours %}
-		{% set Var = attribute(form, 'A'~ Anim.user.id ~ 'J' ~ jour.id) %}
-		<td data-label="{{Anim.user.PN}} le {{ jour.date |date('d/m') }}" >{{ form_widget(Var) }}</td>
-		
-		{% endfor %}
-	</tr>
-	{% endif %}
-	{% endfor %}
-    </tbody>
-  </table>
-  {% if is_granted('ROLE_ADJOINT') %}
-  <center>{{ form_end(form) }}</center>
+
+{% include "SejourBundle:Conges:TablesConges.html.twig" with {'listeJours': listeJours, 'Directeur': Directeur, 'listeAnim': listeAnim, 'jourDir':jourDir, 'listeconges':listeconges, 'form':form } only %}
+
+{% if is_granted('ROLE_ADJOINT') %}
+<center>{{ form_end(form) }}</center>
 {% endif %}
 {% endblock coeur %}
-
 
 {% block javascripts %}
 {% if is_granted('ROLE_ADJOINT') %}
 <script type="text/javascript">
-function show_hide_row(row)
-{
- $("#"+row).toggle();
-}
+	function show_hide_row(row)
+	{
+	 $("#"+row).toggle();
+	}
 </script>
 {% endif %}
 {% endblock javascripts %}

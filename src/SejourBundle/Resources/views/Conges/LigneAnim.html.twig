@@ -1,0 +1,17 @@
+{%for Anim in listeAnim %}
+<tr onclick="show_hide_row('{{Anim.user.id}}');" >
+	<td data-label="Animateur"> {{ Anim.user.PN }} </td>
+	{% for jour in listeJours %}
+	<td data-label="{{Anim.user.PN}} le {{ jour.date |date('d/m') }}" style="background-color:#{{ listeconges[Anim.user.id][jour.id].couleur }};" >{{ listeconges[Anim.user.id][jour.id].moment }}</td>
+	{% endfor %}
+</tr>
+{% if is_granted('ROLE_ADJOINT') %}
+<tr id="{{Anim.user.id}}" class="hidden_row" >
+	<td> Changer </td>
+	{% for jour in listeJours %}
+	{% set Var = attribute(form, 'A'~ Anim.user.id ~ 'J' ~ jour.id) %}
+	<td data-label="{{Anim.user.PN}} le {{ jour.date |date('d/m') }}" >{{ form_widget(Var) }}</td>
+	{% endfor %}
+</tr>
+{% endif %}
+{% endfor %}

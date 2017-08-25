@@ -1,0 +1,14 @@
+<table style="width:100%;" id="table_detail">
+	<thead>
+		<tr>
+			<th> Animateur </th>
+			{% for jour in listeJours %}
+			<th> {{ jour.date|date('d/m') }} </th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% include "SejourBundle:Conges:LigneDir.html.twig" with {'listeJours': listeJours, 'Directeur': Directeur, 'jourDir':jourDir, 'form':form } only %}
+		{% include "SejourBundle:Conges:LigneAnim.html.twig" with {'listeJours': listeJours, 'listeAnim': listeAnim, 'listeconges':listeconges, 'form':form }  only %}
+	</tbody>
+</table>
