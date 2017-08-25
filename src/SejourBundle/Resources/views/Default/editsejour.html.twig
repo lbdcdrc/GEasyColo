@@ -31,30 +31,7 @@
 	</div>
 	{% endif %}
 	<center><a href="{{ path('sejour_planning_conges', { 'id': Sejour.id }) }}" class="button" role="button"><i class="fa fa-calendar" aria-hidden="true"> Planning des Congés</i></a></center>
-	<section id="pricePlans"><center>
-		<ul id="plans">
-			{% for jour in listeJours %}
-				<li class="plan">		
-					<ul class="planContainer">
-						<li class="title"><h2 {% if "now"|date('Ymd')  > jour.date|date('Ymd') %} class="bestPlanTitle" {% endif %} >{{ jour.date|date('d/m/Y') }}</h2></li>
-						<li class="price"><p>{{ jour.NbActM1 + jour.NbActM2 + jour.NbActAM + jour.NbActJourMatin + jour.NbActJour}}<span> activités </span></p></li>
-						<li>
-							<ul class="options">
-								<li>Matin 1 : <span>{{ jour.NbActM1 }}</span></li>
-								<li>Matin 2 : <span>{{ jour.NbActM2 }}</span></li>
-								<li>Après-midi : <span>{{ jour.NbActAM }}</span></li>
-								<li>Journée : <span>{{ jour.NbActJourMatin }}</span></li>
-								<li>Journée + 1/2 : <span>{{ jour.NbActJour }}</span></li>
-							</ul>
-						</li>
-						<li class="button-card"><a href="{{ path('jour_indexjour', { 'id': jour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
-					</ul>
-				</li>
-			{% endfor %}
-		</ul> <!-- End ul#plans --></center>
-	</section>
+	
+	{% include "SejourBundle:default:jourcard.html.twig" %}
 	
 {% endblock %}
-
-
-
