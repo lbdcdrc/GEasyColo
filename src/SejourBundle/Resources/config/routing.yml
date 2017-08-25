@@ -27,13 +27,13 @@ sejour_equipe:
     defaults: { _controller: SejourBundle:Default:listeAnimSejour }
 sejour_forum:
     path:   /sejour/{id}/forum
-    defaults: { _controller: SejourBundle:Default:AccueilForum }
+    defaults: { _controller: SejourBundle:Forum:AccueilForum }
 abonnement_forum:
     path:   /sejour/{id}/forum/{forum}/gestionAbo
-    defaults: { _controller: SejourBundle:Default:forumAbonnement }
+    defaults: { _controller: SejourBundle:Forum:forumAbonnement }
 sejour_discussion:
     path:   /sejour/{id}/forum{idForum}/{page}
-    defaults: { _controller: SejourBundle:Default:Discussion, page: 1}
+    defaults: { _controller: SejourBundle:Forum:Discussion, page: 1}
 sejour_activite:
     path:   /sejour/{id}/activite
     defaults: { _controller: SejourBundle:Default:FichesActiSejour }
