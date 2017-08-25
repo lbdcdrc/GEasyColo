@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ActiviteController extends Controller
 {
 	// Export JSON de la liste des activité d'un utilisateur
-	private function table_acti_util() {
+	private function tableActiUtil() {
 	return $this->get('datatable')
 				->setEntity("SejourBundle:Activite", "x")                         
 				->setFields(
@@ -71,11 +71,11 @@ class ActiviteController extends Controller
 	}              
 	// Génération du datatable de la liste des activités d'un utilisateur
 	public function tableActiUtilAction(){
-		return $this->table_acti_util()->execute();                                      
+		return $this->tableActiUtil()->execute();                                      
 	}
 	// Fiches d'activite d'un utilisateur
 	public function activiteUtilAction(Request $request){
-		$this->table_acti_util();
+		$this->tableActiUtil();
 		
 		$activite = new Activite();
 		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite);
@@ -93,7 +93,7 @@ class ActiviteController extends Controller
 		return $this->render('SejourBundle:FicheActi:indexacti.html.twig', array('form'=>$form->createView()));		
 	}	
 	// Export JSON de la liste des activité d'un séjour
-	private function table_acti($id) {
+	private function tableActi($id) {
 	 $this->container->get('sejour.droits')->AllowedUser($id);
 	return $this->get('datatable')
 				->setEntity("SejourBundle:Activite", "x")                         
@@ -125,7 +125,7 @@ class ActiviteController extends Controller
 	// Génération du datatable de la liste des activités d'un séjour
 	public function tableActiAction($id){
 		$this->container->get('sejour.droits')->AllowedUser($id);
-		return $this->table_acti($id)->execute();                                      
+		return $this->tableActi($id)->execute();                                      
 	}
 	// Ajout d'une fiche activité d'un utilisateur à un de ses séjour
 	public function ajouterFichesActiSejourAction($id, Request $request){

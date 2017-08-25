@@ -104,7 +104,7 @@ class EnfantController extends Controller
 	return $this->redirectToRoute('enfant_indexenfant');
 
 	}
-	private function table_enfants($id) {
+	private function tableEnfants($id) {
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE')) {
 			return $this->get('datatable')
@@ -159,7 +159,7 @@ class EnfantController extends Controller
 	}
 	public function tableEnfantsAction($id){
 		$this->container->get('sejour.droits')->AllowedUser($id);
-		return $this->table_enfants($id)->execute();                                      
+		return $this->tableEnfants($id)->execute();                                      
 	}	
 	public function listeEnfantSejourAction($id, Request $request){
 		$this->container->get('sejour.droits')->AllowedUser($id);
