@@ -9,17 +9,7 @@
 		<h1> Activité : {{ evenement.activite.nom }} </h1>
 		<h3> {{ jour.date|date('D d F Y') }} </h2>  
 		<h3> {{ evenement.NbInscrits }} inscrits </h3>
-		<h3> {% if evenement.moment == 1 %}
-				Matin Premier Créneau
-				{% elseif evenement.moment ==2 %}
-				Matin Deuxième Créneau
-				{% elseif evenement.moment == 3 %}
-				Après-Midi
-				{% elseif evenement.moment ==4 %}
-				Journée plus matinée du lendemain
-				{% else %}
-				Journée entière
-				{% endif %}</h3>
+
 	</center>
 	<hr/>	
 	
@@ -60,13 +50,13 @@
 				<tbody>
 				{% for enfant in listeEnfant %}
 					<tr><td>
-{% if enfant.image %}					
-<img 
-  src="{{ enfant.image| imagine_filter('my_thumb') }}"
-  alt="PhotoEnfant"
-  style="height:70px"
-/>
-{% endif %}</td>
+							{% if enfant.image %}					
+							<img 
+							  src="{{ enfant.image| imagine_filter('my_thumb') }}"
+							  alt="PhotoEnfant"
+							  style="height:70px"
+							/>
+							{% endif %}</td>
 						<td>{{ enfant.nom }}</td>
 						<td>{{ enfant.prenom }}</td>
 						<td>{{ enfant.age }}</td>
@@ -83,5 +73,3 @@
 
 
 </html>
-
-

@@ -1,0 +1,28 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>IdEnfant</th>
+			<th>Nom</th>
+			<th>Prénom</th>
+			<th>Age</th>
+			<th>Séjour</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for enfant in listeEnfant %}
+			<tr>
+				<td>{{ enfant.id }}</td>
+				<td>{{ enfant.Nom }}</td>
+				<td>{{ enfant.Prenom }}</td>
+				<td>{{ enfant.Age }}</td>
+				<td>{{ enfant.Sejour.nomThema }}</td>
+				{% if modifie %}
+					<td><a href="{{ path('jour_modifenfant', { 'idJour': jour.id, 'idEnfant' : enfant.id }) }}" class="btn btn-success" role="button"><span class="glyphicon glyphicon-check"></span></a></td>
+				{% else %}
+					<td><a href="{{ path('jour_affecterenfant', { 'idJour': jour.id, 'idEnfant' : enfant.id }) }}" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-pencil"></span></a></td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
