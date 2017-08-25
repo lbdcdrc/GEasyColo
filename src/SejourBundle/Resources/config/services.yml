@@ -3,5 +3,5 @@ services:
 #        class: SejourBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
     sejour.droits:
-        class: SejourBundle\Droits\droits
+        class: SejourBundle\Droits\Droits
         arguments: [ "@doctrine.orm.entity_manager", "@=service('security.token_storage').getToken().getUser()" ]

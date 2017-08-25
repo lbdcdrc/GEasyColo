@@ -5,10 +5,10 @@ namespace SejourBundle\Droits;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class droits
+class Droits
 {
 	// Fonction de contrôle d'accès à toute la partie "séjour"
-	public function AllowedUser($SejourId){
+	public function allowedUser($SejourId){
 		// Pour accéder :
 		// Soit être admin
 		// Soit être recruté sur le séjour (en tant que directeur ou anim)
