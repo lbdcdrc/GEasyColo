@@ -179,7 +179,7 @@ class AnimController extends Controller
 		$em->flush();
 		return $this->redirectToRoute('sejour_equipe', array('id' => $Sejour->getId()));
 	}
-	public function PlanningCongesAction($id, Request $request){
+	public function planningCongesAction($id, Request $request){
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:AnimSejour');

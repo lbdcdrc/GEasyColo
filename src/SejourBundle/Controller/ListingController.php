@@ -46,7 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ListingController extends Controller
 {
-	public function EvenementtoPdfAction($idEv) {
+	public function evenementToPdfAction($idEv) {
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Evenement')
@@ -99,7 +99,7 @@ class ListingController extends Controller
 
 	}
 	// Edition Trombi simple  (Nom - Prénom - Age - Chambre - Photo)
-	public function ListingtoPdfAction($idSej) {
+	public function listingToPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
 		$this->container->get('sejour.droits')->AllowedUser($idSej);
@@ -145,7 +145,7 @@ class ListingController extends Controller
 		return $this->render('SejourBundle:Default:listingenfant.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
 	}
 	// Edition Trombi complet  (Nom - Prénom - Age - Chambre - Photo - Infos - Régimes)
-	public function ListingCompletToPdfAction($idSej) {
+	public function listingCompletToPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
 		$this->container->get('sejour.droits')->AllowedUser($idSej);
@@ -200,7 +200,7 @@ class ListingController extends Controller
 		return $this->render('SejourBundle:Default:listingenfantcomplet.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
 	}
 	// Edition Trombi Régimes : Seulement les enfants ayant des régimes alimentaires particuliers
-	public function ListingRegimeToPdfAction($idSej) {
+	public function listingRegimeToPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
 		$this->container->get('sejour.droits')->AllowedUser($idSej);

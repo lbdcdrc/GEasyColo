@@ -44,7 +44,7 @@ use Dompdf\Options;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ActiviteController extends Controller
+class activiteController extends Controller
 {
 	// Export JSON de la liste des activité d'un utilisateur
 	private function table_acti_util() {
@@ -74,7 +74,7 @@ class ActiviteController extends Controller
 		return $this->table_acti_util()->execute();                                      
 	}
 	// Fiches d'activite d'un utilisateur
-	public function ActiviteUtilAction(Request $request){
+	public function activiteUtilAction(Request $request){
 		$this->table_acti_util();
 		
 		$activite = new Activite();
@@ -128,7 +128,7 @@ class ActiviteController extends Controller
 		return $this->table_acti($id)->execute();                                      
 	}
 	// Ajout d'une fiche activité d'un utilisateur à un de ses séjour
-	public function AjouterFichesActiSejourAction($id, Request $request){
+	public function ajouterFichesActiSejourAction($id, Request $request){
 	// Vérification des droits
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this
@@ -200,7 +200,7 @@ class ActiviteController extends Controller
 		return $this->render('SejourBundle:TableSejourActi:ajoutfiche.html.twig', array('form' => $form->createView(), 'sejour'=>$sejour ));
 	}
 	// Fiches d'activite d'un séjour
-	public function FichesActiSejourAction($id, Request $request){
+	public function fichesActiSejourAction($id, Request $request){
 		// Vérification des droits
 		 $this->container->get('sejour.droits')->AllowedUser($id);
 		$this->table_acti($id);
@@ -228,7 +228,7 @@ class ActiviteController extends Controller
         return $this->render('SejourBundle:sejour:ListeActiSejour.html.twig', array('Sejour' => $Sejour, 'form'=>$form->createView()));
     }
 	// Suppression d'une activite d'un séjour
-	public function SupprFichesActiSejourAction($id, $idActi, Request $request){
+	public function supprFichesActiSejourAction($id, $idActi, Request $request){
 		// Vérification des droits
 		 $this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this

@@ -46,7 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SoinController extends Controller
 {
-	public function RegistreSoinsAction($id, $jour, Request $request){
+	public function registreSoinsAction($id, $jour, Request $request){
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Sejour');
@@ -108,7 +108,7 @@ class SoinController extends Controller
 		return $this->render('SejourBundle:Soins:RegistreSoins.html.twig', array('Sejour'=>$Sejour, 'form'=>$form->createView(),'ListeJour' => $ListeJour, 'ListeJourComplet' => $ListeJourComplet,  'JourEnCours'=>$JourEnCours, 'ListeSoins'=>$ListeSoins));
 		
 	}
-	public function ClotureSoinsAction($id, $jour, Request $request){
+	public function clotureSoinsAction($id, $jour, Request $request){
 		// Verification des droits
 		// Seul le Directeur et les admins ont accès à cette page
 		$this->container->get('sejour.droits')->AllowedUser($id);
@@ -128,7 +128,7 @@ class SoinController extends Controller
 		$em->flush();
 		return $this->redirectToRoute('sejour_soins', array('id' => $id, 'jour'=>$jour));
 	}
-	public function TraitementAction($id, $jour, Request $request){
+	public function traitementAction($id, $jour, Request $request){
 		// Verification des droits
 		// Seul le Directeur et les admins ont accès à cette page
 		$this->container->get('sejour.droits')->AllowedUser($id);
@@ -413,7 +413,7 @@ class SoinController extends Controller
 		
 		return $this->render('SejourBundle:Soins:Traitement.html.twig', array('Sejour'=>$Sejour,'ListeEnfant' => $ListeEnfant, 'ListeJour' => $ListeJour,'Jour'=>$JourEnCours, 'ListeTraitement' => $ListeTraitements));
 	}
-	public function CheckTraitementAction($id, $jour, $traitement, $moment){
+	public function checkTraitementAction($id, $jour, $traitement, $moment){
 
 	$repository = $this->getDoctrine()
 	->getManager()

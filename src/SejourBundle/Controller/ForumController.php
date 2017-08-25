@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ForumController extends Controller
 {
 	// Forum séjour - Liste catégorie
-	public function AccueilForumAction($id, Request $request){
+	public function accueilForumAction($id, Request $request){
 	$em = $this->getDoctrine()->getManager();
 	$this->container->get('sejour.droits')->AllowedUser($id);
 	$repository = $this->getDoctrine()
@@ -159,7 +159,7 @@ class ForumController extends Controller
 	return $this->render('SejourBundle:sejour:Forum.html.twig', array('Sejour' => $Sejour, 'Categorie' => $ListeCategorieAvecVues,  'form' => $form->createView(),));
 	}	
 	// Forum séjour - Affichage Discussion
-	public function DiscussionAction($id, $idForum, $page, Request $request){
+	public function discussionAction($id, $idForum, $page, Request $request){
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this->getDoctrine()
 		->getManager()

@@ -188,7 +188,7 @@ class EnfantController extends Controller
 	return $this->render('SejourBundle:sejour:ListeEnfantsSejour.html.twig', array('Sejour' => $Sejour, 'form' => $form->createView(),));
 	}
 	// Edition du planning de chaque enfant
-	public function PlanningEnfantAction($id){
+	public function planningEnfantAction($id){
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Enfant');

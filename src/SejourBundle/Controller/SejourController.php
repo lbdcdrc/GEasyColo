@@ -47,12 +47,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class SejourController extends Controller
 {
 	// Accueil de la plateforme
-    public function IndexAction(){
+    public function indexAction(){
 		
         return $this->render('SejourBundle:Default:index.html.twig');
     }
 	// Acceuil espace séjour
-	public function IndexSejourAction(){
+	public function indexSejourAction(){
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()
@@ -96,7 +96,7 @@ class SejourController extends Controller
         return $this->render('SejourBundle:Default:sejour.html.twig', array('listeNouveauSejour' => $listeNouveauSejour, 'listeAncienSejour' => $listeAncienSejour));
     }
 	// Création d'un nouveau séjour
-	public function CreerSejourAction(Request $request){
+	public function creerSejourAction(Request $request){
 		$sejour = new Sejour();
 		$form   = $this->get('form.factory')->create(SejourType::class, $sejour);
 		$repository6 = $this->getDoctrine()
@@ -156,7 +156,7 @@ class SejourController extends Controller
 		return $this->render('SejourBundle:Default:creersejour.html.twig', array('form' => $form->createView(),));
     }
 	// Supprimer un séjour
-	public function SupprimerSejourAction($id, Request $request){
+	public function supprimerSejourAction($id, Request $request){
 		    // On récupère le repository
     $repository = $this->getDoctrine()
       ->getManager()
@@ -230,7 +230,7 @@ class SejourController extends Controller
 		return $this->render('SejourBundle:TableSejourActi:editfiche.html.twig', array('sejour' => $Sejour->getId(), 'acti'=>$activite->getId(), 'form' => $form->createView(),));
     }
 	// Accueil d'un séjour - Listing Jour + Avancement Séjour
-	public function AccueilSejourAction($id, Request $request){
+	public function accueilSejourAction($id, Request $request){
 	$this->container->get('sejour.droits')->AllowedUser($id);
 
     $repository = $this->getDoctrine()
