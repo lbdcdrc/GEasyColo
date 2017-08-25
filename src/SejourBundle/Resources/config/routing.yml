@@ -1,30 +1,30 @@
 sejour_homepage:
     path:     /
-    defaults: { _controller: SejourBundle:Default:Index }
+    defaults: { _controller: SejourBundle:Sejour:Index }
 sejour_indexsejour:
     path:   /sejour
-    defaults: { _controller: SejourBundle:Default:IndexSejour }
+    defaults: { _controller: SejourBundle:Sejour:IndexSejour }
 table_acti_util:
     path:   /json/activite/datatable
-    defaults: { _controller: SejourBundle:Default:tableActiUtil }
+    defaults: { _controller: SejourBundle:Activite:tableActiUtil }
 activite_util:
     path:   /activite
-    defaults: { _controller: SejourBundle:Default:ActiviteUtil }
+    defaults: { _controller: SejourBundle:Activite:ActiviteUtil }
 util_activite_edit:
     path:   /activite/{idActi}/edit
-    defaults: { _controller: SejourBundle:Default:editActiviteUtil }
+    defaults: { _controller: SejourBundle:Anim:editActiviteUtil }
 sejour_creer:
     path:   /sejour/creer
-    defaults: { _controller: SejourBundle:Default:CreerSejour }
+    defaults: { _controller: SejourBundle:Sejour:CreerSejour }
 sejour_edit:
     path:   /sejour/{id}
-    defaults: { _controller: SejourBundle:Default:AccueilSejour }
+    defaults: { _controller: SejourBundle:Sejour:AccueilSejour }
 sejour_liste_enfants:
     path:   /sejour/{id}/enfants
-    defaults: { _controller: SejourBundle:Default:listeEnfantSejour }
+    defaults: { _controller: SejourBundle:Enfant:listeEnfantSejour }
 sejour_equipe:
     path:   /sejour/{id}/equipe
-    defaults: { _controller: SejourBundle:Default:listeAnimSejour }
+    defaults: { _controller: SejourBundle:Anim:listeAnimSejour }
 sejour_forum:
     path:   /sejour/{id}/forum
     defaults: { _controller: SejourBundle:Forum:AccueilForum }
@@ -36,91 +36,91 @@ sejour_discussion:
     defaults: { _controller: SejourBundle:Forum:Discussion, page: 1}
 sejour_activite:
     path:   /sejour/{id}/activite
-    defaults: { _controller: SejourBundle:Default:FichesActiSejour }
+    defaults: { _controller: SejourBundle:Activite:FichesActiSejour }
 sejour_planning_conges:
     path:   /sejour/{id}/conges
-    defaults: { _controller: SejourBundle:Default:PlanningConges }
+    defaults: { _controller: SejourBundle:Anim:PlanningConges }
 sejour_soins:
     path:   /sejour/{id}/soins/{jour}
-    defaults: { _controller: SejourBundle:Default:RegistreSoins, jour:null }
+    defaults: { _controller: SejourBundle:Soin:RegistreSoins, jour:null }
 sejour_traitement:
     path:   /sejour/{id}/traitement/{jour}
-    defaults: { _controller: SejourBundle:Default:Traitement, jour:null }
+    defaults: { _controller: SejourBundle:Soin:Traitement, jour:null }
 sejour_traitement_check:
     path:   /sejour/{id}/traitement/check/{jour}/{traitement}/{moment}
-    defaults: { _controller: SejourBundle:Default:CheckTraitement }    
+    defaults: { _controller: SejourBundle:Soin:CheckTraitement }    
 sejour_soins_cloture:
     path:   /sejour/{id}/soins/{jour}/cloture
-    defaults: { _controller: SejourBundle:Default:ClotureSoins}
+    defaults: { _controller: SejourBundle:Soin:ClotureSoins}
 sejour_activite_edit:
     path:   /sejour/{id}/activite/{idActi}/edit
-    defaults: { _controller: SejourBundle:Default:editActiviteSejour }
+    defaults: { _controller: SejourBundle:Sejour:editActiviteSejour }
 sejour_add_activite:
     path:   /sejour/{id}/activite/add
-    defaults: { _controller: SejourBundle:Default:AjouterFichesActiSejour }
+    defaults: { _controller: SejourBundle:Activite:AjouterFichesActiSejour }
 sejour_suppr_activite:
     path:   /sejour/{id}/suppr/{idActi}
-    defaults: { _controller: SejourBundle:Default:SupprFichesActiSejour }
+    defaults: { _controller: SejourBundle:Activite:SupprFichesActiSejour }
 table_acti_sejour:
     path:   /json/sejour/{id}/activite/datatable
-    defaults: { _controller: SejourBundle:Default:tableActi }
+    defaults: { _controller: SejourBundle:Activite:tableActi }
 derecrute:
     path:   /sejour/derecrute/{id}
-    defaults: { _controller: SejourBundle:Default:derecrute }
+    defaults: { _controller: SejourBundle:Anim:derecrute }
 table_enfants:
     path:   /json/sejour/{id}/datatable
-    defaults: { _controller: SejourBundle:Default:tableEnfants }
+    defaults: { _controller: SejourBundle:Enfant:tableEnfants }
 listing_toPdf:
     path:   /sejour/{idSej}/trombi/simple
-    defaults:  { _controller: SejourBundle:Default:ListingtoPdf }
+    defaults:  { _controller: SejourBundle:Listing:ListingtoPdf }
 listingComplet_toPdf:
     path:   /sejour/{idSej}/trombi/complet
-    defaults:  { _controller: SejourBundle:Default:ListingCompletToPdf }
+    defaults:  { _controller: SejourBundle:Listing:ListingCompletToPdf }
 listingRegimes_toPdf:
     path:   /sejour/{idSej}/trombi/regimes
-    defaults:  { _controller: SejourBundle:Default:ListingRegimeToPdf }
+    defaults:  { _controller: SejourBundle:Listing:ListingRegimeToPdf }
 sejour_supprimer:
     path:   /sejour/supprimer/{id}
-    defaults: { _controller: SejourBundle:Default:SupprimerSejour }
+    defaults: { _controller: SejourBundle:Sejour:SupprimerSejour }
 enfant_edit:
     path:   /enfant/edit/{id}
-    defaults: { _controller: SejourBundle:Default:editEnfant }
+    defaults: { _controller: SejourBundle:Enfant:editEnfant }
 enfant_probleme_list:
     path:   /sejour/enfant/{id}
-    defaults: { _controller: SejourBundle:Default:problemeEnfant }
+    defaults: { _controller: SejourBundle:Enfant:problemeEnfant }
 enfant_check_probleme:
     path:   /enfant/{id}/check
-    defaults: { _controller: SejourBundle:Default:problemeEnfantCheck }
+    defaults: { _controller: SejourBundle:Enfant:problemeEnfantCheck }
 enfant_supprimer:
     path:   /enfant/supprimer/{id}
-    defaults: { _controller: SejourBundle:Default:supprimerEnfant }
+    defaults: { _controller: SejourBundle:Enfant:supprimerEnfant }
 enfant_planning_enfant:
     path:   /enfant/{id}/planning
-    defaults: { _controller: SejourBundle:Default:PlanningEnfant }
+    defaults: { _controller: SejourBundle:Enfant:PlanningEnfant }
 activite_indexactivite:
     path: /activite/
-    defaults: { _controller: SejourBundle:Default:activite }
+    defaults: { _controller: SejourBundle:Activite:activite }
 activite_creer:
     path:   /activite/creer
-    defaults: { _controller: SejourBundle:Default:creerActivite }
+    defaults: { _controller: SejourBundle:Activite:creerActivite }
 jour_indexjour:
     path:   /jour/{id}
-    defaults: { _controller: SejourBundle:Default:jour }
+    defaults: { _controller: SejourBundle:Jour:jour }
 jour_addevent:
     path:   /jour/{id}/add
-    defaults: { _controller: SejourBundle:Default:jourAddEvent }
+    defaults: { _controller: SejourBundle:Jour:jourAddEvent }
 jour_dellevent:
     path:   /jour/{id}/dell
-    defaults: { _controller: SejourBundle:Default:jourDellEvent }
+    defaults: { _controller: SejourBundle:Jour:jourDellEvent }
 jour_editevent:
     path:   /evenement/{id}/edit
-    defaults: { _controller: SejourBundle:Default:jourEditEvent }
+    defaults: { _controller: SejourBundle:Jour:jourEditEvent }
 jour_affecterenfant:
     path:   /jour/{idJour}/affecter/{idEnfant}
-    defaults: { _controller: SejourBundle:Default:jourAffecterEnfant }
+    defaults: { _controller: SejourBundle:Jour:jourAffecterEnfant }
 jour_modifenfant:
     path:   /jour/{idJour}/modifier/{idEnfant}
-    defaults: { _controller: SejourBundle:Default:jourModifierEnfant }
+    defaults: { _controller: SejourBundle:Jour:jourModifierEnfant }
 evenement_toPdf:
     path:   /{idEv}/pdf
-    defaults:  { _controller: SejourBundle:Default:EvenementtoPdf }
+    defaults:  { _controller: SejourBundle:Listing:EvenementtoPdf }
