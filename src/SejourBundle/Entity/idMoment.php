@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * idMoment
  *
  * @ORM\Table(name="id_moment")
- * @ORM\Entity(repositoryClass="SejourBundle\Repository\idMomentRepository")
+ * @ORM\Entity(repositoryClass="SejourBundle\Repository\IdMomentRepository")
  */
 class IdMoment
 {

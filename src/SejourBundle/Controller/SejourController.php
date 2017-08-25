@@ -4,7 +4,7 @@ namespace SejourBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use SejourBundle\Entity\Sejour;
-use SejourBundle\Form\SejourType;
+use SejourBundle\Form\Type\SejourType;
 use SejourBundle\Entity\Enfant;
 use SejourBundle\Entity\Jour;
 use SejourBundle\Entity\Evenement;
@@ -16,7 +16,7 @@ use SejourBundle\Entity\ForumCategorie;
 use SejourBundle\Entity\ForumMessage;
 use SejourBundle\Entity\ForumUserMessageVu;
 use SejourBundle\Entity\AnimConges;
-use SejourBundle\Entity\idMoment;
+use SejourBundle\Entity\IdMoment;
 use SejourBundle\Entity\Soin;
 use SejourBundle\Entity\Traitement;
 use SejourBundle\Entity\TraitementJour;
@@ -99,60 +99,27 @@ class SejourController extends Controller
 	public function creerSejourAction(Request $request){
 		$sejour = new Sejour();
 		$form   = $this->get('form.factory')->create(SejourType::class, $sejour);
-		$repository6 = $this->getDoctrine()
-					->getManager()
-					->getRepository('SejourBundle:idMoment');
-
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
 		{
-
-		$DateDebut=$sejour->getDateDebut();
-		$DateFin=$sejour->getDateFin();
-		$sejour->setDirecteur($this->getUser());
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($sejour);
-		$em->flush();
-		  
-
-		
-		$NbJours = date_diff($DateDebut, $DateFin);
-		$Days=$NbJours->format("%a");		
-		$DateTravail = $DateDebut;
-		
-		$Jour = new Jour();
-		$Jour->setDate($DateTravail);
-		$Jour->setSejour($sejour);
-		
-		$em->persist($Jour);
-		$em->flush();
-		$LigneConges=new AnimConges();
-		$MomentTravail = $repository6->findOneById(1);
-		$LigneConges->setUser($this->getUser())
-					->setJour($Jour)
-					->setMoment($MomentTravail);
-		$em->persist($LigneConges);
-		$em->flush();	
-
-
-		for($i = 1; $i < $Days+1; $i += 1)
-		{
-			$NewDate = $DateTravail->modify('+1 day');
-			$Jour = new Jour();
-			$Jour->setDate($NewDate);
-			$Jour->setSejour($sejour);		
-			$em->persist($Jour);
-			$LigneConges=new AnimConges();
-			$LigneConges->setUser($this->getUser())
-						->setJour($Jour)
-						->setMoment($MomentTravail);
-			$em->persist($LigneConges);	
+			$DateDebut=$sejour->getDateDebut();
+			$DateFin=$sejour->getDateFin();
+			$sejour->setDirecteur($this->getUser());
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($sejour);
+			$em->flush();
+			$NbJours = date_diff($DateDebut, $DateFin);
+			$Days=$NbJours->format("%a");		
+			$DateTravail = $DateDebut;
+			$this->creerJourSejour($DateDebut, $sejour, $em);
+			for($i = 1; $i < $Days+1; $i += 1)
+			{
+				$NewDate = $DateTravail->modify('+1 day');
+				$this->creerJourSejour($NewDate, $sejour);
+			}
+			$em->flush();		
+			$request->getSession()->getFlashBag()->add('notice', 'Le séjour a bien été créé.');
+			return $this->redirectToRoute('sejour_indexsejour');
 		}
-		$em->flush();		
-		$request->getSession()->getFlashBag()->add('notice', 'Le séjour a bien été créé.');
-
-		return $this->redirectToRoute('sejour_indexsejour');
-		}
-
 		return $this->render('SejourBundle:Default:creersejour.html.twig', array('form' => $form->createView(),));
     }
 	// Supprimer un séjour
@@ -252,6 +219,24 @@ class SejourController extends Controller
 	
 	
 	return $this->render('SejourBundle:Default:editsejour.html.twig', array('listeJours' => $listJours, 'Sejour' => $sejour));
+	}
+	public function creerJourSejour($D, $s)
+	{
+		$repository6 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:IdMoment');
+		$em = $this->getDoctrine()->getManager();
+		$Jour = new Jour();
+		$Jour->setDate($D);
+		$Jour->setSejour($s);
+		$em->persist($Jour);
+		$LigneConges=new AnimConges();
+		$MomentTravail = $repository6->findOneById(1);
+		$LigneConges->setUser($this->getUser())
+					->setJour($Jour)
+					->setMoment($MomentTravail);
+		$em->persist($LigneConges);
+		$em->flush();
 	}
 }
 

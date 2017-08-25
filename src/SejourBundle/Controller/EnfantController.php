@@ -16,7 +16,7 @@ use SejourBundle\Entity\ForumCategorie;
 use SejourBundle\Entity\ForumMessage;
 use SejourBundle\Entity\ForumUserMessageVu;
 use SejourBundle\Entity\AnimConges;
-use SejourBundle\Entity\idMoment;
+use SejourBundle\Entity\IdMoment;
 use SejourBundle\Entity\Soin;
 use SejourBundle\Entity\Traitement;
 use SejourBundle\Entity\TraitementJour;
