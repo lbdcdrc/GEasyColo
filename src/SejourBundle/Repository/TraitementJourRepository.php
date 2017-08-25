@@ -13,7 +13,7 @@ class TraitementJourRepository extends \Doctrine\ORM\EntityRepository
 	/**
 	* Récupération des traitement/jour/séjour.
 	*/
-	function traitementsejour($id, $jour)
+	public function traitementsejour($id, $jour)
     {
         $query = 	$this->createQueryBuilder('p')
 						->addSelect('t')
