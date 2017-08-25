@@ -1,0 +1,7 @@
+{% for ev in listeInscriptions %}
+	{% if ev.jour == jour %}
+		{% if ev.moment == momenttest %}
+			{{ ev.activite.nom }}
+		{% endif %}
+	{% endif %}
+{% endfor %}

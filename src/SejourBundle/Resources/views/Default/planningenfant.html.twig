@@ -14,44 +14,19 @@
 	<tr>
 		<td>{{ jour.date|date('d/m/Y') }}</td>
 			<td>
-			{% for ev in listeInscriptions %}
-				{% if ev.jour == jour %}
-					{% if ev.moment == 1 %}
-						{{ ev.activite.nom }}
-					{% endif %}
-				{% endif %}
-			{% endfor %}
+			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
 			</td>
 			
 			<td>			
-			{% for ev in listeInscriptions %}
-				{% if ev.jour == jour %}
-					{% if ev.moment == 2 %}
-						{{ ev.activite.nom }}
-					{% endif %}
-				{% endif %}
-			{% endfor %}
+			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 2, 'jour': jour } only %}
 			</td>			
 			
 			<td>
-			{% for ev in listeInscriptions %}
-				{% if ev.jour == jour %}
-					{% if ev.moment == 3 %}
-						{{ ev.activite.nom }}
-					{% endif %}
-				{% endif %}
-
-			{% endfor %}
+			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
 			</td>
 			
 			<td>
-			{% for ev in listeInscriptions %}
-				{% if ev.jour == jour %}
-					{% if ev.moment == 4 or ev.moment == 5 %}
-						{{ ev.activite.nom }}
-					{% endif %}
-				{% endif %}
-			{% endfor %}
+			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 4 or 5, 'jour': jour } only %}
 			</td>
 	</tr>
 	{% endfor %}
