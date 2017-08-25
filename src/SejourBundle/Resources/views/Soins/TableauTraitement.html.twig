@@ -1,0 +1,67 @@
+<center>
+	<table class="Matable" border="1px">
+		<tr>
+			<th> Aller au jour :  </th>
+			<th>
+				<form>
+					<select id="select-id" name="someoptions">
+						<option value="{{ path('sejour_traitement', { 'id': Sejour.id, 'jour' : Jour.id }) }}" style="color:red;">{{ Jour.date | localizeddate('full', 'none') }}</option>
+						{% for jour in ListeJour %}
+							{% if jour.id != Jour.id %}
+							<option value="{{ path('sejour_traitement', { 'id': Sejour.id, 'jour' : jour.id }) }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+							{% endif %}
+						{% endfor %}
+					</select>
+				</form>
+			</th>
+			<th colspan="5"> {{ Jour.date|date('d/m') }} </th>
+		</tr>
+		<tr>
+			<th> Enfant </th>
+			<th> Traitement </th>
+			<th> Matin </th>
+			<th> Midi </th>
+			<th> Soir </th>
+			<th> Couché </th>
+			<th> Autre </th>
+		</tr>
+		{% for traitement in ListeTraitement %}
+		<tr>
+			<td> {{traitement.Traitement.enfant.prenom }} {{traitement.Traitement.enfant.nom }} </td>
+			<td> {{traitement.Traitement.traitement }} </td>
+			{% include "SejourBundle:Soins:LigneMatin.html.twig" with {'traitement': traitement, 'Sejour':Sejour, 'Jour':Jour} only %}
+			{% include "SejourBundle:Soins:LigneMidi.html.twig" with {'traitement': traitement, 'Sejour':Sejour, 'Jour':Jour} only %}
+			{% include "SejourBundle:Soins:LigneSoir.html.twig" with {'traitement': traitement, 'Sejour':Sejour, 'Jour':Jour} only %}
+			{% include "SejourBundle:Soins:LigneCouche.html.twig" with {'traitement': traitement, 'Sejour':Sejour, 'Jour':Jour} only %}
+			{% include "SejourBundle:Soins:LigneAutre.html.twig" with {'traitement': traitement, 'Sejour':Sejour, 'Jour':Jour} only %}
+		</tr>
+		{% endfor %}
+	</table>
+</center>
+<script>
+function check(id, Moment, idTraitement)
+{
+var cb = document.getElementById(id)
+	if (cb.checked) 
+		{
+			if(confirm("Ce traitement a t'il bien été donné ?"))
+				{
+					window.location.href = cb.name;
+				}
+			else
+				{
+					cb.checked = false;
+				}	
+		}
+	else{
+			return false;
+		}
+}
+</script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script> 
+$('#select-id').change(function() {
+   url = $('#select-id').val();
+   window.location.href = url;
+});
+</script>

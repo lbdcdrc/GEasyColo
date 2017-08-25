@@ -1,0 +1,10 @@
+<td width="10%"> 	{% if traitement.Traitement.Autre %}
+			{% if traitement.AutreCheck %}
+				<i class="fa fa-check" aria-hidden="true"></i>
+			{% else %}
+				<input id="checkBoxAutre{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.AutrePosologie }}" title="{{ traitement.Traitement.AutrePosologie }}" onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 5 }) }}">
+			{% endif %}
+		{% else %}
+			<i class="fa fa-times" aria-hidden="true"></i>
+		{% endif %}
+</td>

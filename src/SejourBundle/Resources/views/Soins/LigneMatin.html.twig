@@ -1,0 +1,10 @@
+<td width="10%"> 	{% if traitement.Traitement.Matin %}
+			{% if traitement.MatinCheck %}
+				<i class="fa fa-check" aria-hidden="true"></i>
+			{% else %}
+				<input id="checkBoxMatin{{traitement.id}}" type="checkbox" alt="{{ traitement.Traitement.MatinPosologie }}" title="{{ traitement.Traitement.MatinPosologie }}"  onclick="check(this.id, 1, {{traitement.id }})" name="{{ path('sejour_traitement_check', { 'id': Sejour.id, 'jour' : Jour.id, 'traitement' : traitement.id  , 'moment' : 1 }) }}">
+			{% endif %}
+		{% else %}
+			<i class="fa fa-times" aria-hidden="true"></i>
+		{% endif %}
+</td>
