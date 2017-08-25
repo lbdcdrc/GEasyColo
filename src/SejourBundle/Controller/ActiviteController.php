@@ -124,13 +124,13 @@ class ActiviteController extends Controller
 	}              
 	// Génération du datatable de la liste des activités d'un séjour
 	public function tableActiAction($id){
-		$this->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		return $this->table_acti($id)->execute();                                      
 	}
 	// Ajout d'une fiche activité d'un utilisateur à un de ses séjour
 	public function AjouterFichesActiSejourAction($id, Request $request){
 	// Vérification des droits
-		 $this->container->get('sejour.droits')->AllowedUser($id);;
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()

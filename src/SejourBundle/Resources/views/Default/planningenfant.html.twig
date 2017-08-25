@@ -15,19 +15,19 @@
 			<tr>
 				<td>{{ jour.date|date('d/m/Y') }}</td>
 					<td>
-					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'momenttest': 1, 'jour': jour } only %}
 					</td>
 					
 					<td>			
-					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 2, 'jour': jour } only %}
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'momenttest': 2, 'jour': jour } only %}
 					</td>			
 					
 					<td>
-					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'momenttest': 1, 'jour': jour } only %}
 					</td>
 					
 					<td>
-					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 4 or 5, 'jour': jour } only %}
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'momenttest': 4 or 5, 'jour': jour } only %}
 					</td>
 			</tr>
 			{% endfor %}
