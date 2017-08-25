@@ -1,35 +1,36 @@
 {% extends "AdminBundle:TableUtilisateurs:modal.html.twig" %}
 {% block modal %}  
-  <table style="width:100%;">
-    <thead>
-	<tr>
-		<th> Jour </th>
-		<th> Matin 1 </th>
-		<th> Matin 2 </th>
-		<th> Après Midi </th>
-		<th> Journée </th>
-    </thead>
-    <tbody>
-	{%for jour in listeJours %}
-	<tr>
-		<td>{{ jour.date|date('d/m/Y') }}</td>
-			<td>
-			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
-			</td>
-			
-			<td>			
-			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 2, 'jour': jour } only %}
-			</td>			
-			
-			<td>
-			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
-			</td>
-			
-			<td>
-			{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 4 or 5, 'jour': jour } only %}
-			</td>
-	</tr>
-	{% endfor %}
-    </tbody>
-  </table>
+	<table style="width:100%;">
+		<thead>
+			<tr>
+				<th> Jour </th>
+				<th> Matin 1 </th>
+				<th> Matin 2 </th>
+				<th> Après Midi </th>
+				<th> Journée </th>
+			</tr>
+		</thead>
+		<tbody>
+			{%for jour in listeJours %}
+			<tr>
+				<td>{{ jour.date|date('d/m/Y') }}</td>
+					<td>
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
+					</td>
+					
+					<td>			
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 2, 'jour': jour } only %}
+					</td>			
+					
+					<td>
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 1, 'jour': jour } only %}
+					</td>
+					
+					<td>
+					{% include "SejourBundle:PlanningEnfant:LigneMoment.html.twig" with {'listeInscriptions': listeInscriptions, 'moment': 4 or 5, 'jour': jour } only %}
+					</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock modal %}

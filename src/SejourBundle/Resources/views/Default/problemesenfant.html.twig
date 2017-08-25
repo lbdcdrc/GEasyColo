@@ -4,148 +4,37 @@
 {% block titre %}{{ enfant.nom }} {{ enfant.prenom }}{% endblock titre %}
 {% block soustitre %}{{ enfant.age }} ans {% if enfant.chambre %} - Chambre : {{ enfant.chambre }} {% endif %}{% endblock soustitre %}
 
-
-
 {% block coeur %}
 <center>
-{% if image %}
-<img 
-  src="{{ image | imagine_filter('my_thumb')}}"
-  alt="PhotoEnfant"
-  style="width:204px"
-/>
-{% else %}
-<img 
-  src="/anonyme.jpg"
-  alt="PhotoEnfant"
-  style="width:204px"
-/>
-{% endif %}</br><hr>
-<button id="{{ enfant.id }}enfant{{ enfant.id }}"><i class="fa fa-calendar" aria-hidden="true"></i></button>
-{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-<button id="buttonenfant{{ enfant.id }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-{% endif %}
+	{% if image %}
+	<img 
+	  src="{{ image | imagine_filter('my_thumb')}}"
+	  alt="PhotoEnfant"
+	  style="width:204px"
+	/>
+	{% else %}
+	<img 
+	  src="/anonyme.jpg"
+	  alt="PhotoEnfant"
+	  style="width:204px"
+	/>
+	{% endif %}<br><hr>
+	<button id="{{ enfant.id }}enfant{{ enfant.id }}"><i class="fa fa-calendar" aria-hidden="true"></i></button>
 
-
-
+	{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
+	<button id="buttonenfant{{ enfant.id }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+	{% endif %}
 </center>
- </br>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-		<th width="75%">Problème</th>
-		<th>Etat</th>
-      </tr>
-    </thead>
-    <tbody>
-	{% for probleme in listeProblemes %}
-		<tr {% if probleme.encours %} style="background:#ffd9d1;" {% endif %} >
-		<td>{{ probleme.date|date("d/m/y g:ia", "Europe/Paris") }}</br> Problème n°{{ probleme.id }}</br> Déclaré par :</br>{{probleme.ecrivain.prenom}} {{probleme.ecrivain.nom}}</td>
-		<td>{{ probleme.probleme }}</td>
-		<td>
-		{% if probleme.encours %}
-		<a href="{{ path('enfant_check_probleme', { 'id': probleme.id }) }}" class="button" role="button">Régler ?</a>
-		{% else %}
-		<span class="fa fa-check" aria-hidden="true"></span></br>
-		{{ probleme.datefin|date("d/m/y g:ia", "Europe/Paris") }}</br>
-		Réglé par :</br>
-		{{probleme.reglepar.prenom}} {{probleme.reglepar.nom}}
-		{% endif %}
-		</td>
-		</tr>
-	{% endfor %}
-    </tbody>
-  </table>
-
-
-<hr/>
+<br>
+{% include "SejourBundle:ProblemesEnfant:ListeProblemes.html.twig" with {'listeProblemes': listeProblemes } only %}
+<hr>
 <center>
-{{ form(form) }}
+	{{ form(form) }}
 </center>
 
-<!-- The Modal -->
-<div id="enfant{{ enfant.id }}" class="modal">
+{% include "SejourBundle:ProblemesEnfant:ModalPlanningEnfant.html.twig" with {'enfant': enfant } only %}
+{% include "SejourBundle:ProblemesEnfant:ModalEditEnfant.html.twig" with {'enfant': enfant } only %}
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close" id="{{ enfant.id }}span{{ enfant.id }}">&times;</span>
-      <h2>Planning de {{ enfant.prenom }} {{ enfant.nom }}</h2>
-    </div>
-    <div class="modal-body">
-      {{ render(controller('SejourBundle:Enfant:PlanningEnfant',{ 'id': enfant.id })) }}
-    </div>
-    <div class="modal-footer">
-      <h3>{{ enfant.sejour.nomThema }}</h3>
-    </div>
-  </div>
-
-</div>
-
-<script>
-// Get the modal
-var modalenfant{{ enfant.id }} = document.getElementById('enfant{{ enfant.id }}');
-
-// Get the button that opens the modal
-var btnenfant{{ enfant.id }} = document.getElementById("{{ enfant.id }}enfant{{ enfant.id }}");
-
-// Get the <span> element that closes the modal
-var spanenfant{{ enfant.id }} = document.getElementById("{{ enfant.id }}span{{ enfant.id }}");
-
-// When the user clicks the button, open the modal 
-btnenfant{{ enfant.id }}.onclick = function() {
-    modalenfant{{ enfant.id }}.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-spanenfant{{ enfant.id }}.onclick = function() {
-    modalenfant{{ enfant.id }}.style.display = "none";
-}
-
-</script>
-{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-<!-- The Modal -->
-<div id="modalenfant{{ enfant.id }}" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close" id="spanenfant{{ enfant.id }}">&times;</span>
-      <h2>Édition d'une fiche enfant :</h2>
-    </div>
-    <div class="modal-body">
-		{{ render(controller('SejourBundle:Enfant:editEnfant',{ 'id': enfant.id })) }}
-    </div>
-    <div class="modal-footer">
-      <h3>{{ enfant.nom }} {{ enfant.prenom }}</h3>
-    </div>
-  </div>
-
-</div>
-
-<script>
-// Get the modal
-var modalvarenfant{{ enfant.id }} = document.getElementById('modalenfant{{ enfant.id }}');
-
-// Get the button that opens the modal
-var buttonvarenfant{{ enfant.id }} = document.getElementById("buttonenfant{{ enfant.id }}");
-
-// Get the <span> element that closes the modal
-var spanvarenfant{{ enfant.id }} = document.getElementById("spanenfant{{ enfant.id }}");
-
-// When the user clicks the button, open the modal 
-buttonvarenfant{{ enfant.id }}.onclick = function() {
-    modalvarenfant{{ enfant.id }}.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-spanvarenfant{{ enfant.id }}.onclick = function() {
-    modalvarenfant{{ enfant.id }}.style.display = "none";
-}
-
-</script>
-{% endif %}
 {% endblock %}
 
 

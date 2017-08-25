@@ -1,0 +1,24 @@
+{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
+<div id="modalenfant{{ enfant.id }}" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="spanenfant{{ enfant.id }}">&times;</span>
+			<h2>Édition d'une fiche enfant :</h2>
+		</div>
+		<div class="modal-body">
+			{{ render(controller('SejourBundle:Enfant:editEnfant',{ 'id': enfant.id })) }}
+		</div>
+		<div class="modal-footer">
+			<h3>{{ enfant.nom }} {{ enfant.prenom }}</h3>
+		</div>
+	</div>
+</div>
+
+<script>
+	var modalvarenfant{{ enfant.id }} = document.getElementById('modalenfant{{ enfant.id }}');
+	var buttonvarenfant{{ enfant.id }} = document.getElementById("buttonenfant{{ enfant.id }}");
+	var spanvarenfant{{ enfant.id }} = document.getElementById("spanenfant{{ enfant.id }}");
+	buttonvarenfant{{ enfant.id }}.onclick = function() { modalvarenfant{{ enfant.id }}.style.display = "block";}
+	spanvarenfant{{ enfant.id }}.onclick = function() { modalvarenfant{{ enfant.id }}.style.display = "none";}
+</script>
+{% endif %}

@@ -1,0 +1,22 @@
+<div id="enfant{{ enfant.id }}" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="{{ enfant.id }}span{{ enfant.id }}">&times;</span>
+			<h2>Planning de {{ enfant.prenom }} {{ enfant.nom }}</h2>
+		</div>
+		<div class="modal-body">
+			{{ render(controller('SejourBundle:Enfant:PlanningEnfant',{ 'id': enfant.id })) }}
+		</div>
+		<div class="modal-footer">
+			<h3>{{ enfant.sejour.nomThema }}</h3>
+		</div>
+	</div>
+</div>
+
+<script>
+	var modalenfant{{ enfant.id }} = document.getElementById('enfant{{ enfant.id }}');
+	var btnenfant{{ enfant.id }} = document.getElementById("{{ enfant.id }}enfant{{ enfant.id }}");
+	var spanenfant{{ enfant.id }} = document.getElementById("{{ enfant.id }}span{{ enfant.id }}");
+	btnenfant{{ enfant.id }}.onclick = function() {modalenfant{{ enfant.id }}.style.display = "block";}
+	spanenfant{{ enfant.id }}.onclick = function() { modalenfant{{ enfant.id }}.style.display = "none";}
+</script>
