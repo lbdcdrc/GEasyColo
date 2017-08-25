@@ -21,31 +21,7 @@
 						<li> {{ Sejour.directeur.telephone }} </li>
 						<li> {{ Sejour.directeur.email }} </li>
 												<li>
-						{% if Sejour.directeur.diplome == 0 %}
-						Non Diplomé
-						{% elseif Sejour.directeur.diplome == 1 %}
-						BAFA Stage 1 Fait 
-						{% elseif Sejour.directeur.diplome == 2 %}
-						BAFA Stage Pratique Fait
-						{% elseif Sejour.directeur.diplome == 3 %}
-						BAFA Stage 2 Fait 
-						{% elseif Sejour.directeur.diplome == 4 %}
-						Diplômé BAFA
-						{% elseif Sejour.directeur.diplome == 5 %}
-						Équivalence BAFA
-						{% elseif Sejour.directeur.diplome == 6 %}
-						BAFD Stage 1 Fait
-						{% elseif Sejour.directeur.diplome == 7 %}
-						BAFD Stage Pratique 1 Fait
-						{% elseif Sejour.directeur.diplome == 8 %}
-						BAFD Stage 2 Fait
-						{% elseif Sejour.directeur.diplome == 9 %}
-						BAFD Stage Pratique 2 Fait
-						{% elseif Sejour.directeur.diplome == 10 %}
-						BAFD Diplômé
-						{% elseif Sejour.directeur.diplome == 11 %}
-						Équivalence BAFD
-						{% endif %}
+						{{ Sejour.directeur.diplome.nom }}
 						</li>
 						<li>
 						{% if Sejour.directeur.psc1 == 1 %}
@@ -90,31 +66,7 @@
 						<li> {{ animateur.user.email }} </li>
 						{% endif %}
 						<li>
-						{% if animateur.user.diplome == 0 %}
-						Non Diplomé
-						{% elseif animateur.user.diplome == 1 %}
-						BAFA Stage 1 Fait 
-						{% elseif animateur.user.diplome == 2 %}
-						BAFA Stage Pratique Fait
-						{% elseif animateur.user.diplome == 3 %}
-						BAFA Stage 2 Fait 
-						{% elseif animateur.user.diplome == 4 %}
-						Diplômé BAFA
-						{% elseif animateur.user.diplome == 5 %}
-						Équivalence BAFA
-						{% elseif animateur.user.diplome == 6 %}
-						BAFD Stage 1 Fait
-						{% elseif animateur.user.diplome == 7 %}
-						BAFD Stage Pratique 1 Fait
-						{% elseif animateur.user.diplome == 8 %}
-						BAFD Stage 2 Fait
-						{% elseif animateur.user.diplome == 9 %}
-						BAFD Stage Pratique 2 Fait
-						{% elseif animateur.user.diplome == 10 %}
-						BAFD Diplômé
-						{% elseif animateur.user.diplome == 11 %}
-						Équivalence BAFD
-						{% endif %}
+						{{ animateur.user.diplome.nom }}
 						</li>
 						<li>
 						{% if animateur.user.psc1 == 1 %}

@@ -1,29 +1,5 @@
 {# XXXMyBundle:Renderers:_actions.html.twig #}
-{% if dt_item == 0 %}
-Non Diplomé
-{% elseif dt_item == 1 %}
-BAFA Stage 1 Fait 
-{% elseif dt_item == 2 %}
-BAFA Stage Pratique Fait
-{% elseif dt_item == 3 %}
-BAFA Stage 2 Fait 
-{% elseif dt_item == 4 %}
-Diplômé BAFA
-{% elseif dt_item == 5 %}
-Équivalence BAFA
-{% elseif dt_item == 6 %}
-BAFD Stage 1 Fait
-{% elseif dt_item == 7 %}
-BAFD Stage Pratique 1 Fait
-{% elseif dt_item == 8 %}
-BAFD Stage 2 Fait
-{% elseif dt_item == 9 %}
-BAFD Stage Pratique 2 Fait
-{% elseif dt_item == 10 %}
-BAFD Diplômé
-{% elseif dt_item == 11 %}
-Équivalence BAFD
-{% endif %}
+{{ dt_item }}
 </br>
 {% if dt_obj.psc1 == 1 %}
 PSC1

@@ -61,15 +61,10 @@ class User extends BaseUser
 	private $telephone;	
 	
 	/**
-     * @var int
-     *
-     * @ORM\Column(name="Diplome", type="integer")
-	 * @Assert\Range(
-     *      min = 0,
-     *      max = 11,
-     * )
-     */
-    private $diplome;
+	* @ORM\ManyToOne(targetEntity="UserBundle\Entity\Diplome")
+	* @ORM\JoinColumn(nullable=true)
+	*/
+	private $diplome;	
 	
     /**
      * @var bool
@@ -203,30 +198,6 @@ class User extends BaseUser
     public function getTelephone()
     {
         return $this->telephone;
-    }
-
-    /**
-     * Set diplome
-     *
-     * @param integer $diplome
-     *
-     * @return User
-     */
-    public function setDiplome($diplome)
-    {
-        $this->diplome = $diplome;
-
-        return $this;
-    }
-
-    /**
-     * Get diplome
-     *
-     * @return integer
-     */
-    public function getDiplome()
-    {
-        return $this->diplome;
     }
 
     /**
@@ -489,5 +460,29 @@ class User extends BaseUser
     public function getPN()
     {
         return $this->PN;
+    }
+
+    /**
+     * Set diplome
+     *
+     * @param \UserBundle\Entity\Diplome $diplome
+     *
+     * @return User
+     */
+    public function setDiplome(\UserBundle\Entity\Diplome $diplome = null)
+    {
+        $this->diplome = $diplome;
+
+        return $this;
+    }
+
+    /**
+     * Get diplome
+     *
+     * @return \UserBundle\Entity\Diplome
+     */
+    public function getDiplome()
+    {
+        return $this->diplome;
     }
 }

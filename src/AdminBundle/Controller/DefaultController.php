@@ -33,10 +33,11 @@ class DefaultController extends Controller
 									"Nom d'utilisateur" => 'x.username',
 									"État civil"	=> 'x.nom',
 									"Coordonnées" => 'x.email',
-									"Qualifications" => 'x.diplome',
+									"Qualifications" => 'd.nom',
 									"Actions" => 'x.id',
 									"_identifier_" => 'x.id')
 						)
+						->addJoin('x.diplome', 'd', \Doctrine\ORM\Query\Expr\Join::INNER_JOIN)
 						->setRenderers(
 								array(
 									1 => array('view' => 'AdminBundle:TableUtilisateurs:etatcivil.html.twig',),

@@ -12,6 +12,7 @@ use FOS\UserBundle\Util\LegacyFormHelper;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  
 class ProfileType extends AbstractType
  
@@ -35,20 +36,9 @@ class ProfileType extends AbstractType
 	   
 	   $builder->add(
 					$builder->create('step2', FormType::class, array('label'=>'Qualifications :', 'inherit_data' => true))
-							->add('diplome', ChoiceType::class, array('label'=>'Diplôme', 'choices' => array(
-														'Sans BAFA'=>0,
-														'BAFA Stage 1 fait'=>1,
-														'BAFA Stage pratique fait'=>2,
-														'BAFA Stage 2 fait'=>3,
-														'BAFA Diplômé'=>4,
-														'Équivalence BAFA'=>5,
-														'BAFD Stage 1 fait'=>6,
-														'BAFD Stage pratique 1 fait'=>7,
-														'BAFD Stage 2 fait'=>8,
-														'BAFD Stage pratique 2 fait'=>9,
-														'BAFD Diplômé'=>10,
-														'Équivalence BAFD'=>11
-														)))
+							->add('diplome', EntityType::class, array('class' => 'UserBundle:Diplome',
+																	'choice_label' => 'nom',
+																	))
 							->add('psc1', CheckboxType::class, array('label'    => 'PSC1', 'required'=>false))
 							->add('sb', CheckboxType::class, array('label'    => 'Surveillant de Baignade', 'required'=>false)));
 		$builder->add('presentation', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ma présentation', 'config_name'=>'bbcode'));

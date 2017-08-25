@@ -16,31 +16,7 @@
 																<header>
 																	<h3>Profil de {{ user.username }}</a></h3>
 																	<p>Animateur - {{ user.age }} ans - 
-																	{% if user.diplome == 0 %}
-																	Non Diplomé
-																	{% elseif user.diplome == 1 %}
-																	BAFA Stage 1 Fait 
-																	{% elseif user.diplome == 2 %}
-																	BAFA Stage Pratique Fait
-																	{% elseif user.diplome == 3 %}
-																	BAFA Stage 2 Fait 
-																	{% elseif user.diplome == 4 %}
-																	Diplômé BAFA
-																	{% elseif user.diplome == 5 %}
-																	Équivalence BAFA
-																	{% elseif user.diplome == 6 %}
-																	BAFD Stage 1 Fait
-																	{% elseif user.diplome == 7 %}
-																	BAFD Stage Pratique 1 Fait
-																	{% elseif user.diplome == 8 %}
-																	BAFD Stage 2 Fait
-																	{% elseif user.diplome == 9 %}
-																	BAFD Stage Pratique 2 Fait
-																	{% elseif user.diplome == 10 %}
-																	BAFD Diplômé
-																	{% elseif user.diplome == 11 %}
-																	Équivalence BAFD
-																	{% endif %}
+																	{{ user.diplome.nom }}
 																	 - 
 																	{% if user.psc1 == 1 %}
 																	<i class="fa fa-check-square-o" aria-hidden="true">  PSC1</i>
