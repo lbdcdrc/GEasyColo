@@ -163,7 +163,7 @@ class EnfantController extends Controller
 	}	
 	public function listeEnfantSejourAction($id, Request $request){
 		$this->container->get('sejour.droits')->AllowedUser($id);
-		$this->table_enfants($id);
+		$this->tableEnfants($id);
 		$repository2 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Sejour');
