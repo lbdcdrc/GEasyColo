@@ -44,7 +44,7 @@ use Dompdf\Options;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class activiteController extends Controller
+class ActiviteController extends Controller
 {
 	// Export JSON de la liste des activité d'un utilisateur
 	private function table_acti_util() {
