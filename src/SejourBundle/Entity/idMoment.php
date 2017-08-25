@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="id_moment")
  * @ORM\Entity(repositoryClass="SejourBundle\Repository\idMomentRepository")
  */
-class idMoment
+class IdMoment
 {
     /**
      * @var int
