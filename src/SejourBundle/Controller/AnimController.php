@@ -4,7 +4,7 @@ namespace SejourBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use SejourBundle\Entity\Sejour;
-use SejourBundle\Form\SejourType;
+use SejourBundle\Form\Type\SejourType;
 use SejourBundle\Entity\Enfant;
 use SejourBundle\Entity\Jour;
 use SejourBundle\Entity\Evenement;
@@ -16,7 +16,7 @@ use SejourBundle\Entity\ForumCategorie;
 use SejourBundle\Entity\ForumMessage;
 use SejourBundle\Entity\ForumUserMessageVu;
 use SejourBundle\Entity\AnimConges;
-use SejourBundle\Entity\idMoment;
+use SejourBundle\Entity\IdMoment;
 use SejourBundle\Entity\Soin;
 use SejourBundle\Entity\Traitement;
 use SejourBundle\Entity\TraitementJour;
@@ -119,7 +119,7 @@ class AnimController extends Controller
 					->getRepository('SejourBundle:Jour');
 			$repository6 = $this->getDoctrine()
 					->getManager()
-					->getRepository('SejourBundle:idMoment');
+					->getRepository('SejourBundle:IdMoment');
 			
 			$listeJour = $repository4->findBy(array('sejour'=>$Sejour));
 			
@@ -219,7 +219,7 @@ class AnimController extends Controller
 			$listeJ[$Jour->getId()]=$CongesAnim;
 			$NomForm="A".$Directeur->getId()."J".$Jour->getId();
 			$form->add($NomForm, EntityType::class, array(
-					'class' => 'SejourBundle:idMoment',
+					'class' => 'SejourBundle:IdMoment',
 					'choice_label'=>'moment',
 					'required'=>true,
 					'expanded'=>true,
@@ -237,7 +237,7 @@ class AnimController extends Controller
 				$listeJ[$Jour->getId()]=$CongesAnim;
 				$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
 				$form->add($NomForm, EntityType::class, array(
-						'class' => 'SejourBundle:idMoment',
+						'class' => 'SejourBundle:IdMoment',
 						'choice_label'=>'moment',
 						'required'=>true,
 						'expanded'=>true,

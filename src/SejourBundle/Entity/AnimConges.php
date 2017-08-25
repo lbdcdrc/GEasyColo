@@ -34,7 +34,7 @@ class AnimConges
 	private $user;	
 
 	/**
-	* @ORM\ManyToOne(targetEntity="SejourBundle\Entity\idMoment")
+	* @ORM\ManyToOne(targetEntity="SejourBundle\Entity\IdMoment")
 	* @ORM\JoinColumn(nullable=false)
 	*/
 	private $moment;

@@ -106,9 +106,7 @@ class SejourController extends Controller
 			$sejour->setDirecteur($this->getUser());
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($sejour);
-			$em->flush();
-			$NbJours = date_diff($DateDebut, $DateFin);
-			$Days=$NbJours->format("%a");		
+			$Days=date_diff($DateDebut, $DateFin)->format("%a");		
 			$DateTravail = $DateDebut;
 			$this->creerJourSejour($DateDebut, $sejour, $em);
 			for($i = 1; $i < $Days+1; $i += 1)
@@ -220,7 +218,7 @@ class SejourController extends Controller
 	
 	return $this->render('SejourBundle:Default:editsejour.html.twig', array('listeJours' => $listJours, 'Sejour' => $sejour));
 	}
-	public function creerJourSejour($D, $s)
+	private function creerJourSejour($D, $s)
 	{
 		$repository6 = $this->getDoctrine()
 			->getManager()

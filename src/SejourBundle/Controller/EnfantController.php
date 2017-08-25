@@ -4,7 +4,7 @@ namespace SejourBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use SejourBundle\Entity\Sejour;
-use SejourBundle\Form\SejourType;
+use SejourBundle\Form\Type\SejourType;
 use SejourBundle\Entity\Enfant;
 use SejourBundle\Entity\Jour;
 use SejourBundle\Entity\Evenement;

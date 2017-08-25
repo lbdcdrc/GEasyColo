@@ -4,7 +4,7 @@ namespace SejourBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use SejourBundle\Entity\Sejour;
-use SejourBundle\Form\SejourType;
+use SejourBundle\Form\Type\SejourType;
 use SejourBundle\Entity\Enfant;
 use SejourBundle\Entity\Jour;
 use SejourBundle\Entity\Evenement;
@@ -16,7 +16,7 @@ use SejourBundle\Entity\ForumCategorie;
 use SejourBundle\Entity\ForumMessage;
 use SejourBundle\Entity\ForumUserMessageVu;
 use SejourBundle\Entity\AnimConges;
-use SejourBundle\Entity\idMoment;
+use SejourBundle\Entity\IdMoment;
 use SejourBundle\Entity\Soin;
 use SejourBundle\Entity\Traitement;
 use SejourBundle\Entity\TraitementJour;

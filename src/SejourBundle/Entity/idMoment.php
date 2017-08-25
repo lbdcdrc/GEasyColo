@@ -5,7 +5,7 @@ namespace SejourBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * idMoment
+ * IdMoment
  *
  * @ORM\Table(name="id_moment")
  * @ORM\Entity(repositoryClass="SejourBundle\Repository\IdMomentRepository")
