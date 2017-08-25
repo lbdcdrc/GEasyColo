@@ -1,0 +1,54 @@
+<li class="plan">		
+	<ul class="planContainer">
+		{% include "SejourBundle:FicheAnim:Image.html.twig" with {'user': user} only %}
+		<li class="price"><p>{{ user.prenom }} <span> {{ user.nom }} </span></p></li>
+		<li>
+			<ul class="options">
+				<li>{{ user.age }} ans  <span>
+				{% if role == 1 %}
+				Animateur
+				{% elseif role == 2 %}
+				Assistant Sanitaire
+				{% elseif role ==3 %}
+				Adjoint
+				{% else %}
+				Directeur
+				{% endif %}</span></li>
+			</ul>
+		</li>
+		{% include "SejourBundle:FicheAnim:Coordonnes.html.twig" with {'user': user, 'role':role} only %}
+		{% include "SejourBundle:FicheAnim:Diplomes.html.twig" with {'user': user} only %}
+		{% if is_granted('ROLE_ADJOINT') and role<4 %}
+		<li><a href="{{ path('derecrute', { 'id': user.id }) }}" onclick="return confirm('Confirmer le dérecrutement ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
+Dérecruter?</button></a></li>
+		{% endif %}
+	</ul>
+</li>
+
+<div id="modalanim{{ user.id }}" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<span class="close" id="modalanimclose{{ user.id }}" >&times;</span>
+			<center><h4>{{ user.prenom }} {{ user.nom }}</h4></center>
+		</div>
+		<br>
+		<center>
+			<div style="width:80%;">
+				{% if user.presentation%}
+				{{ user.presentation|bbcode_filter('my_default_filter') }}
+				{% else %}
+				Ooow... Cet animateur n'as pas écris de présentation...
+				{% endif %}
+			</div>
+		</center>
+		<br>
+	</div>
+</div>
+
+<script>
+	var modalvaranim{{ user.id }} = document.getElementById('modalanim{{ user.id }}');
+	var varbtnanim{{ user.id }} = document.getElementById("modalanimbutton{{ user.id }}");
+	var varspananim{{ user.id }} = document.getElementById("modalanimclose{{ user.id }}");
+	varbtnanim{{ user.id }}.onclick = function() {modalvaranim{{ user.id }}.style.display = "block";}
+	varspananim{{ user.id }}.onclick = function() {modalvaranim{{ user.id }}.style.display = "none";}
+</script>

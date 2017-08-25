@@ -1,0 +1,5 @@
+<img class="card" {% if user.image %} 
+								src="{{ user.image.webPath| imagine_filter('md_thumb') }}" 
+						{% else %} 
+								src="{{ '/anonyme.jpg'|imagine_filter('md_thumb') }}"
+						{% endif %} alt="Avatar" style="width:100%">

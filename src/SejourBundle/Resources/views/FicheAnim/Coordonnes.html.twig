@@ -1,0 +1,4 @@
+{% if is_granted('ROLE_ADJOINT') or role==4 %}
+<li> {{ user.telephone }} </li>
+<li> {{ user.email }} </li>
+{% endif %}

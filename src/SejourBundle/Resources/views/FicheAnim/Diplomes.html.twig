@@ -1,0 +1,17 @@
+<li>
+{{ user.diplome.nom }}
+</li>
+<li>
+{% if user.psc1 == 1 %}
+<i class="fa fa-check-square-o" aria-hidden="true">  PSC1</i>
+{% else %}
+<i class="fa fa-times-circle-o" aria-hidden="true">  PSC1</i>
+{% endif %}
+-
+{% if user.sb == 1 %}
+<i class="fa fa-check-square-o" aria-hidden="true">  SB</i>
+{% else %}
+<i class="fa fa-times-circle-o" aria-hidden="true">  SB</i>
+{% endif %}
+</li>
+<li id ="modalanimbutton{{ user.id }}" class="button-card"><a href="#"><i class="fa fa-commenting" aria-hidden="true"></i></a></li>
