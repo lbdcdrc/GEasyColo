@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // src/SejourBundle/Droits/droits.php
 
 namespace SejourBundle\Droits;
