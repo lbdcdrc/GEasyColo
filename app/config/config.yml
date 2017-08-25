@@ -166,13 +166,13 @@ ivory_ck_editor:
             filename:                   'plugin.js'
     configs:
         bbcode:
-            toolbar:                    [[ 'Bold', 'Italic', 'Underline', 'BulletedList' ]]
+            toolbar:                    [ [ 'Preview' ], [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ], [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ], [ 'Source' ], [ "About" ],"/", [ 'Bold','Italic','Underline','Strike', 'Blockquote','Subscript','Superscript','-','RemoveFormat' ], [ 'NumberedList','BulletedList','-','Outdent','Indent','-','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ], [ 'Link','Unlink','Anchor' ], [ 'pbckcode', 'Image', 'Video', 'Table','SpecialChar','Iframe' ], '/', [ 'Styles', 'Format','Font','FontSize' ], [ 'TextColor','BGColor' ], [ 'RemoveFormat' ], [ 'Maximize' ] ]
             uiColor:                    "#FCFCFC"
             extraPlugins:               'bbcode'
 fm_bbcode:
   filter_sets:
     my_default_filter:
       strict: false # if you want to parse attr values without quotes
-      locale: ru
+      locale: fr
       xhtml: true
       filters: [ default ]
