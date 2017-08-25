@@ -31,7 +31,7 @@
 				</div>
 				<div id="collapse3" class="panel-collapse collapse">
 					<div class="panel-body">
-						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" , {'listeEnfant': listeEnfantsNulle, 'modifie': false } %}
+						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" with {'listeEnfant': listeEnfantsNulle, 'modifie': false, 'jour': jour } only %}
 					</div>
 					<div class="panel-footer">{{ listeEnfantsNulle|length }} enfants non inscrits aux activités</div>
 				</div>
@@ -49,7 +49,7 @@
 				</div>
 				<div id="collapse2" class="panel-collapse collapse">
 					<div class="panel-body">
-						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" , {'listeEnfant': listeEnfantsIncomplet, 'modifie': true } %}
+						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" with {'listeEnfant': listeEnfantsIncomplet, 'modifie': true, 'jour': jour } only %}
 					</div>
 					<div class="panel-footer">{{ listeEnfantsIncomplet|length }} enfants partiellement inscrits </div>
 				</div>
@@ -67,7 +67,7 @@
 				</div>
 				<div id="collapse1" class="panel-collapse collapse">
 					<div class="panel-body">
-						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" , {'listeEnfant': listeEnfantsComplet, 'modifie': true } %}
+						{% include "SejourBundle:RecapJour:TableAffectation.html.twig" with {'listeEnfant': listeEnfantsComplet, 'modifie': true, 'jour': jour } only %}
 					</div>
 					<div class="panel-footer"> {{ listeEnfantsComplet|length }} enfants inscrits complètement</div>
 				</div>
