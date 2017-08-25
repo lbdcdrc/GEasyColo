@@ -74,7 +74,7 @@
       <h2>Planning de {{ enfant.prenom }} {{ enfant.nom }}</h2>
     </div>
     <div class="modal-body">
-      {{ render(controller('SejourBundle:Default:PlanningEnfant',{ 'id': enfant.id })) }}
+      {{ render(controller('SejourBundle:Enfant:PlanningEnfant',{ 'id': enfant.id })) }}
     </div>
     <div class="modal-footer">
       <h3>{{ enfant.sejour.nomThema }}</h3>
@@ -115,7 +115,7 @@ spanenfant{{ enfant.id }}.onclick = function() {
       <h2>Édition d'une fiche enfant :</h2>
     </div>
     <div class="modal-body">
-		{{ render(controller('SejourBundle:Default:editEnfant',{ 'id': enfant.id })) }}
+		{{ render(controller('SejourBundle:Enfant:editEnfant',{ 'id': enfant.id })) }}
     </div>
     <div class="modal-footer">
       <h3>{{ enfant.nom }} {{ enfant.prenom }}</h3>
