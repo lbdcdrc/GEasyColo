@@ -46,33 +46,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ActiviteController extends Controller
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
-	private function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
-		
-		$repository = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:Sejour')
-		;
-		$repository2 = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:AnimSejour')
-		;
-		$Utilisateur = $this->getUser();
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
-
-		
-	}
 	// Export JSON de la liste des activité d'un utilisateur
 	private function table_acti_util() {
 	return $this->get('datatable')
@@ -121,7 +94,7 @@ class ActiviteController extends Controller
 	}	
 	// Export JSON de la liste des activité d'un séjour
 	private function table_acti($id) {
-	$this->AllowedUser($id);
+	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 	return $this->get('datatable')
 				->setEntity("SejourBundle:Activite", "x")                         
 				->setFields(
@@ -157,7 +130,7 @@ class ActiviteController extends Controller
 	// Ajout d'une fiche activité d'un utilisateur à un de ses séjour
 	public function AjouterFichesActiSejourAction($id, Request $request){
 	// Vérification des droits
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);;
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()
@@ -229,7 +202,7 @@ class ActiviteController extends Controller
 	// Fiches d'activite d'un séjour
 	public function FichesActiSejourAction($id, Request $request){
 		// Vérification des droits
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		$this->table_acti($id);
 		$repository = $this
 		  ->getDoctrine()
@@ -257,7 +230,7 @@ class ActiviteController extends Controller
 	// Suppression d'une activite d'un séjour
 	public function SupprFichesActiSejourAction($id, $idActi, Request $request){
 		// Vérification des droits
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()

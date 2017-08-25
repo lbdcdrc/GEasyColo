@@ -46,33 +46,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SejourController extends Controller
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
-	private function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
-		
-		$repository = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:Sejour')
-		;
-		$repository2 = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:AnimSejour')
-		;
-		$Utilisateur = $this->getUser();
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
-
-		
-	}
 	// Accueil de la plateforme
     public function IndexAction(){
 		
@@ -217,7 +190,7 @@ class SejourController extends Controller
 		$activite = $repository->find($idActi);
 		$Sejour = $repository2->find($id);
 		//verification des droits
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		// Ici, l'utilisateur est validé
 		
 		if (null === $activite)
@@ -243,7 +216,7 @@ class SejourController extends Controller
     }
 	// Accueil d'un séjour - Listing Jour + Avancement Séjour
 	public function AccueilSejourAction($id, Request $request){
-	$this->AllowedUser($id);
+	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 
     $repository = $this->getDoctrine()
       ->getManager()

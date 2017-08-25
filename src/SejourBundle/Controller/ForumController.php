@@ -46,37 +46,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ForumController extends Controller
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
-	private function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
-		
-		$repository = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:Sejour')
-		;
-		$repository2 = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:AnimSejour')
-		;
-		$Utilisateur = $this->getUser();
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
-
-		
-	}
 	// Forum séjour - Liste catégorie
 	public function AccueilForumAction($id, Request $request){
 	$em = $this->getDoctrine()->getManager();
-	$this->AllowedUser($id);
+	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 	$repository = $this->getDoctrine()
 	->getManager()
 	->getRepository('SejourBundle:Sejour');
@@ -187,7 +160,7 @@ class ForumController extends Controller
 	}	
 	// Forum séjour - Affichage Discussion
 	public function DiscussionAction($id, $idForum, $page, Request $request){
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Sejour');

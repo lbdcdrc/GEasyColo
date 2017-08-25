@@ -46,34 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EnfantController extends Controller
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
-	private function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
-		
-		$repository = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:Sejour')
-		;
-		$repository2 = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:AnimSejour')
-		;
-		$Utilisateur = $this->getUser();
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
-
-		
-	}
-		// Edition d'un enfant
+	// Edition d'un enfant
 	public function editEnfantAction($id, Request $request){
 		$repository = $this->getDoctrine()
 		  ->getManager()
@@ -81,7 +54,7 @@ class EnfantController extends Controller
 		;
 		$enfant = $repository->find($id);
 		//verification des droits
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Accès réservé à la direction');
@@ -132,7 +105,7 @@ class EnfantController extends Controller
 
 	}
 	private function table_enfants($id) {
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE')) {
 			return $this->get('datatable')
 						->setEntity("SejourBundle:Enfant", "x")                         
@@ -185,11 +158,11 @@ class EnfantController extends Controller
                        
 	}
 	public function tableEnfantsAction($id){
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		return $this->table_enfants($id)->execute();                                      
 	}	
 	public function listeEnfantSejourAction($id, Request $request){
-		$this->AllowedUser($id);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 		$this->table_enfants($id);
 		$repository2 = $this->getDoctrine()
 		->getManager()
@@ -233,7 +206,7 @@ class EnfantController extends Controller
 		$Sejour = $Enfant->getSejour();
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$this->AllowedUser($Sejour);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
 		
 		$NomEnfant = $Enfant->getNom();
 		$PrenomEnfant = $Enfant->getPrenom();
@@ -263,7 +236,7 @@ class EnfantController extends Controller
 		
 		$Sejour=$Enfant->getSejour();
 		
-		$this->AllowedUser($Sejour);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
 		
 		$repository3 = $this->getDoctrine()
 		->getManager()

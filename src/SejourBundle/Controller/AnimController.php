@@ -46,35 +46,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AnimController extends Controller
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
-	private function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
-		
-		$repository = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:Sejour')
-		;
-		$repository2 = $this
-		  ->getDoctrine()
-		  ->getManager()
-		  ->getRepository('SejourBundle:AnimSejour')
-		;
-		$Utilisateur = $this->getUser();
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
-
-		
-	}
 	public function listeAnimSejourAction($id, Request $request){
-	$this->AllowedUser($id);
+	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
 	$repository2 = $this->getDoctrine()
 						->getManager()
 						->getRepository('SejourBundle:Sejour');
@@ -234,7 +207,7 @@ class AnimController extends Controller
 		$Sejour = $repository2->findOneById($id);
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$this->AllowedUser($Sejour);
+		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$em = $this->getDoctrine()->getManager();
 		$form = $this->createFormBuilder();
 		$listeAnimConges=array();
