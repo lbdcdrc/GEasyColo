@@ -1,0 +1,11 @@
+<li {% if 	app.request.get('_route') == 'fos_user_profile_show' or
+			app.request.get('_route') == 'fos_user_profile_edit' or
+			app.request.get('_route') == 'edit_picture' or
+			app.request.get('_route') == 'fos_user_change_password' %}class="current"{% endif %}>
+	<a href="#">Mon Compte</a>
+	<ul>
+		<li><a href="{{ path('fos_user_profile_show') }}">Voir mon profil</a></li>
+		<li><a href="{{ path('fos_user_change_password') }}">Modifier mon mot de passe</a></li>
+		<li><a href="{{ path('fos_user_security_logout') }}"><span class="icon fa-sign-out"></span> Déconnexion</a></li>
+	</ul>
+</li>

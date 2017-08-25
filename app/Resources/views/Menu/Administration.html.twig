@@ -1,0 +1,7 @@
+{% if is_granted('ROLE_ADMIN') %}
+<li {% if 	app.request.get('_route') == 'index_admin'  or
+			app.request.get('_route') == 'voir_profil'  or
+			app.request.get('_route') == 'user_list' %}class="current"{% endif %}>
+			<a href="{{ path('index_admin') }}">Administration</a>
+</li>
+{% endif %}

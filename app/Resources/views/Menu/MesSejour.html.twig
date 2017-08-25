@@ -1,0 +1,12 @@
+<li {% if 	app.request.get('_route') == 'sejour_indexsejour' or
+									app.request.get('_route') == 'sejour_liste_enfants' or
+									app.request.get('_route') == 'enfant_probleme_list' or
+									app.request.get('_route') == 'sejour_equipe' or
+									app.request.get('_route') == 'sejour_activite' or
+									app.request.get('_route') == 'sejour_forum' or 
+									app.request.get('_route') == 'sejour_planning_conges' or
+									app.request.get('_route') == 'sejour_discussion' or
+									app.request.get('_route') == 'sejour_soins' or
+									app.request.get('_route') == 'sejour_traitement' or
+									app.request.get('_route') == 'sejour_edit' %}class="current"{% endif %}><a href="{{ path('sejour_indexsejour') }}">Mes Séjours</a>
+</li>
