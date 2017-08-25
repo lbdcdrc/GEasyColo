@@ -66,7 +66,7 @@ class SoinController extends Controller
 		$Sejour = $repository->findOneById($id);
 		// Verification des droits
 		// Seul les AS + Directions ont accès à cette page
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		if( !$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
@@ -111,7 +111,7 @@ class SoinController extends Controller
 	public function ClotureSoinsAction($id, $jour, Request $request){
 		// Verification des droits
 		// Seul le Directeur et les admins ont accès à cette page
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		if( !$this->get('security.authorization_checker')->isGranted('ROLE_DIRECTEUR') )
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
@@ -131,7 +131,7 @@ class SoinController extends Controller
 	public function TraitementAction($id, $jour, Request $request){
 		// Verification des droits
 		// Seul le Directeur et les admins ont accès à cette page
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		if( !$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');

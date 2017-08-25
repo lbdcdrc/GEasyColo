@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AnimController extends Controller
 {
 	public function listeAnimSejourAction($id, Request $request){
-	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+	$this->container->get('sejour.droits')->AllowedUser($id);
 	$repository2 = $this->getDoctrine()
 						->getManager()
 						->getRepository('SejourBundle:Sejour');
@@ -207,7 +207,7 @@ class AnimController extends Controller
 		$Sejour = $repository2->findOneById($id);
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$em = $this->getDoctrine()->getManager();
 		$form = $this->createFormBuilder();
 		$listeAnimConges=array();

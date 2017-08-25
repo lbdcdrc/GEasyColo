@@ -102,7 +102,7 @@ class ListingController extends Controller
 	public function ListingtoPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($idSej);
+		$this->container->get('sejour.droits')->AllowedUser($idSej);
 		
 		$repository3 = $this->getDoctrine()
 		->getManager()
@@ -117,7 +117,7 @@ class ListingController extends Controller
 		->getRepository('SejourBundle:Sejour');
 		
 		$Sejour = $repository2->findOneById($idSej);
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$listEnfantImage=array();
 		foreach($listEnfants as $Enf)
 		{
@@ -148,7 +148,7 @@ class ListingController extends Controller
 	public function ListingCompletToPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($idSej);
+		$this->container->get('sejour.droits')->AllowedUser($idSej);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Accès réservé à la direction');
@@ -168,7 +168,7 @@ class ListingController extends Controller
 		->getRepository('SejourBundle:Sejour');
 		
 		$Sejour = $repository2->findOneById($idSej);
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$listEnfantImage=array();
 		foreach($listEnfants as $Enf)
 		{
@@ -203,7 +203,7 @@ class ListingController extends Controller
 	public function ListingRegimeToPdfAction($idSej) {
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($idSej);
+		$this->container->get('sejour.droits')->AllowedUser($idSej);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Accès réservé à la direction');
@@ -223,7 +223,7 @@ class ListingController extends Controller
 		->getRepository('SejourBundle:Sejour');
 		
 		$Sejour = $repository2->findOneById($idSej);
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$listEnfantImage=array();
 		foreach($listEnfants as $Enf)
 		{

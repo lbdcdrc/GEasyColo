@@ -94,7 +94,7 @@ class ActiviteController extends Controller
 	}	
 	// Export JSON de la liste des activité d'un séjour
 	private function table_acti($id) {
-	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+	 $this->container->get('sejour.droits')->AllowedUser($id);
 	return $this->get('datatable')
 				->setEntity("SejourBundle:Activite", "x")                         
 				->setFields(
@@ -130,7 +130,7 @@ class ActiviteController extends Controller
 	// Ajout d'une fiche activité d'un utilisateur à un de ses séjour
 	public function AjouterFichesActiSejourAction($id, Request $request){
 	// Vérification des droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);;
+		 $this->container->get('sejour.droits')->AllowedUser($id);;
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()
@@ -202,7 +202,7 @@ class ActiviteController extends Controller
 	// Fiches d'activite d'un séjour
 	public function FichesActiSejourAction($id, Request $request){
 		// Vérification des droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		 $this->container->get('sejour.droits')->AllowedUser($id);
 		$this->table_acti($id);
 		$repository = $this
 		  ->getDoctrine()
@@ -230,7 +230,7 @@ class ActiviteController extends Controller
 	// Suppression d'une activite d'un séjour
 	public function SupprFichesActiSejourAction($id, $idActi, Request $request){
 		// Vérification des droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		 $this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()

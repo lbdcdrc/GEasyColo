@@ -190,7 +190,7 @@ class SejourController extends Controller
 		$activite = $repository->find($idActi);
 		$Sejour = $repository2->find($id);
 		//verification des droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		// Ici, l'utilisateur est validé
 		
 		if (null === $activite)
@@ -216,7 +216,7 @@ class SejourController extends Controller
     }
 	// Accueil d'un séjour - Listing Jour + Avancement Séjour
 	public function AccueilSejourAction($id, Request $request){
-	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+	$this->container->get('sejour.droits')->AllowedUser($id);
 
     $repository = $this->getDoctrine()
       ->getManager()

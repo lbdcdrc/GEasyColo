@@ -49,7 +49,7 @@ class ForumController extends Controller
 	// Forum séjour - Liste catégorie
 	public function AccueilForumAction($id, Request $request){
 	$em = $this->getDoctrine()->getManager();
-	$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+	$this->container->get('sejour.droits')->AllowedUser($id);
 	$repository = $this->getDoctrine()
 	->getManager()
 	->getRepository('SejourBundle:Sejour');
@@ -160,7 +160,7 @@ class ForumController extends Controller
 	}	
 	// Forum séjour - Affichage Discussion
 	public function DiscussionAction($id, $idForum, $page, Request $request){
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Sejour');

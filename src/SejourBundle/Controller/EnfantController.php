@@ -54,7 +54,7 @@ class EnfantController extends Controller
 		;
 		$enfant = $repository->find($id);
 		//verification des droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Accès réservé à la direction');
@@ -105,7 +105,7 @@ class EnfantController extends Controller
 
 	}
 	private function table_enfants($id) {
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE')) {
 			return $this->get('datatable')
 						->setEntity("SejourBundle:Enfant", "x")                         
@@ -158,11 +158,11 @@ class EnfantController extends Controller
                        
 	}
 	public function tableEnfantsAction($id){
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		return $this->table_enfants($id)->execute();                                      
 	}	
 	public function listeEnfantSejourAction($id, Request $request){
-		$droits = $this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($id);
 		$this->table_enfants($id);
 		$repository2 = $this->getDoctrine()
 		->getManager()
@@ -206,7 +206,7 @@ class EnfantController extends Controller
 		$Sejour = $Enfant->getSejour();
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		
 		$NomEnfant = $Enfant->getNom();
 		$PrenomEnfant = $Enfant->getPrenom();
@@ -236,7 +236,7 @@ class EnfantController extends Controller
 		
 		$Sejour=$Enfant->getSejour();
 		
-		$droits = $this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		
 		$repository3 = $this->getDoctrine()
 		->getManager()
