@@ -1,15 +1,17 @@
-<?php
+ï»¿<?php
 // src/SejourBundle/Droits/droits.php
 
 namespace SejourBundle\Droits;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 class droits
 {
-	// Fonction de contrôle d'accés à toute la partie "séjour"
+	// Fonction de contrÃ´le d'accÃ¨s Ã  toute la partie "sÃ©jour"
 	public function AllowedUser($SejourId){
-		// Pour accéder :
-		// Soit être admin
-		// Soit être recruté sur le séjour (en tant que directeur ou anim)
+		// Pour accÃ©der :
+		// Soit Ãªtre admin
+		// Soit Ãªtre recrutÃ© sur le sÃ©jour (en tant que directeur ou anim)
 		
 		$repository = $this
 		  ->em
@@ -23,9 +25,9 @@ class droits
 		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
 		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
 				
-		if( $ListeDir == null && $ListeAnim == null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
+		if( $ListeDir === null && $ListeAnim === null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
 		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
+			throw new AccessDeniedException('Tu n\'as pas accÃ©s Ã  cette page !');
 		}
 		
 		
