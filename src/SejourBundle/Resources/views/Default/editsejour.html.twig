@@ -23,12 +23,7 @@
 		
 	</div>
 	{% else %}
-	{% set difference2 = date(Sejour.DateDebut|date('Y/m/d')).diff(date('now'|date('Y/m/d'))) %}
-	{% set pourcent = ((difference2.days / NbJour)*100) | number_format(0) %}
-	<div id="progress">
-		<progress value="{{ pourcent }}" min="0" max="100">0%</progress>
-		<center><div class="percent">{{ pourcent }} % passés</div ></center>
-	</div>
+
 	{% endif %}
 	<center><a href="{{ path('sejour_planning_conges', { 'id': Sejour.id }) }}" class="button" role="button"><i class="fa fa-calendar" aria-hidden="true"> Planning des Congés</i></a></center>
 	
