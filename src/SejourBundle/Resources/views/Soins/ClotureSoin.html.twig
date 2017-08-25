@@ -1,0 +1,15 @@
+{% if JourEnCours.SoinValide %}
+<center>
+	<h4> Le registre pour cette journée à été cloturé </h4>
+	<h1> Tu ne peux donc plus y ajouter de soins </h1>
+	<i><u> Journée cloturée par {{ JourEnCours.SoinValidePar.PN }} le {{ JourEnCours.SoinValideDate |date('d/m/Y à H:i:s') }} </u></i>
+</center>
+{% else %}
+{% if is_granted('ROLE_DIRECTEUR') %}
+<center>
+	<a href="{{ path('sejour_soins_cloture', { 'id': Sejour.id, 'jour' : JourEnCours.id }) }}" onclick="return confirm('Tu vas clotûrer cette journée. Cette action n\'est pas réversible.\n L\'assistant sanitaire ne pourra plus ajouter de soins... \n Clotûrer la journée ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
+	Clotûrer cette journée</button></a>
+	<br>
+</center>
+{% endif %}
+{% endif %}

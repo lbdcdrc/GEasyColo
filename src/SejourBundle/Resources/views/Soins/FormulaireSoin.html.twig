@@ -1,0 +1,129 @@
+<center>
+{{ form_start(form) }}
+<table >
+<tr>
+	<th colspan="6"> Nouveau Soin </th>
+</tr>
+<tr>
+	<td> Enfant : </td>
+	<td colspan="5"> 
+		{% set Var = attribute(form, 'enfant') %}
+		{{ form_widget(Var) }}
+	</td>
+</tr>
+<tr>
+	<td> Donné le </td>
+	<td> 
+		{% set Var = attribute(form, 'jour') %} {{ form_widget(Var) }} 
+	</td>
+	<td> À </td>
+	<td> 
+		{% set Var = attribute(form, 'heure') %}
+		{% set Var = attribute(Var, 'hour') %}
+		{{ form_widget(Var) }}	
+	</td>
+	<td> h : </td>
+	<td>
+		{% set Var = attribute(form, 'heure') %}
+		{% set Var = attribute(Var, 'minute') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<th colspan="6"> Motif de la visite </th>
+</tr>
+<tr>
+	<td colspan="6">
+		{% set Var = attribute(form, 'objet') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		Température (en °C)
+	</td>
+	<td id="myspan" style="color:green;">
+		37 °C
+	</td>
+	<td colspan="2">
+		{% set Var = attribute(form, 'temperature') %}
+		{{ form_widget(Var) }}	
+		
+	</td>
+	<td>
+		Non prise :
+	</td>
+	<td>
+		<input id="checkBox" type="checkbox" name="check" onclick="updateTemp(this.value);"/>
+	</td>
+</tr>
+<tr>
+	<th colspan="6">
+	Compte rendu des soins
+	</th>
+</tr>
+<tr>
+	<td>
+	 Soins donnés :
+	</td>
+	<td colspan="5">
+		{% set Var = attribute(form, 'soinsDispenses') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td>
+	 Observations :
+	</td>
+	<td colspan="5">
+		{% set Var = attribute(form, 'observations') %}
+		{{ form_widget(Var) }}	
+	</td>
+</tr>
+<tr>
+	<td colspan="6">
+	{{ form_end(form) }}
+	</td>
+</tr>
+<tr>
+	<th colspan="6"></br>
+	</th>
+</tr>
+
+</table>
+</center>
+<script>
+function updateTextInput(val) {
+
+	if(val < 35.5 ){
+    document.getElementById("myspan").style.color = 'red';
+  } else if(val < 36.5 && val > 35.5){
+    document.getElementById("myspan").style.color = 'orange';
+  } else if(val >= 36.5 && val <= 37.5){
+    document.getElementById("myspan").style.color = 'green';
+  } else if(val > 37.5 && val <= 40){
+    document.getElementById("myspan").style.color = 'orange';
+  } else if(val > 40){
+    document.getElementById("myspan").style.color = 'red';
+  }
+
+			document.getElementById("myspan").textContent=val.concat("°C");		  
+        }
+		
+function updateTemp(Pris) {
+
+	  if (document.getElementById('checkBox').checked) 
+	  {
+		document.getElementById("myspan").textContent="Non Prise";
+		document.getElementById("myspan").style.color = 'black';
+		document.getElementById("sejourbundle_soin_temperature").value = "null";
+		document.getElementById("sejourbundle_soin_temperature").disabled = true; 
+	  } else {
+		document.getElementById("myspan").textContent="37°C";
+		document.getElementById("myspan").style.color = 'green';		
+		document.getElementById("sejourbundle_soin_temperature").value = "37";
+		document.getElementById("sejourbundle_soin_temperature").disabled = false; 
+	  }
+				  
+        }		
+</script>	

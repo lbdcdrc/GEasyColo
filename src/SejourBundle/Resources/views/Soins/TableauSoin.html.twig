@@ -1,0 +1,26 @@
+<center>
+{% if ListeSoins| length == 0 %}
+<h3> Il n'y a pas de bobos pour cette journée ! </h3>
+{% else %}
+<table>
+<tr>
+	<th> Soin donné à </th>
+	<th> Enregistré par </th>
+	<th> Motif de la visite </th>
+	<th> T° </th>
+	<th> Soins donnés </th>
+	<th> Observations </th>
+</tr>
+{% for soin in ListeSoins %}
+<tr>
+	<td> {{ soin.enfant.prenomnom }} <br> le {{ soin.jour.date|date('d/m') }} à {{ soin.heure|date(' H:i') }} </td>
+	<td> <i>{{ soin.User.PN }} <br> le {{ soin.date|date('d/m/Y à H:i:s') }} </i> </td>
+	<td> {{ soin.objet }} </td>
+	<td> {% if soin.temperature == null %} NC {% else %}{{ soin.temperature }} °C {% endif %} </td>
+	<td> {{ soin.soinsDispenses }} </td>
+	<td> {{ soin.observations }} </td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+</center>

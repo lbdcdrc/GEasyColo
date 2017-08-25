@@ -1,0 +1,28 @@
+<center>
+	<table>
+		<tr>
+			<td>
+				Voir les soins pour la journée du :
+			</td>
+			<td>
+				<form>
+					<select id="select-id" name="someoptions">
+					<option value="{{ path('sejour_soins', { 'id': Sejour.id, 'jour' : JourEnCours.id }) }}" style="color:red;">{{ JourEnCours.date | localizeddate('full', 'none') }}</option>
+					{% for jour in ListeJourComplet %}
+					{% if jour.id != JourEnCours.id %}
+						<option value="{{ path('sejour_soins', { 'id': Sejour.id, 'jour' : jour.id }) }}">{{ jour.date | localizeddate('full', 'none') }}</option>
+					{% endif %}
+					{% endfor %}
+					</select>
+				</form>
+			</td>
+		</tr>
+	</table>
+</center>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script> 
+$('#select-id').change(function() {
+   url = $('#select-id').val();
+   window.location.href = url;
+});
+</script>
