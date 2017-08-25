@@ -6,93 +6,43 @@ EasyColo V2 - Mes séjours
 Mes <p id="logo">séjours</p>
 {% endblock header %}
 
-
-		
-		
 {% block body %}
 
 <div id="main-wrapper">
 	<div id="main" class="container">
 		<div class="row 200%">
 			<div class="12u">
+				<center><h2> Séjour à venir ou en cours </h2></center>
 				<section class="box highlight">
-					{% set present = false %}
-
-					{% for sejour in listeSejours %}
-						{% if "now"|date('Ymd')  <= sejour.DateFin|date('Ymd') %}
-							{% set present = true %}
-						{% endif %}
-					{% endfor %}
-						<div class="container">
-						  <h2>Séjours à venir ou en cours</h2> 
-					{% if present == true %}        
-						<section id="pricePlans"><center>
-							<ul id="plans">
-								{% for sejour in listeSejours %}
-									{% if "now"|date('Ymd')  <= sejour.DateFin|date('Ymd') %}		
-											
-										<li class="plan">		
-											<ul class="planContainer">
-												<li class="title"><h2>{{ sejour.NomThema }}</h2></li>
-												<li class="price"><p>{{ sejour.NbEnfants }}<span>{% if sejour.NbEnfants <= 1 %} Enfant {% else %} Enfants {% endif %} </span></p></li>
-												<li>
-													<ul class="options">
-														<li>Début : <span>{{ sejour.DateDebut|date('d/m/Y') }}</span></li>
-														<li>Fin : <span>{{ sejour.DateFin|date('d/m/Y') }}</span></li>
-													</ul>
-												</li>
-												<li class="button-card"><a href="{{ path('sejour_edit', { 'id': sejour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
-											</ul>
-										</li>
-							
-									{% endif %}
-								{% endfor %}
-							</ul> <!-- End ul#plans --></center>
+					{% if listeNouveauSejour| length > 0 %}
+						<section id="pricePlans">
+							<center>
+								<ul id="plans">
+									{% include "SejourBundle:ListeSejour:ListeSejour.html.twig" with {'listeSejours': listeNouveauSejour} only %}
+								</ul>
+							</center>
 						</section>
-
 					{% else %}
-					<h4> Il n'y a pas encore de séjours prévus... </h4>
+						<h4>Il n'y a pas encore de séjours prévus...</h4>
 					{% endif %}
 					<hr>
-						</div>					
-					
-					{% set passe = false %}
-
-					{% for sejour in listeSejours %}
-						{% if "now"|date('Ymd')  > sejour.DateFin|date('Ymd') %}
-							{% set passe = true %}
-						{% endif %}
-					{% endfor %}
-						<div class="container">
-						  <h2>Séjours passés</h2>  
-					{% if passe == true %}       
-						<section id="pricePlans"><center>
-							<ul id="plans">
-								{% for sejour in listeSejours %}
-									{% if "now"|date('Ymd')  > sejour.DateFin|date('Ymd') %}		
-											
-										<li class="plan">		
-											<ul class="planContainer">
-												<li class="title"><h2>{{ sejour.NomThema }}</h2></li>
-												<li class="price"><p>{{ sejour.NbEnfants }}<span>{% if sejour.NbEnfants <= 1 %} Enfant {% else %} Enfants {% endif %} </span></p></li>
-												<li>
-													<ul class="options">
-														<li>Début : <span>{{ sejour.DateDebut|date('d/m/Y') }}</span></li>
-														<li>Fin : <span>{{ sejour.DateFin|date('d/m/Y') }}</span></li>
-													</ul>
-												</li>
-												<li class="button-card"><a href="{{ path('sejour_edit', { 'id': sejour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
-											</ul>
-										</li>
-							
-									{% endif %}
-								{% endfor %}
-							</ul> <!-- End ul#plans --></center>
-						</section>	
+				</section>
+			</div>	
+			<div class="12u">
+				<center><h2> Séjour passés </h2></center>
+				<section class="box highlight">
+					{% if listeAncienSejour| length > 0 %}
+						<section id="pricePlans">
+							<center>
+								<ul id="plans">
+									{% include "SejourBundle:ListeSejour:ListeSejour.html.twig" with {'listeSejours': listeAncienSejour} only %}
+								</ul>
+							</center>
+						</section>
 					{% else %}
-					<h4> Tu n'as pas encore participé à un séjour... </h4>
+						<h4>Tu n'as pas encore participé à un séjour...</h4>
 					{% endif %}
-						</div>
+					<hr>
 				</section>
 			</div>
 		</div>
@@ -101,12 +51,4 @@ Mes <p id="logo">séjours</p>
 		{% endif %}
 	</div>
 </div>
-
-
-
-
-
 {% endblock body %}
-
-
-

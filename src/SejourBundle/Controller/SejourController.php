@@ -78,7 +78,22 @@ class SejourController extends Controller
 			$listeSejour[] = $Sej->getSejour();
 		}
 		
-        return $this->render('SejourBundle:Default:sejour.html.twig', array('listeSejours' => $listeSejour));
+		$listeAncienSejour = array();
+		$listeNouveauSejour = array();
+		
+		foreach($listeSejour as $Sej)
+		{
+			if( new \DateTime('now') <= $Sej->getDateFin())
+			{
+				$listeNouveauSejour[] = $Sej;
+			}
+			else
+			{
+				$listeAncienSejour[] = $Sej;
+			}
+		}
+		
+        return $this->render('SejourBundle:Default:sejour.html.twig', array('listeNouveauSejour' => $listeNouveauSejour, 'listeAncienSejour' => $listeAncienSejour));
     }
 	// Création d'un nouveau séjour
 	public function CreerSejourAction(Request $request){

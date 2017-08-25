@@ -1,0 +1,19 @@
+<section id="pricePlans">
+	<center>
+		{% for sejour in listeSejours %}
+			<li class="plan">		
+				<ul class="planContainer">
+					<li class="title"><h2>{{ sejour.NomThema }}</h2></li>
+					<li class="price"><p>{{ sejour.NbEnfants }}<span>{% if sejour.NbEnfants <= 1 %} Enfant {% else %} Enfants {% endif %} </span></p></li>
+					<li>
+						<ul class="options">
+							<li>Début : <span>{{ sejour.DateDebut|date('d/m/Y') }}</span></li>
+							<li>Fin : <span>{{ sejour.DateFin|date('d/m/Y') }}</span></li>
+						</ul>
+					</li>
+					<li class="button-card"><a href="{{ path('sejour_edit', { 'id': sejour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
+				</ul>
+			</li>
+		{% endfor %}
+	</center>
+</section>
