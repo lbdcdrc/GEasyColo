@@ -5,25 +5,18 @@
 
 {% block coeur %}
 
-	{% set difference = date(Sejour.DateDebut|date('Y/m/d')).diff(date(Sejour.DateFin|date('Y/m/d'))) %}
-	{% set NbJour = difference.days %}
-
 	{% if "now"|date('Ymd')  < Sejour.DateDebut|date('Ymd') %}
-	{% set difference3 = date('now'|date('Y/m/d')).diff(date(Sejour.DateDebut|date('Y/m/d'))) %}
-	{% set NbJour2 = difference3.days %}
-	<div id="progress">
-		<progress value="0" min="0" max="100">0%</progress>
-		<center><div class="percent">Le séjour commence dans : {{ NbJour2 }} jours.</div ></center>
-		
-	</div>
-	{% elseif "now"|date('Ymd')  > Sejour.DateFin|date('Ymd') %}
-	<div id="progress">
-		<progress value="100" min="0" max="100">0%</progress>
-		<center><div class="percent">Le séjour est terminé !</div ></center>
-		
-	</div>
-	{% else %}
 
+	{% include "SejourBundle:PourcentJour:PasCommence.html.twig" %}
+	
+	{% elseif "now"|date('Ymd')  > Sejour.DateFin|date('Ymd') %}
+
+	{% include "SejourBundle:PourcentJour:Fini.html.twig" %}
+	
+	{% else %}
+	
+	{% include "SejourBundle:PourcentJour:EnCours.html.twig" %}
+	
 	{% endif %}
 	<center><a href="{{ path('sejour_planning_conges', { 'id': Sejour.id }) }}" class="button" role="button"><i class="fa fa-calendar" aria-hidden="true"> Planning des Congés</i></a></center>
 	

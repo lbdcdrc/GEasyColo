@@ -1,0 +1,7 @@
+{% set difference3 = date('now'|date('Y/m/d')).diff(date(Sejour.DateDebut|date('Y/m/d'))) %}
+{% set NbJour2 = difference3.days %}
+<div id="progress">
+	<progress value="0" min="0" max="100">0%</progress>
+	<center><div class="percent">Le séjour commence dans : {{ NbJour2 }} jours.</div ></center>
+	
+</div>
