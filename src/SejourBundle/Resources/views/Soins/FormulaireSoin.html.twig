@@ -7,26 +7,21 @@
 <tr>
 	<td> Enfant : </td>
 	<td colspan="5"> 
-		{% set Var = attribute(form, 'enfant') %}
-		{{ form_widget(Var) }}
+		{{ form_widget(attribute(form, 'enfant')) }}
 	</td>
 </tr>
 <tr>
 	<td> Donné le </td>
 	<td> 
-		{% set Var = attribute(form, 'jour') %} {{ form_widget(Var) }} 
+		{{ form_widget(attribute(form, 'jour')) }} 
 	</td>
 	<td> À </td>
 	<td> 
-		{% set Var = attribute(form, 'heure') %}
-		{% set Var = attribute(Var, 'hour') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(attribute(form, 'heure'), 'hour')) }}	
 	</td>
 	<td> h : </td>
 	<td>
-		{% set Var = attribute(form, 'heure') %}
-		{% set Var = attribute(Var, 'minute') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(attribute(form, 'heure'), 'minute')) }}	
 	</td>
 </tr>
 <tr>
@@ -34,8 +29,7 @@
 </tr>
 <tr>
 	<td colspan="6">
-		{% set Var = attribute(form, 'objet') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(form, 'objet')) }}	
 	</td>
 </tr>
 <tr>
@@ -46,8 +40,7 @@
 		37 °C
 	</td>
 	<td colspan="2">
-		{% set Var = attribute(form, 'temperature') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(form, 'temperature')) }}	
 		
 	</td>
 	<td>
@@ -67,8 +60,7 @@
 	 Soins donnés :
 	</td>
 	<td colspan="5">
-		{% set Var = attribute(form, 'soinsDispenses') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(form, 'soinsDispenses')) }}	
 	</td>
 </tr>
 <tr>
@@ -76,8 +68,7 @@
 	 Observations :
 	</td>
 	<td colspan="5">
-		{% set Var = attribute(form, 'observations') %}
-		{{ form_widget(Var) }}	
+		{{ form_widget(attribute(form, 'observations')) }}	
 	</td>
 </tr>
 <tr>
