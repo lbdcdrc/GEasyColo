@@ -412,7 +412,7 @@ class JourController extends Controller
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
 		{
-			if($MatinBloque == false)
+			if($MatinBloque === false)
 			{
 			$NewMatin1=$form->get('Matin1')->getData();
 			$NewMatin2=$form->get('Matin2')->getData();
@@ -422,7 +422,7 @@ class JourController extends Controller
 			$NewJour=$form->get('Journee')->getData();
 			$em = $this->getDoctrine()->getManager();
 			
-			if($MatinBloque == false)
+			if($MatinBloque === false)
 			{
 			
 				if($Matin1 != $NewMatin1)

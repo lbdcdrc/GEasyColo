@@ -19,7 +19,7 @@ class DefaultController extends Controller
     {
 		$user = $this->getUser();
 		
-		if ($user->getImage()==null)
+		if ($user->getImage()===null)
 		{
 			$Image=new Image();
 		}

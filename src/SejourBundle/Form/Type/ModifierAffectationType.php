@@ -80,7 +80,7 @@ class ModifierAffectationType extends AbstractType
 	
 	}
 	
-	elseif($options['Matin1']->getEstlie()==false)
+	elseif($options['Matin1']->getEstlie()===false)
 	{
 		if($options['Matin1'] && $options['Matin1']->getNbInscrits() >= $options['Matin1']->getNbPlaces() )
 		{

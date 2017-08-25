@@ -92,7 +92,7 @@ class ForumController extends Controller
 										'notif'=> false,
 										'page' =>1);										
 		}
-		elseif($Cate->getDernierMessage() == null)
+		elseif($Cate->getDernierMessage() === null)
 		{
 			$Notif=$DernierMessageVu->getAccepteNotifications();
 			$ListeCategorieAvecVues[]= array(
@@ -101,7 +101,7 @@ class ForumController extends Controller
 										'notif'=>$Notif,
 										'page'=>1);
 		}
-		elseif($DernierMessageVu->getDernierMessageVu() == null)
+		elseif($DernierMessageVu->getDernierMessageVu() === null)
 		{
 			$Notif=$DernierMessageVu->getAccepteNotifications();
 			$ListeCategorieAvecVues[]= array(
@@ -215,7 +215,7 @@ class ForumController extends Controller
 				
 				foreach($ListeUtilisateur as $Utilisateur)
 				{
-					if($Utilisateur->getNotifie() == false  && $Utilisateur->getAccepteNotifications() == true )
+					if($Utilisateur->getNotifie() === false  && $Utilisateur->getAccepteNotifications() === true )
 					{
 						if( $Utilisateur->getUser()->getId() != $this->getUser()->getId() )
 						{

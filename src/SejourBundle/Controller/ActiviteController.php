@@ -181,7 +181,7 @@ class ActiviteController extends Controller
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$data = $form->getData();
 			$activite=$data['activites'];
-			if( $activite == null)
+			if( $activite === null)
 			{
 				$request->getSession()->getFlashBag()->add('notice', 'Aucune fiche à ajouter !');
 				return $this->redirectToRoute('sejour_activite', array('id' => $id));

@@ -77,7 +77,7 @@ class SoinController extends Controller
 
 		$ListeJour = $repository3->findBy(array('sejour'=>$Sejour, 'SoinValide'=>false));
 		$ListeJourComplet = $repository3->findBy(array('sejour'=>$Sejour));
-		if($jour == null)
+		if($jour === null)
 		{
 			$JourEnCours = current($ListeJourComplet);
 		}
@@ -157,7 +157,7 @@ class SoinController extends Controller
 		->getRepository('SejourBundle:TraitementJour');	
 		
 		
-		if($jour == null)
+		if($jour === null)
 		{
 			$JourEnCours = current($ListeJour);
 		}
