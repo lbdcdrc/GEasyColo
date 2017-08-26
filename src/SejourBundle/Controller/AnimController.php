@@ -58,19 +58,7 @@ class AnimController extends Controller
 							->getRepository('SejourBundle:AnimSejour');
 		$listeAnim = $repository->findBy(array('sejour'=>$Sejour), array('role' => 'desc'));
 		
-		$repository3 = $this->getDoctrine()
-							->getManager()
-							->getRepository('UserBundle:User');
-			
-		$listeAnimR = $repository3->animRecrute($id);
-		$listeAnimRecrutable=array();
-		foreach($listeAnimR as $anim)
-			{	
-				if ($anim['id'] != $Sejour->getDirecteur()->getId())
-				{
-					$listeAnimRecrutable[] = $repository3->find($anim['id']);
-				}
-			}
+		$listeAnimRecrutable=$this->listeAnimRecrutable($Sejour);
 		$em=$this->getDoctrine()->getManager();
 		$affectation = new AnimSejour();
 		$form   = $this->get('form.factory')->create(RecruterType::class, $affectation, ['listeAnim' => $listeAnimRecrutable]);
@@ -305,6 +293,24 @@ class AnimController extends Controller
 		$request->getSession()->getFlashBag()->add('notice', 'L\'animateur a été recruté !');
 		
 		return $em;
+	}
+	
+	private function listeAnimRecrutable($Sejour)
+	{
+		$repository3 = $this->getDoctrine()
+							->getManager()
+							->getRepository('UserBundle:User');
+			
+		$listeAnimR = $repository3->animRecrute($Sejour->getId());
+		$listeAnimRecrutable=array();
+		foreach($listeAnimR as $anim)
+			{	
+				if ($anim['id'] != $Sejour->getDirecteur()->getId())
+				{
+					$listeAnimRecrutable[] = $repository3->find($anim['id']);
+				}
+			}
+		return $listeAnimRecrutable;
 	}
 }
 
