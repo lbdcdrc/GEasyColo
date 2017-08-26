@@ -137,71 +137,15 @@ class AnimController extends Controller
 		array('role' => 'asc'));
 
 		$Sejour = $repository2->findOneById($id);
+		$Directeur=$Sejour->getDirecteur();
 		// Verification des droits
 		// Toutes l'équipe du séjour + Admin ont les droits
 		$this->container->get('sejour.droits')->AllowedUser($Sejour);
 		$em = $this->getDoctrine()->getManager();
-		$form = $this->createFormBuilder();
-		$listeAnimConges=array();
-		$Directeur=$Sejour->getDirecteur();
-		
-		$listeJ=array();
-		foreach($listeJour as $Jour){
-			$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()))->getMoment();
-			$listeJ[$Jour->getId()]=$CongesAnim;
-			$NomForm="A".$Directeur->getId()."J".$Jour->getId();
-			$form->add($NomForm, EntityType::class, array(
-					'class' => 'SejourBundle:IdMoment',
-					'choice_label'=>'moment',
-					'required'=>true,
-					'expanded'=>true,
-					'data'=>$CongesAnim,
-					));
-		}
-		$JourDir=array();
-		$JourDir[$Directeur->getId()]= $listeJ;
-		
-				
-		foreach($listeAnim as $Anim){
-			$listeJ=array();
-			foreach($listeJour as $Jour){
-				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()))->getMoment();
-				$listeJ[$Jour->getId()]=$CongesAnim;
-				$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
-				$form->add($NomForm, EntityType::class, array(
-						'class' => 'SejourBundle:IdMoment',
-						'choice_label'=>'moment',
-						'required'=>true,
-						'expanded'=>true,
-						'data'=>$CongesAnim,
-						));
-			}
-			$listeAnimConges[$Anim->getUser()->getId()]= $listeJ;
-		}
-        
-		$form->add('Modifier les conges',SubmitType::class);
-		
-		$form = $form->getForm();
-		
+
+		list($form, $JourDir, $listeAnimConges) = $this->creerFormulaireConges($Sejour, $listeJour, $listeAnim, $Directeur );
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-			$data = $form->getData();	
-			foreach($listeAnim as $Anim)
-			{
-				foreach($listeJour as $Jour){
-					$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()));
-					$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
-					$Travail=$data[$NomForm];
-					$CongesAnim -> setMoment($Travail);				
-				}
-			}
-			foreach($listeJour as $Jour){
-				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()));
-				$NomForm="A".$Directeur->getId()."J".$Jour->getId();
-				$Travail=$data[$NomForm];
-				$CongesAnim -> setMoment($Travail);
-			}
-			$em->flush();
-			$request->getSession()->getFlashBag()->add('notice', 'Les modifications ont étés enregistrées');
+			$em=$this->modifierConges($form, $request, $listeAnim, $listeJour, $em, $Directeur);
 			return $this->redirectToRoute('sejour_planning_conges', array('id' => $Sejour->getId()));	
 			
 		}
@@ -312,5 +256,77 @@ class AnimController extends Controller
 			}
 		return $listeAnimRecrutable;
 	}
-}
+	private function creerFormulaireConges($Sejour , $listeJour, $listeAnim, $Directeur )
+	{
+		$repository4 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:AnimConges');
 
+		$form = $this->createFormBuilder();
+		$listeAnimConges=array();
+			
+		$listeJ=array();
+		foreach($listeJour as $Jour){
+			$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()))->getMoment();
+			$listeJ[$Jour->getId()]=$CongesAnim;
+			$NomForm="A".$Directeur->getId()."J".$Jour->getId();
+			$form->add($NomForm, EntityType::class, array(
+					'class' => 'SejourBundle:IdMoment',
+					'choice_label'=>'moment',
+					'required'=>true,
+					'expanded'=>true,
+					'data'=>$CongesAnim,
+					));
+		}
+		$JourDir=array();
+		$JourDir[$Directeur->getId()]= $listeJ;
+		
+				
+		foreach($listeAnim as $Anim){
+			$listeJ=array();
+			foreach($listeJour as $Jour){
+				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()))->getMoment();
+				$listeJ[$Jour->getId()]=$CongesAnim;
+				$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
+				$form->add($NomForm, EntityType::class, array(
+						'class' => 'SejourBundle:IdMoment',
+						'choice_label'=>'moment',
+						'required'=>true,
+						'expanded'=>true,
+						'data'=>$CongesAnim,
+						));
+			}
+			$listeAnimConges[$Anim->getUser()->getId()]= $listeJ;
+		}
+        
+		$form->add('Modifier les conges',SubmitType::class);
+		
+		$form = $form->getForm();
+		return array($form, $JourDir, $listeAnimConges);
+	}
+	private function modifierConges($form, $request, $listeAnim, $listeJour, $em, $Directeur)
+	{
+		$repository4 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:AnimConges');
+		$data = $form->getData();	
+		foreach($listeAnim as $Anim)
+		{
+			foreach($listeJour as $Jour){
+				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()));
+				$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
+				$Travail=$data[$NomForm];
+				$CongesAnim -> setMoment($Travail);				
+			}
+		}
+		foreach($listeJour as $Jour){
+			$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()));
+			$NomForm="A".$Directeur->getId()."J".$Jour->getId();
+			$Travail=$data[$NomForm];
+			$CongesAnim -> setMoment($Travail);
+		}
+		$em->flush();
+		$request->getSession()->getFlashBag()->add('notice', 'Les modifications ont étés enregistrées');
+		return $em;
+	}
+}
