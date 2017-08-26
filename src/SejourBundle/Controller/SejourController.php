@@ -67,17 +67,8 @@ class SejourController extends Controller
 		$listSejoursDir = $repository->findByDirecteur($this->getUser());
 		$listSejoursAnim = $repository2->findByUser($this->getUser());
 		
-		$listeSejour = array();
-		
-		foreach($listSejoursDir as $Sej)
-		{
-			$listeSejour[] = $Sej;
-		}
-		foreach($listSejoursAnim as $Sej)
-		{
-			$listeSejour[] = $Sej->getSejour();
-		}
-		
+		$listeSejour = array_merge($listSejoursDir, $listSejoursAnim );
+				
 		$listeAncienSejour = array();
 		$listeNouveauSejour = array();
 		

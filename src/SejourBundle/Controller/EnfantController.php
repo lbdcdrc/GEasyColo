@@ -174,9 +174,8 @@ class EnfantController extends Controller
 		$form   = $this->get('form.factory')->create(EnfantType::class, $enfant, ['edit' => false]);
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-			    if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT')) {
-			  // Sinon on déclenche une exception « Accès interdit »
-			  throw new AccessDeniedException('Accès limité à la direction du séjour.');
+			if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT')) {
+				throw new AccessDeniedException('Accès limité à la direction du séjour.');
 			}
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($enfant);
@@ -233,10 +232,7 @@ class EnfantController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Enfant');
 		$Enfant=$repository2->findOneById($id);
-		
-		$Sejour=$Enfant->getSejour();
-		
-		$this->container->get('sejour.droits')->AllowedUser($Sejour);
+		$this->container->get('sejour.droits')->AllowedUser($Enfant->getSejour());
 		
 		$repository3 = $this->getDoctrine()
 		->getManager()
@@ -253,8 +249,8 @@ class EnfantController extends Controller
 		}
 		
 		$probleme = new ProblemesEnfant();
-		$probleme->setEncours(true);
-		$probleme->setEnfant($Enfant);
+		$probleme->setEncours(true)
+				->setEnfant($Enfant);
 		$form   = $this->get('form.factory')->create(ProblemesEnfantType::class, $probleme);
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
