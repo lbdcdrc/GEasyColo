@@ -400,4 +400,35 @@ class TraitementJour
     {
         return $this->jour;
     }
+		
+	public function setTraitementMoment($moment)
+	{
+		if($moment ==1)
+		{
+			$this->setMatinCheck(true);
+			$this->setMatinDateCheck(new \DateTime('now'));
+		}
+		elseif ( $moment ==2 )
+		{
+			$this->setMidiCheck(true);
+			$this->setMidiDateCheck( new \DateTime('now'));		
+		}
+		elseif ( $moment ==3 )
+		{
+			$this->setSoirCheck(true);
+			$this->setSoirDateCheck( new \DateTime('now'));		
+		}
+		elseif ( $moment ==4 )
+		{
+			$this->setCoucheCheck(true);
+			$this->setCoucheDateCheck( new \DateTime('now'));		
+		}
+		elseif ( $moment ==5 )
+		{
+			$this->setAutreCheck(true);
+			$this->setAutreDateCheck( new \DateTime('now'));		
+		}
+		
+		return $this;
+	}
 }

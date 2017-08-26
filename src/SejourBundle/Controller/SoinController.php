@@ -414,50 +414,25 @@ class SoinController extends Controller
 		return $this->render('SejourBundle:Soins:Traitement.html.twig', array('Sejour'=>$Sejour,'ListeEnfant' => $ListeEnfant, 'ListeJour' => $ListeJour,'Jour'=>$JourEnCours, 'ListeTraitement' => $ListeTraitements));
 	}
 	public function checkTraitementAction($id, $jour, $traitement, $moment){
+		$repository = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Sejour');
+		$Sejour = $repository->findOneById($id);
 
-	$repository = $this->getDoctrine()
-	->getManager()
-	->getRepository('SejourBundle:Sejour');
-	$Sejour = $repository->findOneById($id);
-
-	$repository3 = $this->getDoctrine()
-	->getManager()
-	->getRepository('SejourBundle:Jour');
-	$Jour = $repository3->findOneById($jour);
-	$repository4 = $this->getDoctrine()
-	->getManager()
-	->getRepository('SejourBundle:TraitementJour');
-	$Traitement = $repository4->findOneById($traitement);	
-	
-	if( $moment ==1 )
-	{
-		$Traitement->setMatinCheck(true);
-		$Traitement->setMatinDateCheck( new \DateTime('now'));
-	}
-	elseif ( $moment ==2 )
-	{
-		$Traitement->setMidiCheck(true);
-		$Traitement->setMidiDateCheck( new \DateTime('now'));		
-	}
-	elseif ( $moment ==3 )
-	{
-		$Traitement->setSoirCheck(true);
-		$Traitement->setSoirDateCheck( new \DateTime('now'));		
-	}
-	elseif ( $moment ==4 )
-	{
-		$Traitement->setCoucheCheck(true);
-		$Traitement->setCoucheDateCheck( new \DateTime('now'));		
-	}
-	elseif ( $moment ==5 )
-	{
-		$Traitement->setAutreCheck(true);
-		$Traitement->setAutreDateCheck( new \DateTime('now'));		
-	}
-
-	$em = $this->getDoctrine()->getManager();	
-	$em->flush();
-	return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour, 'jour' =>$Jour->getId()));
+		$repository3 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Jour');
+		$Jour = $repository3->findOneById($jour);
+		$repository4 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:TraitementJour');
+		$Traitement = $repository4->findOneById($traitement);	
+		
+		$Traitement->setTraitementMoment($moment);
+		
+		$em = $this->getDoctrine()->getManager();	
+		$em->flush();
+		return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour, 'jour' =>$Jour->getId()));
 	}
 }
 

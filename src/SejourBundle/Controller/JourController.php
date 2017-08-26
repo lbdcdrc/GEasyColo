@@ -211,38 +211,38 @@ class JourController extends Controller
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
 	}
 	public function jourDellEventAction($id, Request $request){
-    $repository = $this->getDoctrine()
-      ->getManager()
-      ->getRepository('SejourBundle:Evenement')
-    ;
-	$repository2 = $this->getDoctrine()
-      ->getManager()
-      ->getRepository('SejourBundle:EvenementLies')
-    ;
-    $evenement = $repository->find($id);
-		
-    if (null === $evenement) {
-      throw new NotFoundHttpException("L'evenement ".$id." n'existe pas.");
-    }
-	$em = $this->getDoctrine()->getManager();
-	if($evenement->getMoment()==4)
-	{
-		$Lien=$repository2->findOneBy(array('Jour' => $evenement));
-		$M1=$Lien->getMatin1();
-		$M2=$Lien->getMatin2();
-		
-		$em	->remove($Lien)
-			->remove($M1)
-			->remove($M2);
+		$repository = $this->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:Evenement')
+		;
+		$repository2 = $this->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:EvenementLies')
+		;
+		$evenement = $repository->find($id);
+			
+		if (null === $evenement) {
+		  throw new NotFoundHttpException("L'evenement ".$id." n'existe pas.");
+		}
+		$em = $this->getDoctrine()->getManager();
+		if($evenement->getMoment()==4)
+		{
+			$Lien=$repository2->findOneBy(array('Jour' => $evenement));
+			$M1=$Lien->getMatin1();
+			$M2=$Lien->getMatin2();
+			
+			$em	->remove($Lien)
+				->remove($M1)
+				->remove($M2);
+			$em->flush();
+
+		}
+
+		$em->remove($evenement);
 		$em->flush();
-
-	}
-
-	$em->remove($evenement);
-	$em->flush();
-	
-	$request->getSession()->getFlashBag()->add('notice', 'L\'activité a été supprimée.');
-	return $this->redirectToRoute('jour_indexjour', array('id' => $evenement->getJour()->getId()));
+		
+		$request->getSession()->getFlashBag()->add('notice', 'L\'activité a été supprimée.');
+		return $this->redirectToRoute('jour_indexjour', array('id' => $evenement->getJour()->getId()));
 
 	}
 	public function jourAffecterEnfantAction($idJour, $idEnfant, Request $request){
