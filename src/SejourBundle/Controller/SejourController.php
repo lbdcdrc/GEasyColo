@@ -172,7 +172,7 @@ class SejourController extends Controller
 			throw new NotFoundHttpException("Le sejour n'existe pas");
 		}
 		
-		$form = $this->get('form.factory')->create(EditActiviteType::class, $activite);
+		$form = $this->get('form.factory')->create(ActiviteType::class, $activite, array('attr' => array('edit' => true)));
 
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
