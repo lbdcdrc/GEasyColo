@@ -19,7 +19,7 @@
 		{% include "SejourBundle:FicheAnim:Coordonnes.html.twig" with {'user': user, 'role':role} only %}
 		{% include "SejourBundle:FicheAnim:Diplomes.html.twig" with {'user': user} only %}
 		{% if is_granted('ROLE_ADJOINT') and role<4 %}
-		<li><a href="{{ path('derecrute', { 'id': user.id }) }}" onclick="return confirm('Confirmer le dérecrutement ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
+		<li><a href="{{ path('derecrute', { 'id': affectation }) }}" onclick="return confirm('Confirmer le dérecrutement ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i>
 Dérecruter?</button></a></li>
 		{% endif %}
 	</ul>

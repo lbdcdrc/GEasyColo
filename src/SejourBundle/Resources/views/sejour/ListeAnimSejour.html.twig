@@ -11,7 +11,7 @@
 		<ul id="plans">
 		{% include "SejourBundle:FicheAnim:AnimCard.html.twig" with {'user': Sejour.directeur, 'role': 4} only %}
 		{% for animateur in listeAnim %}	
-		{% include "SejourBundle:FicheAnim:AnimCard.html.twig" with {'user': animateur.user, 'role': animateur.role} only %}
+		{% include "SejourBundle:FicheAnim:AnimCard.html.twig" with {'user': animateur.user, 'role': animateur.role, 'affectation': animateur.id } only %}
 		{% endfor %}
 		</ul>
 	</center>

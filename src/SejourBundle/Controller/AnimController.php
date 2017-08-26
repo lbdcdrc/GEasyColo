@@ -47,105 +47,49 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AnimController extends Controller
 {
 	public function listeAnimSejourAction($id, Request $request){
-	$this->container->get('sejour.droits')->AllowedUser($id);
-	$repository2 = $this->getDoctrine()
-						->getManager()
-						->getRepository('SejourBundle:Sejour');
-	$Sejour = $repository2->findOneBy(array('id' => $id));
-	
-	$repository = $this->getDoctrine()
-						->getManager()
-						->getRepository('SejourBundle:AnimSejour');
-	$listeAnim = $repository->findBy(array('sejour'=>$Sejour), array('role' => 'desc'));
-	
-	$repository3 = $this->getDoctrine()
-						->getManager()
-						->getRepository('UserBundle:User');
+		$this->container->get('sejour.droits')->AllowedUser($id);
+		$repository2 = $this->getDoctrine()
+							->getManager()
+							->getRepository('SejourBundle:Sejour');
+		$Sejour = $repository2->findOneBy(array('id' => $id));
 		
-	$listeAnimR = $repository3->animRecrute($id);
-	$listeAnimRecrutable=array();
-	foreach($listeAnimR as $anim)
-		{	
-			if ($anim['id'] != $Sejour->getDirecteur()->getId())
-			{
-				$listeAnimRecrutable[] = $repository3->find($anim['id']);
+		$repository = $this->getDoctrine()
+							->getManager()
+							->getRepository('SejourBundle:AnimSejour');
+		$listeAnim = $repository->findBy(array('sejour'=>$Sejour), array('role' => 'desc'));
+		
+		$repository3 = $this->getDoctrine()
+							->getManager()
+							->getRepository('UserBundle:User');
+			
+		$listeAnimR = $repository3->animRecrute($id);
+		$listeAnimRecrutable=array();
+		foreach($listeAnimR as $anim)
+			{	
+				if ($anim['id'] != $Sejour->getDirecteur()->getId())
+				{
+					$listeAnimRecrutable[] = $repository3->find($anim['id']);
+				}
 			}
-		}
-	$affectation = new AnimSejour();
-	$form   = $this->get('form.factory')->create(RecruterType::class, $affectation, ['listeAnim' => $listeAnimRecrutable]);
-	
-	if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-			    if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT')) {
-			  // Sinon on déclenche une exception « Accès interdit »
-			  throw new AccessDeniedException('Accès limité à la direction du séjour.');
-			}
-			if( $affectation->getUser() === null)
-			{
-				$request->getSession()->getFlashBag()->add('notice', 'Aucun animateur à recruter !');
-				return $this->redirectToRoute('sejour_equipe', array('id' => $id));
-			}
-			$em = $this->getDoctrine()->getManager();
-			$affectation->setSejour($Sejour);
-			$AnimEnCours=$affectation->getUser();
-			if($affectation->getRole() == 2)
-			{
-				$AnimEnCours->addRole('ROLE_ASSISTANT_SANITAIRE');
-			}
-			elseif($affectation->getRole() == 3)
-			{
-				$AnimEnCours->addRole('ROLE_ADJOINT');
-			}
-			$em->persist($AnimEnCours);
-			$em->persist($affectation);
+		$em=$this->getDoctrine()->getManager();
+		$affectation = new AnimSejour();
+		$form   = $this->get('form.factory')->create(RecruterType::class, $affectation, ['listeAnim' => $listeAnimRecrutable]);
+		
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
+		{
+			$em = $this->recrutementAnim($affectation, $request, $em, $Sejour );
 			$em->flush();
-			
-			$message = \Swift_Message::newInstance()
-			->setSubject('EasyColo - Confirmation de recrutement')
-			->setFrom('register@easycolo.fr')
-			->setTo($AnimEnCours->getEmail())
-			->setBody(
-			$this->renderView(
-			'SejourBundle:Emails:registration.html.twig',
-			array('anim' => $AnimEnCours, 'sejour'=>$Sejour, 'role'=>$affectation->getRole())
-			),
-			'text/html'
-			)
-			;
-
-			$this->get('mailer')->send($message);
-			
-			$repository4 = $this->getDoctrine()
-					->getManager()
-					->getRepository('SejourBundle:Jour');
-			$repository6 = $this->getDoctrine()
-					->getManager()
-					->getRepository('SejourBundle:IdMoment');
-			
-			$listeJour = $repository4->findBy(array('sejour'=>$Sejour));
-			
-			foreach($listeJour as $j){
-			$MomentTravail = $repository6->findOneById(1);
-			$LigneConges=new AnimConges();
-			$LigneConges->setUser($AnimEnCours)
-						->setJour($j)
-						->setMoment($MomentTravail);
-			$em->persist($LigneConges);		
-			}
-			$em->flush();
-			
-			$request->getSession()->getFlashBag()->add('notice', 'L\'animateur a été recruté !');
-
-		  return $this->redirectToRoute('sejour_equipe', array('id' => $id));
+			return $this->redirectToRoute('sejour_equipe', array('id' => $id));
 		}
 
-	return $this->render('SejourBundle:sejour:ListeAnimSejour.html.twig', array('Sejour' => $Sejour, 'listeAnim'=>$listeAnim, 'form' => $form->createView(), ));
+		return $this->render('SejourBundle:sejour:ListeAnimSejour.html.twig', array('Sejour' => $Sejour, 'listeAnim'=>$listeAnim, 'form' => $form->createView(), ));
 	}
 	public function derecruteAction($id){
 		$repository = $this->getDoctrine()
 						->getManager()
 						->getRepository('SejourBundle:AnimSejour');
 		$affectation = $repository->findOneById($id);
-		if (null === $affectation) {
+		if ($affectation === null) {
 			throw new NotFoundHttpException("Affectation inexistante..");
 		}
 		$em = $this->getDoctrine()->getManager();
@@ -302,5 +246,65 @@ class AnimController extends Controller
 
 		return $this->render('SejourBundle:FicheActi:editfiche.html.twig', array('acti'=>$activite->getId(), 'form' => $form->createView(),));
     }
+	private function recrutementAnim($affectation, $request, $em, $Sejour )
+	{
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADJOINT')) 
+		{
+			throw new AccessDeniedException('Accès limité à la direction du séjour.');
+		}
+		if( $affectation->getUser() === null)
+		{
+			$request->getSession()->getFlashBag()->add('notice', 'Aucun animateur à recruter !');
+			return $this->redirectToRoute('sejour_equipe', array('id' => $id));
+		}
+		$affectation->setSejour($Sejour);
+		$AnimEnCours=$affectation->getUser();
+		if($affectation->getRole() == 2)
+		{
+			$AnimEnCours->addRole('ROLE_ASSISTANT_SANITAIRE');
+		}
+		elseif($affectation->getRole() == 3)
+		{
+			$AnimEnCours->addRole('ROLE_ADJOINT');
+		}
+		$em->persist($AnimEnCours);
+		$em->persist($affectation);
+		
+		$message = \Swift_Message::newInstance()
+		->setSubject('EasyColo - Confirmation de recrutement')
+		->setFrom('register@easycolo.fr')
+		->setTo($AnimEnCours->getEmail())
+		->setBody(
+		$this->renderView(
+		'SejourBundle:Emails:registration.html.twig',
+		array('anim' => $AnimEnCours, 'sejour'=>$Sejour, 'role'=>$affectation->getRole())
+		),
+		'text/html'
+		)
+		;
+
+		$this->get('mailer')->send($message);
+		
+		$repository4 = $this->getDoctrine()
+				->getManager()
+				->getRepository('SejourBundle:Jour');
+		$repository6 = $this->getDoctrine()
+				->getManager()
+				->getRepository('SejourBundle:IdMoment');
+		
+		$listeJour = $repository4->findBy(array('sejour'=>$Sejour));
+		
+		foreach($listeJour as $j){
+		$MomentTravail = $repository6->findOneById(1);
+		$LigneConges=new AnimConges();
+		$LigneConges->setUser($AnimEnCours)
+					->setJour($j)
+					->setMoment($MomentTravail);
+		$em->persist($LigneConges);		
+		}
+		$request->getSession()->getFlashBag()->add('notice', 'L\'animateur a été recruté !');
+		
+		return $em;
+	}
 }
 
