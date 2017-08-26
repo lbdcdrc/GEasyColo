@@ -63,14 +63,7 @@ class SoinController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Soin');
 
-		$Sejour = $repository->findOneById($id);
-		// Verification des droits
-		// Seul les AS + Directions ont accès à cette page
-		$this->container->get('sejour.droits')->AllowedUser($Sejour);
-		if( !$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
+		$this->verif_droit($repository->findOneById($id), 'ROLE_ASSISTANT_SANITAIRE');
 		
 		$ListeEnfant = $repository2->findBy(array('sejour'=>$Sejour));
 		
@@ -109,13 +102,7 @@ class SoinController extends Controller
 		
 	}
 	public function clotureSoinsAction($id, $jour, Request $request){
-		// Verification des droits
-		// Seul le Directeur et les admins ont accès à cette page
-		$this->container->get('sejour.droits')->AllowedUser($id);
-		if( !$this->get('security.authorization_checker')->isGranted('ROLE_DIRECTEUR') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
+		$this->verif_droit($id, 'ROLE_DIRECCTEUR');
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Jour');
@@ -129,11 +116,7 @@ class SoinController extends Controller
 		return $this->redirectToRoute('sejour_soins', array('id' => $id, 'jour'=>$jour));
 	}
 	public function traitementAction($id, $jour, Request $request){
-		$this->container->get('sejour.droits')->AllowedUser($id);
-		if( !$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
-		{
-			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
-		}
+		$this->verif_droit($id, 'ROLE_ASSISTANT_SANITAIRE');
 		
 		$repository = $this->getDoctrine()
 		->getManager()
@@ -167,20 +150,7 @@ class SoinController extends Controller
 		
 		if ($request->isMethod('POST')) 
 		{
-			$data = $request->request->all();		
-			$NbLigne=$data['nbligne'];	
-			$em = $this->getDoctrine()->getManager();
-			$em=$this->creerLigneTraitement("", $data,$em, $Sejour);
-			
-			if($NbLigne>1)
-			{
-				for($j = 1; $j < $NbLigne; $j += 1)
-				{
-					$em=$this->creerLigneTraitement($j, $data,$em, $Sejour);
-				}
-			}
-			$em->flush();
-			$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');
+			$this->formulaireTraitement($request, $Sejour);
 			return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour));
 		}
 		
@@ -322,6 +292,32 @@ class SoinController extends Controller
 			$em->persist($TraitementJour);			
 		}		
 		return $em;
+	}
+	
+	private function formulaireTraitement($request, $Sejour)
+	{
+		$data = $request->request->all();		
+		$NbLigne=$data['nbligne'];	
+		$em = $this->getDoctrine()->getManager();
+		$em=$this->creerLigneTraitement("", $data,$em, $Sejour);
+		
+		if($NbLigne>1)
+		{
+			for($j = 1; $j < $NbLigne; $j += 1)
+			{
+				$em=$this->creerLigneTraitement($j, $data,$em, $Sejour);
+			}
+		}
+		$em->flush();
+		$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');		
+	}
+	private function verif_droit($id, $role)
+	{
+		$this->container->get('sejour.droits')->AllowedUser($id);
+		if( !$this->get('security.authorization_checker')->isGranted($role) )
+		{
+			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
+		}		
 	}
 }
 
