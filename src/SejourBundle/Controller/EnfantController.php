@@ -242,12 +242,8 @@ class EnfantController extends Controller
 		array('enfant' => $Enfant), // Critere
 		array('date' => 'desc'));
 		
-		$URLImage = $Enfant->getImage();
-		if($URLImage)
-		{
-			$URLImage=$URLImage->getwebPath();
-		}
-		
+		$URLImage = $this->Image($Enfant);
+
 		$probleme = new ProblemesEnfant();
 		$probleme->setEncours(true)
 				->setEnfant($Enfant);
@@ -266,7 +262,7 @@ class EnfantController extends Controller
 		
 		
 		
-		return $this->render('SejourBundle:Default:problemesenfant.html.twig', array('id' => $id,'listeProblemes' => $listProblemes,'Sejour'=>$Sejour, 'form' => $form->createView(),  'enfant' => $Enfant, 'image'=>$URLImage));
+		return $this->render('SejourBundle:Default:problemesenfant.html.twig', array('id' => $id,'listeProblemes' => $listProblemes,'Sejour'=>$Enfant->getSejour(), 'form' => $form->createView(),  'enfant' => $Enfant, 'image'=>$URLImage));
 		
 	}
 	public function problemeEnfantCheckAction($id, Request $request){
@@ -286,6 +282,18 @@ class EnfantController extends Controller
 		
 		return $this->redirectToRoute('enfant_probleme_list', array('id' => $Enfant));
 		
+	}
+	
+	private function Image($Enfant)
+	{
+		if($Enfant->getImage())
+		{
+			return $Enfant->getImage()->getwebPath();
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
 
