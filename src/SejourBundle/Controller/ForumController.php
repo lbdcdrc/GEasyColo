@@ -59,102 +59,19 @@ class ForumController extends Controller
 	->getManager()
 	->getRepository('SejourBundle:ForumCategorie');
 	$ListeCategorie = $repository2->findBy(array('sejour' => $Sejour->getId()));
-	
-	$repository3 = $this->getDoctrine()
-	->getManager()
-	->getRepository('SejourBundle:ForumUserMessageVu');
 
-	$repository4 = $this->getDoctrine()
-	->getManager()
-	->getRepository('SejourBundle:ForumMessage');	
+	list($ListeCategorieAvecVues, $em)= $this->listeCategorie($ListeCategorie);
 
-	$ListeCategorieAvecVues= array();
-	
-	foreach($ListeCategorie as $Cate)
-	{
-		$DernierMessageVu = $repository3->findOneBy(array('user' => $this->getUser(), 'categorie' => $Cate));
-		$page=null;
-		$numeroMessage=0;
-		$NbMessage=$Cate->getReponses();
-		if($DernierMessageVu === null)
-		{
-			$NewDernier = new ForumUserMessageVu();
-			$NewDernier->setUser($this->getUser())
-						->setCategorie($Cate)
-						->setDernierMessageVu(null)
-						->setAccepteNotifications(false)
-						->setNotifie(false);
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($NewDernier);
-			$ListeCategorieAvecVues[]= array(
-										'categorie' => $Cate,
-										'vu' => false,
-										'notif'=> false,
-										'page' =>1);										
-		}
-		elseif($Cate->getDernierMessage() === null)
-		{
-			$Notif=$DernierMessageVu->getAccepteNotifications();
-			$ListeCategorieAvecVues[]= array(
-										'categorie' => $Cate,
-										'vu' => true,
-										'notif'=>$Notif,
-										'page'=>1);
-		}
-		elseif($DernierMessageVu->getDernierMessageVu() === null)
-		{
-			$Notif=$DernierMessageVu->getAccepteNotifications();
-			$ListeCategorieAvecVues[]= array(
-										'categorie' => $Cate,
-										'vu' => false,
-										'notif'=>$Notif,
-										'page' =>1);
-		}
-		elseif($DernierMessageVu->getDernierMessageVu() != $Cate->getDernierMessage())
-		{
-			$Notif=$DernierMessageVu->getAccepteNotifications();
-			$ListeMessages=$repository4->findBy(array('categorie' => $Cate->getId()));
-			foreach($ListeMessages as $Mes){
-				if($Mes->getId() != $Cate->getDernierMessage()->getId()){
-					$numeroMessage++;
-				}
-				else{
-				break;
-				}
-			}
-			$Page=ceil($numeroMessage/10);
-			$ListeCategorieAvecVues[]= array(
-										'categorie' => $Cate,
-										'vu' => false,
-										'notif'=>$Notif,
-										'page'=> $Page);
-			
-		}
-		else
-		{
-			$Notif=$DernierMessageVu->getAccepteNotifications();
-			$ListeCategorieAvecVues[]= array(
-										'categorie' => $Cate,
-										'notif'=>$Notif,
-										'vu' => true,
-										'page' =>ceil($NbMessage/10));
-		}
-		
-	}
-	$em->flush();
-	
 	$Categorie = new ForumCategorie();
-	$Categorie->setSejour($Sejour);
-	$Categorie->setCreateur($this->getUser());
+	$Categorie	->setSejour($Sejour)
+				->setCreateur($this->getUser());
 	$form   = $this->get('form.factory')->create(ForumCategorieType::class, $Categorie);
 
 	if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-		$em = $this->getDoctrine()->getManager();
 		$em->persist($Categorie);
 		$em->flush();
 		$request->getSession()->getFlashBag()->add('notice', 'La discussion a bien été créé.');
-
-	  return $this->redirectToRoute('sejour_forum', array('id' => $Sejour->getId()));
+		return $this->redirectToRoute('sejour_forum', array('id' => $Sejour->getId()));
 	}
 	return $this->render('SejourBundle:sejour:Forum.html.twig', array('Sejour' => $Sejour, 'Categorie' => $ListeCategorieAvecVues,  'form' => $form->createView(),));
 	}	
@@ -259,6 +176,89 @@ class ForumController extends Controller
 		$request->getSession()->getFlashBag()->add('notice', 'La réponse a été postée !');		
 		
 		return array($em, $Page);
+	}
+	private function listeCategorie($ListeCategorie)
+	{
+		$repository3 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:ForumUserMessageVu');
+		$repository4 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:ForumMessage');
+		$ListeCategorieAvecVues= array();
+		foreach($ListeCategorie as $Cate)
+		{
+			$DernierMessageVu = $repository3->findOneBy(array('user' => $this->getUser(), 'categorie' => $Cate));
+			$page=null;
+			$numeroMessage=0;
+			$NbMessage=$Cate->getReponses();
+			if($DernierMessageVu === null)
+			{
+				$NewDernier = new ForumUserMessageVu();
+				$NewDernier->setUser($this->getUser())
+							->setCategorie($Cate)
+							->setDernierMessageVu(null)
+							->setAccepteNotifications(false)
+							->setNotifie(false);
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($NewDernier);
+				$ListeCategorieAvecVues[]= array(
+											'categorie' => $Cate,
+											'vu' => false,
+											'notif'=> false,
+											'page' =>1);										
+			}
+			elseif($Cate->getDernierMessage() === null)
+			{
+				$Notif=$DernierMessageVu->getAccepteNotifications();
+				$ListeCategorieAvecVues[]= array(
+											'categorie' => $Cate,
+											'vu' => true,
+											'notif'=>$Notif,
+											'page'=>1);
+			}
+			elseif($DernierMessageVu->getDernierMessageVu() === null)
+			{
+				$Notif=$DernierMessageVu->getAccepteNotifications();
+				$ListeCategorieAvecVues[]= array(
+											'categorie' => $Cate,
+											'vu' => false,
+											'notif'=>$Notif,
+											'page' =>1);
+			}
+			elseif($DernierMessageVu->getDernierMessageVu() != $Cate->getDernierMessage())
+			{
+				$Notif=$DernierMessageVu->getAccepteNotifications();
+				$ListeMessages=$repository4->findBy(array('categorie' => $Cate->getId()));
+				foreach($ListeMessages as $Mes){
+					if($Mes->getId() != $Cate->getDernierMessage()->getId()){
+						$numeroMessage++;
+					}
+					else{
+					break;
+					}
+				}
+				$Page=ceil($numeroMessage/10);
+				$ListeCategorieAvecVues[]= array(
+											'categorie' => $Cate,
+											'vu' => false,
+											'notif'=>$Notif,
+											'page'=> $Page);
+				
+			}
+			else
+			{
+				$Notif=$DernierMessageVu->getAccepteNotifications();
+				$ListeCategorieAvecVues[]= array(
+											'categorie' => $Cate,
+											'notif'=>$Notif,
+											'vu' => true,
+											'page' =>ceil($NbMessage/10));
+			}
+			
+		}
+		$em->flush();
+		return array($ListeCategorieAvecVues, $em);
 	}
 }
 
