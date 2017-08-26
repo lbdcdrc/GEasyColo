@@ -175,7 +175,7 @@ class ListingController extends Controller
 			}
 			if($ListingType === 'Regime')
 			{
-				if($Enf->getRegimes() != null)
+				if($Enf->getRegimes() !== null)
 				{
 					$array['regime'] = $Enf ->getRegimes();
 					$listEnfantImage[]= $array;
