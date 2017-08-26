@@ -28,14 +28,14 @@ class DefaultController extends Controller
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
 		{
-			$user->setImage($Image);
+			$this->getUser()->setImage($Image);
 			$this->getDoctrine()->getManager()->flush();
 			$request->getSession()->getFlashBag()->add('notice', 'L\'avatar a bien été modifié');
 
 			$cacheManager = $this->get('liip_imagine.cache.manager');
-			$cacheManager->remove($user->getImage()->getwebPath(), 'my_thumb');
-			$cacheManager->remove($user->getImage()->getwebPath(), 'md_thumb');
-			$cacheManager->remove($user->getImage()->getwebPath(), 'lg_thumb');
+			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'my_thumb');
+			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'md_thumb');
+			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'lg_thumb');
 			
 			return $this->redirectToRoute('fos_user_profile_show');
 		}		
