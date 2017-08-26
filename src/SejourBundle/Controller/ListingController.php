@@ -104,44 +104,7 @@ class ListingController extends Controller
 		// Toutes l'équipe du séjour + Admin ont les droits
 		$this->container->get('sejour.droits')->AllowedUser($idSej);
 		
-		$repository3 = $this->getDoctrine()
-		->getManager()
-		->getRepository('SejourBundle:Enfant');
-
-		$listEnfants = $repository3->findBy(
-		array('sejour' => $idSej), // Critere
-		array('nom' => 'asc'));
-		
-		$repository2 = $this->getDoctrine()
-		->getManager()
-		->getRepository('SejourBundle:Sejour');
-		
-		$Sejour = $repository2->findOneById($idSej);
-		$this->container->get('sejour.droits')->AllowedUser($Sejour);
-		$listEnfantImage=array();
-		foreach($listEnfants as $Enf)
-		{
-			if($Enf-> getImage())
-			{
-			$listEnfantImage[] = array(
-										'prenom' => $Enf->getPrenom(),
-										'nom' => $Enf->getNom(),
-										'age' => $Enf ->getAge(),
-										'chambre' => $Enf -> getChambre(),
-										'image' => $Enf -> getImage()->getwebPath());
-			}
-			else
-			{
-			$listEnfantImage[] = array(
-							'prenom' => $Enf->getPrenom(),
-							'nom' => $Enf->getNom(),
-							'age' => $Enf ->getAge(),
-							'chambre' => $Enf -> getChambre(),
-							'image' => null);	
-			}
-
-			
-		}
+		list($listEnfantImage, $Sejour)=$this->listingSejour($idSej);
 		return $this->render('SejourBundle:Default:listingenfant.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
 	}
 	// Edition Trombi complet  (Nom - Prénom - Age - Chambre - Photo - Infos - Régimes)
@@ -154,49 +117,8 @@ class ListingController extends Controller
 			throw new AccessDeniedException('Accès réservé à la direction');
 		}
 		// Ici, l'utilisateur est validé
-		
-		$repository3 = $this->getDoctrine()
-		->getManager()
-		->getRepository('SejourBundle:Enfant');
+		list($listEnfantImage, $Sejour)=$this->listingSejour($idSej, 'Complet');
 
-		$listEnfants = $repository3->findBy(
-		array('sejour' => $idSej), // Critere
-		array('nom' => 'asc'));
-		
-		$repository2 = $this->getDoctrine()
-		->getManager()
-		->getRepository('SejourBundle:Sejour');
-		
-		$Sejour = $repository2->findOneById($idSej);
-		$this->container->get('sejour.droits')->AllowedUser($Sejour);
-		$listEnfantImage=array();
-		foreach($listEnfants as $Enf)
-		{
-			if($Enf-> getImage())
-			{
-			$listEnfantImage[] = array(
-										'prenom' => $Enf->getPrenom(),
-										'nom' => $Enf->getNom(),
-										'age' => $Enf ->getAge(),
-										'chambre' => $Enf -> getChambre(),
-										'info' => $Enf -> getInfos(),
-										'regime' => $Enf ->getRegimes(),
-										'image' => $Enf -> getImage()->getwebPath());
-			}
-			else
-			{
-			$listEnfantImage[] = array(
-							'prenom' => $Enf->getPrenom(),
-							'nom' => $Enf->getNom(),
-							'age' => $Enf ->getAge(),
-							'chambre' => $Enf -> getChambre(),
-							'info' => $Enf -> getInfos(),
-							'regime' => $Enf ->getRegimes(),
-							'image' => null);	
-			}
-
-			
-		}
 		return $this->render('SejourBundle:Default:listingenfantcomplet.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
 	}
 	// Edition Trombi Régimes : Seulement les enfants ayant des régimes alimentaires particuliers
@@ -209,7 +131,12 @@ class ListingController extends Controller
 			throw new AccessDeniedException('Accès réservé à la direction');
 		}
 		// Ici, l'utilisateur est validé
-		
+		list($listEnfantImage, $Sejour)=$this->listingSejour($idSej, 'Regime');
+		return $this->render('SejourBundle:Default:listingregimes.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
+	}
+	
+	private function listingSejour($idSej, $ListingType="Normal")
+	{
 		$repository3 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Enfant');
@@ -227,30 +154,40 @@ class ListingController extends Controller
 		$listEnfantImage=array();
 		foreach($listEnfants as $Enf)
 		{
-			if($Enf-> getRegimes())
+			$array['prenom'] = $Enf->getPrenom();
+			$array['nom'] = $Enf->getNom();
+			$array['age'] = $Enf ->getAge();
+			$array['chambre'] = $Enf -> getChambre();
+										
+			if($Enf-> getImage())
 			{
-				if($Enf-> getImage())
+			$array['image'] = $Enf -> getImage()->getwebPath();
+			}
+			else
+			{
+			$array['image'] = null ;
+			}
+			
+			if($ListingType === 'Complet')
+			{
+			$array['info'] = $Enf -> getInfos();
+			$array['regime'] = $Enf ->getRegimes();
+			}
+			if($ListingType === 'Regime')
+			{
+				if($Enf->getRegimes() != null)
 				{
-				$listEnfantImage[] = array(
-											'prenom' => $Enf->getPrenom(),
-											'nom' => $Enf->getNom(),
-											'age' => $Enf ->getAge(),
-											'regime' => $Enf ->getRegimes(),
-											'image' => $Enf -> getImage()->getwebPath());
+					$array['regime'] = $Enf ->getRegimes();
+					$listEnfantImage[]= $array;
 				}
-				else
-				{
-				$listEnfantImage[] = array(
-								'prenom' => $Enf->getPrenom(),
-								'nom' => $Enf->getNom(),
-								'age' => $Enf ->getAge(),
-								'regime' => $Enf ->getRegimes(),
-								'image' => null);	
-				}
+			}
+			else
+			{
+				$listEnfantImage[]= $array;
 			}
 			
 		}
-		return $this->render('SejourBundle:Default:listingregimes.html.twig', array('listeEnfant' => $listEnfantImage, 'sejour' => $Sejour ));
-	}	
+		return array($listEnfantImage,$Sejour);
+	}
 }
 
