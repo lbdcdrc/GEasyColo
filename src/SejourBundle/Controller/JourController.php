@@ -211,52 +211,38 @@ class JourController extends Controller
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
 	}
 	public function jourDellEventAction($id, Request $request){
-		    // On récupère le repository
     $repository = $this->getDoctrine()
       ->getManager()
       ->getRepository('SejourBundle:Evenement')
     ;
-	
 	$repository2 = $this->getDoctrine()
       ->getManager()
       ->getRepository('SejourBundle:EvenementLies')
     ;
-
-    // On récupère l'entité correspondante à l'id $id
     $evenement = $repository->find($id);
-	
-	$jourId = $evenement->getJour()->getId();
-
-    // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
-    // ou null si l'id $id  n'existe pas, d'où ce if :
+		
     if (null === $evenement) {
       throw new NotFoundHttpException("L'evenement ".$id." n'existe pas.");
     }
 	$em = $this->getDoctrine()->getManager();
 	if($evenement->getMoment()==4)
 	{
-		$Lien=$repository2->findOneBy(
-			array('Jour' => $evenement));
-			$M1=$Lien->getMatin1();
-			$M2=$Lien->getMatin2();
-			
-			$em->remove($Lien);
-			$em->flush();
-			$em->remove($M1);
-			$em->flush();
-			$em->remove($M2);
-			$em->flush();
+		$Lien=$repository2->findOneBy(array('Jour' => $evenement));
+		$M1=$Lien->getMatin1();
+		$M2=$Lien->getMatin2();
+		
+		$em	->remove($Lien)
+			->remove($M1)
+			->remove($M2);
+		$em->flush();
 
 	}
-	
-	
 
 	$em->remove($evenement);
 	$em->flush();
 	
-	
 	$request->getSession()->getFlashBag()->add('notice', 'L\'activité a été supprimée.');
-	return $this->redirectToRoute('jour_indexjour', array('id' => $jourId));
+	return $this->redirectToRoute('jour_indexjour', array('id' => $evenement->getJour()->getId()));
 
 	}
 	public function jourAffecterEnfantAction($idJour, $idEnfant, Request $request){
