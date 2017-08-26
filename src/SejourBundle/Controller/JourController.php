@@ -74,69 +74,13 @@ class JourController extends Controller
 	array('sejour' => $Sejour), // Critere
 	array('nom' => 'asc'));
 	
-	$listInscriptionsComplete=array();
-	$listInscriptionsIncomplete=array();
-	$listInscriptionsNulle=array();
-	
-	
-	
-	foreach(  $listEnfants as $enfant )
-	{
-		$listeEvEnfant = $enfant->getEvenements();
-		$NbMatin1=0;
-		$NbMatin2=0;
-		$NbAM=0;
-		$NbJour12=0;
-		$NbJour=0;
-		foreach( $listeEvEnfant as $EvEnfant)
-		{
-			if($EvEnfant->getJour()->getId() == $id)
-			{
-				if($EvEnfant->getMoment() == 1)
-				{
-					$NbMatin1+=1;
-				}
-				elseif($EvEnfant->getMoment() == 2)
-				{
-					$NbMatin2+=1;
-				}
-				elseif($EvEnfant->getMoment() == 3)
-				{
-					$NbAM+=1;
-				}
-				elseif($EvEnfant->getMoment() == 4)
-				{
-					$NbJour12+=1;
-				}
-				elseif($EvEnfant->getMoment() == 5)
-				{
-					$NbJour+=1;
-				}
-			}
-		}
+	list($listInscriptionsComplete, $listInscriptionsIncomplete, $listInscriptionsNulle) = $this->triInscriptionsEnfant($listEnfants);
 		
-		if( $NbMatin1 == 0 && $NbMatin2 ==0 && $NbAM == 0 && $NbJour12 ==0 && $NbJour==0)
-		{
-			$listInscriptionsNulle[] = $enfant;
-		}
-		elseif( (($NbMatin1 == 1 && $NbMatin2 ==1 && $NbAM == 1) xor $NbJour12 ==1) xor $NbJour==1)
-		{
-			$listInscriptionsComplete[] = $enfant;
-		}
-		else
-		{
-			$listInscriptionsIncomplete[] = $enfant;
-		}
-	}
-	
-	
-		
-	return $this->render('SejourBundle:Default:jour.html.twig', array('listeEvenements' => $listEvenement, 'jour' => $jour, 
-	'listeEnfantsComplet' => $listInscriptionsComplete,
-	'listeEnfantsIncomplet' => $listInscriptionsIncomplete,
-	'listeEnfantsNulle' => $listInscriptionsNulle
-	
-	));
+	return $this->render('SejourBundle:Default:jour.html.twig', array(	'listeEvenements' => $listEvenement, 'jour' => $jour, 
+																		'listeEnfantsComplet' => $listInscriptionsComplete,
+																		'listeEnfantsIncomplet' => $listInscriptionsIncomplete,
+																		'listeEnfantsNulle' => $listInscriptionsNulle
+																	));
 	}
 	public function jourAddEventAction($id, Request $request){
 	$repository2 = $this->getDoctrine()
@@ -550,6 +494,63 @@ class JourController extends Controller
 	}
 
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
-    }	
+    }
+
+	private function triInscriptionsEnfant($listEnfants)
+	{
+		$listInscriptionsComplete=array();
+		$listInscriptionsIncomplete=array();
+		$listInscriptionsNulle=array();
+
+		foreach(  $listEnfants as $enfant )
+		{
+			$listeEvEnfant = $enfant->getEvenements();
+			$NbMatin1=0;
+			$NbMatin2=0;
+			$NbAM=0;
+			$NbJour12=0;
+			$NbJour=0;
+			foreach( $listeEvEnfant as $EvEnfant)
+			{
+				if($EvEnfant->getJour()->getId() == $id)
+				{
+					if($EvEnfant->getMoment() == 1)
+					{
+						$NbMatin1+=1;
+					}
+					elseif($EvEnfant->getMoment() == 2)
+					{
+						$NbMatin2+=1;
+					}
+					elseif($EvEnfant->getMoment() == 3)
+					{
+						$NbAM+=1;
+					}
+					elseif($EvEnfant->getMoment() == 4)
+					{
+						$NbJour12+=1;
+					}
+					elseif($EvEnfant->getMoment() == 5)
+					{
+						$NbJour+=1;
+					}
+				}
+			}
+			
+			if( $NbMatin1 == 0 && $NbMatin2 ==0 && $NbAM == 0 && $NbJour12 ==0 && $NbJour==0)
+			{
+				$listInscriptionsNulle[] = $enfant;
+			}
+			elseif( (($NbMatin1 == 1 && $NbMatin2 ==1 && $NbAM == 1) xor $NbJour12 ==1) xor $NbJour==1)
+			{
+				$listInscriptionsComplete[] = $enfant;
+			}
+			else
+			{
+				$listInscriptionsIncomplete[] = $enfant;
+			}
+		}	
+		return array($listInscriptionsComplete, $listInscriptionsIncomplete, $listInscriptionsNulle);
+	}
 }
 
