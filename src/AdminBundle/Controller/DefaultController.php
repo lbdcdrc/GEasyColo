@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use UserBundle\Form\Type\RolesType;
-use AdminBundle\Form\Type\ProfileType;
+use UserBundle\Form\Type\ProfileType;
 use UserBundle\Entity\User;
 
 class DefaultController extends Controller
@@ -121,7 +121,7 @@ class DefaultController extends Controller
 		{
 			throw new NotFoundHttpException("L'utilisateur ".$id." n'existe pas.");
 		}
-		$form   = $this->get('form.factory')->create(ProfileType::class, $user);
+		$form   = $this->get('form.factory')->create(ProfileType::class, $user, array('attr' => array('edit' => true)));
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 		  $userManager->updateUser($user);
 		  $request->getSession()->getFlashBag()->add('notice', 'Le profil a été mis à jours.');

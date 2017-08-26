@@ -19,29 +19,33 @@ class ProfileType extends AbstractType
    public function buildForm(FormBuilderInterface $builder, array $options)
  
    {
-		$builder->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle', 'disabled' => true))
-				->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle', 'disabled' => true));
-	   $builder->add(
-					$builder->create('step1', FormType::class, array('label'=> 'État Civil :', 'inherit_data' => true))
-							->add('nom',null, array('label'=>"Nom de famille", 'disabled'=>true))
-							->add('prenom',null, array('label'=>"Prénom", 'disabled'=>true))
-							->add('naissance', BirthdayType::class, array('label'=>"Date de naissance", 'disabled'=>true))
-							->add('telephone', null, array('label'=>'Numéro de portable', 'attr'=>array('placeholder'=>'+33601020304')))
-							->add('adresse1', null, array('label'=>'Champ d\'adresse 1 :', 'attr'=>array('placeholder'=>'Numéro et nom de rue')))
-							->add('adresse2', null, array('label'=>'Champ d\'adresse 2 :', 'required'=>false, 'attr'=>array('placeholder'=>'Complément d\'adresse')))
-							->add('codepostal', null, array('label'=>'Code Postal'))
-							->add('ville'));							
-							
-	   
-	   $builder->add(
-					$builder->create('step2', FormType::class, array('label'=>'Qualifications :', 'inherit_data' => true))
-							->add('diplome', EntityType::class, array('class' => 'UserBundle:Diplome',
-																	'choice_label' => 'nom',
-																	))
-							->add('psc1', CheckboxType::class, array('label'    => 'PSC1', 'required'=>false))
-							->add('sb', CheckboxType::class, array('label'    => 'Surveillant de Baignade', 'required'=>false)));
-		$builder->add('presentation', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ma présentation', 'config_name'=>'bbcode'));
 
+	   $builder	->add('telephone', null, array('label'=>'Numéro de portable', 'attr'=>array('placeholder'=>'+33601020304')))
+				->add('adresse1', null, array('label'=>'Champ d\'adresse 1 :', 'attr'=>array('placeholder'=>'Numéro et nom de rue')))
+				->add('adresse2', null, array('label'=>'Champ d\'adresse 2 :', 'required'=>false, 'attr'=>array('placeholder'=>'Complément d\'adresse')))
+				->add('codepostal', null, array('label'=>'Code Postal'))
+				->add('ville')
+				->add('diplome', EntityType::class, array('class' => 'UserBundle:Diplome','choice_label' => 'nom',))
+				->add('psc1', CheckboxType::class, array('label'    => 'PSC1', 'required'=>false))
+				->add('sb', CheckboxType::class, array('label'    => 'Surveillant de Baignade', 'required'=>false))
+				->add('presentation', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Ma présentation', 'config_name'=>'bbcode'));				
+		if (isset($options['attr']['edit']) && ($options['attr']['edit'] === true))
+		{
+			$builder->add('nom',null, array('label'=>"Nom de famille"))
+					->add('prenom',null, array('label'=>"Prénom"))
+					->add('naissance', BirthdayType::class, array('label'=>"Date de naissance"))
+					->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
+					->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'));
+
+		}
+		else
+		{
+		$builder->add('nom',null, array('label'=>"Nom de famille", 'disabled'=>true))
+				->add('prenom',null, array('label'=>"Prénom", 'disabled'=>true))
+				->add('naissance', BirthdayType::class, array('label'=>"Date de naissance", 'disabled'=>true))
+				->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle', 'disabled' => true))
+				->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle', 'disabled' => true));
+		}	
    }
  
    public function getParent()
