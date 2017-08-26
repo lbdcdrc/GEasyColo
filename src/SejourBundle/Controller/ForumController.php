@@ -59,7 +59,7 @@ class ForumController extends Controller
 	->getRepository('SejourBundle:ForumCategorie');
 	$ListeCategorie = $repository2->findBy(array('sejour' => $Sejour->getId()));
 
-	list($ListeCategorieAvecVues, $em)= $this->listeCategorie($ListeCategorie);
+	list($ListeCategorieAvecVues, $em)= $this->listeCategorie($ListeCategorie, $em);
 
 	$Categorie = new ForumCategorie();
 	$Categorie	->setSejour($Sejour)
@@ -176,7 +176,7 @@ class ForumController extends Controller
 		
 		return array($em, $Page);
 	}
-	private function listeCategorie($ListeCategorie)
+	private function listeCategorie($ListeCategorie, $em)
 	{
 		$repository3 = $this->getDoctrine()
 		->getManager()
