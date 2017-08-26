@@ -124,10 +124,6 @@ class AnimController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Jour');
 		
-		$repository4 = $this->getDoctrine()
-		->getManager()
-		->getRepository('SejourBundle:AnimConges');
-
 		$listeJour = $repository3->findBy(
 		array('sejour' => $id), // Critere
 		array('date' => 'asc'));
