@@ -63,7 +63,7 @@ class SoinController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Soin');
 
-		$this->verif_droit($repository->findOneById($id), 'ROLE_ASSISTANT_SANITAIRE');
+		$this->verifDroit($repository->findOneById($id), 'ROLE_ASSISTANT_SANITAIRE');
 		
 		$ListeEnfant = $repository2->findBy(array('sejour'=>$Sejour));
 		
@@ -102,7 +102,7 @@ class SoinController extends Controller
 		
 	}
 	public function clotureSoinsAction($id, $jour, Request $request){
-		$this->verif_droit($id, 'ROLE_DIRECCTEUR');
+		$this->verifDroit($id, 'ROLE_DIRECCTEUR');
 		$repository = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Jour');
@@ -116,7 +116,7 @@ class SoinController extends Controller
 		return $this->redirectToRoute('sejour_soins', array('id' => $id, 'jour'=>$jour));
 	}
 	public function traitementAction($id, $jour, Request $request){
-		$this->verif_droit($id, 'ROLE_ASSISTANT_SANITAIRE');
+		$this->verifDroit($id, 'ROLE_ASSISTANT_SANITAIRE');
 		
 		$repository = $this->getDoctrine()
 		->getManager()
@@ -311,7 +311,7 @@ class SoinController extends Controller
 		$em->flush();
 		$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');		
 	}
-	private function verif_droit($id, $role)
+	private function verifDroit($id, $role)
 	{
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		if( !$this->get('security.authorization_checker')->isGranted($role) )
