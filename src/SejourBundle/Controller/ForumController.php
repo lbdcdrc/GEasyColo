@@ -171,8 +171,8 @@ class ForumController extends Controller
 		->getRepository('SejourBundle:ForumMessage');
 		$ListeMessages = $repository2->findBy(array('categorie' => $idForum));
 
-		$paginator  = $this->get('knp_paginator');
-		$pagination = $paginator->paginate(
+
+		$pagination = $this->get('knp_paginator')->paginate(
 			$ListeMessages,
 			$request->query->getInt('page', $page)/*change the number 1 by the $page parameter*/,
 			10/*limit per page*/
@@ -186,15 +186,14 @@ class ForumController extends Controller
 		$repository4 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:ForumUserMessageVu');
-		$DernierMessageVu = $repository4->findOneBy(array('user' => $this->getUser(), 'categorie' => $Categorie));
 		
+		$DernierMessageVu = $repository4->findOneBy(array('user' => $this->getUser(), 'categorie' => $Categorie));
 		$DernierMessageVu	->setDernierMessageVu($Categorie->getDernierMessage())
 							->setNotifie(false);
 
 		
 		$Categorie->increaseVues();
 		$em = $this->getDoctrine()->getManager();
-		$em->flush();	
 		$OkNotif=$DernierMessageVu->getAccepteNotifications();
 		
 		$Message = new ForumMessage();
@@ -202,46 +201,9 @@ class ForumController extends Controller
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
 			{
-				$em = $this->getDoctrine()->getManager();
-				$Message->setCategorie($Categorie);
-				$Message->setUser($this->getUser());
-				$Message->setDateCreation(new \DateTime('now'));
-				$em->persist($Message);
-				$Categorie->increaseMessages();
-				$Categorie->setDernierMessage($Message);
+				list($em, $Page) = $this->nouvelleReponse($em, $Message, $Categorie, $Sejour, $repository4, $request);
 				$em->flush();
-				
-				$ListeUtilisateur = $repository4->findBy(array('categorie'=>$Categorie));
-				
-				foreach($ListeUtilisateur as $Utilisateur)
-				{
-					if($Utilisateur->getNotifie() === false  && $Utilisateur->getAccepteNotifications() === true )
-					{
-						if( $Utilisateur->getUser()->getId() != $this->getUser()->getId() )
-						{
-						$message = \Swift_Message::newInstance()
-						->setSubject('EasyColo - Une réponse a été postée dans le forum !')
-						->setFrom('forum@easycolo.fr')
-						->setTo($Utilisateur->getUser()->getEmail())
-						->setBody(
-						$this->renderView(
-						'SejourBundle:Emails:reponseforum.html.twig',
-						array('forum' => $Utilisateur, 'id' => $Sejour->getId())
-						),
-						'text/html'
-						)
-						;
-
-						$this->get('mailer')->send($message);
-						$Utilisateur->setNotifie(true);
-						}
-					}
-				}
-				$em->flush();
-				$Page=ceil($Categorie->getReponses()/10);
-				$request->getSession()->getFlashBag()->add('notice', 'La réponse a été postée !');
-
-			  return $this->redirectToRoute('sejour_discussion', array('id' => $Sejour->getId(), 'idForum'=> $idForum, 'page'=>$Page));
+				return $this->redirectToRoute('sejour_discussion', array('id' => $Sejour->getId(), 'idForum'=> $idForum, 'page'=>$Page));
 			}	
 		return $this->render('SejourBundle:sejour:Messages.html.twig', array('Sejour' => $Sejour,'Categorie'=> $Categorie, 'Messages' => $pagination,  'form' => $form->createView(), 'notif'=>$OkNotif));
 	}
@@ -262,6 +224,46 @@ class ForumController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$em->flush();
 		return $this->redirectToRoute('sejour_forum', array('id' => $id));		
+	}
+	
+	private function nouvelleReponse($em, $Message, $Categorie, $Sejour, $UserRepository, $request)
+	{
+		$Message->setCategorie($Categorie)
+				->setUser($this->getUser())
+				->setDateCreation(new \DateTime('now'));
+		$em->persist($Message);
+		$Categorie->increaseMessages();
+		$Categorie->setDernierMessage($Message);	
+		$ListeUtilisateur = $UserRepository->findBy(array('categorie'=>$Categorie));
+		
+		foreach($ListeUtilisateur as $Utilisateur)
+		{
+			if($Utilisateur->getNotifie() === false  && $Utilisateur->getAccepteNotifications() === true )
+			{
+				if( $Utilisateur->getUser()->getId() != $this->getUser()->getId() )
+				{
+				$message = \Swift_Message::newInstance()
+				->setSubject('EasyColo - Une réponse a été postée dans le forum !')
+				->setFrom('forum@easycolo.fr')
+				->setTo($Utilisateur->getUser()->getEmail())
+				->setBody(
+				$this->renderView(
+				'SejourBundle:Emails:reponseforum.html.twig',
+				array('forum' => $Utilisateur, 'id' => $Sejour->getId())
+				),
+				'text/html'
+				)
+				;
+
+				$this->get('mailer')->send($message);
+				$Utilisateur->setNotifie(true);
+				}
+			}
+		}
+		$Page=ceil($Categorie->getReponses()/10);
+		$request->getSession()->getFlashBag()->add('notice', 'La réponse a été postée !');		
+		
+		return array($em, $Page);
 	}
 }
 
