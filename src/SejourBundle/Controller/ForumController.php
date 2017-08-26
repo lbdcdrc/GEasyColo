@@ -159,7 +159,8 @@ class ForumController extends Controller
 	return $this->render('SejourBundle:sejour:Forum.html.twig', array('Sejour' => $Sejour, 'Categorie' => $ListeCategorieAvecVues,  'form' => $form->createView(),));
 	}	
 	// Forum séjour - Affichage Discussion
-	public function discussionAction($id, $idForum, $page, Request $request){
+	public function discussionAction($id, $idForum, $page, Request $request)
+	{
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		$repository = $this->getDoctrine()
 		->getManager()
@@ -169,14 +170,10 @@ class ForumController extends Controller
 		$repository2 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:ForumMessage');
-		$ListeMessages = $repository2->findBy(array('categorie' => $idForum));
 
-
-		$pagination = $this->get('knp_paginator')->paginate(
-			$ListeMessages,
-			$request->query->getInt('page', $page)/*change the number 1 by the $page parameter*/,
-			10/*limit per page*/
-		);
+		$pagination = $this->get('knp_paginator')->paginate($repository2->findBy(array('categorie' => $idForum)),
+															$request->query->getInt('page', $page),
+															10);													
 		$pagination->setUsedRoute('sejour_discussion');
 		$repository3 = $this->getDoctrine()
 		->getManager()
@@ -190,11 +187,8 @@ class ForumController extends Controller
 		$DernierMessageVu = $repository4->findOneBy(array('user' => $this->getUser(), 'categorie' => $Categorie));
 		$DernierMessageVu	->setDernierMessageVu($Categorie->getDernierMessage())
 							->setNotifie(false);
-
-		
 		$Categorie->increaseVues();
 		$em = $this->getDoctrine()->getManager();
-		$OkNotif=$DernierMessageVu->getAccepteNotifications();
 		
 		$Message = new ForumMessage();
 		$form   = $this->get('form.factory')->create(ForumMessageType::class, $Message);
@@ -205,8 +199,9 @@ class ForumController extends Controller
 				$em->flush();
 				return $this->redirectToRoute('sejour_discussion', array('id' => $Sejour->getId(), 'idForum'=> $idForum, 'page'=>$Page));
 			}	
-		return $this->render('SejourBundle:sejour:Messages.html.twig', array('Sejour' => $Sejour,'Categorie'=> $Categorie, 'Messages' => $pagination,  'form' => $form->createView(), 'notif'=>$OkNotif));
+		return $this->render('SejourBundle:sejour:Messages.html.twig', array('Sejour' => $Sejour,'Categorie'=> $Categorie, 'Messages' => $pagination,  'form' => $form->createView(), 'notif'=>$DernierMessageVu->getAccepteNotifications()));
 	}
+	
 	public function forumAbonnementAction($id, $forum, Request $request){
 		$repository = $this->getDoctrine()
 		->getManager()
