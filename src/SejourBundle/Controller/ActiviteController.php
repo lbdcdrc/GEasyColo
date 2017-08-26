@@ -29,7 +29,6 @@ use SejourBundle\Form\Type\ModifierEvenementType;
 use SejourBundle\Form\Type\AjoutFicheType;
 use SejourBundle\Form\Type\EnfantType;
 use SejourBundle\Form\Type\EvenementType;
-use SejourBundle\Form\Type\EditActiviteType;
 use SejourBundle\Form\Type\ProblemesEnfantType;
 use SejourBundle\Form\Type\RecruterType;
 use SejourBundle\Form\Type\SoinType;
@@ -78,7 +77,7 @@ class ActiviteController extends Controller
 		$this->tableActiUtil();
 		
 		$activite = new Activite();
-		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite);
+		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite, array('attr' => array('edit' => false)));
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em = $this->getDoctrine()->getManager();
@@ -203,7 +202,7 @@ class ActiviteController extends Controller
 	public function fichesActiSejourAction($id, Request $request){
 		// Vérification des droits
 		 $this->container->get('sejour.droits')->AllowedUser($id);
-		$this->table_acti($id);
+		$this->tableActi($id);
 		$repository = $this
 		  ->getDoctrine()
 		  ->getManager()
@@ -212,7 +211,7 @@ class ActiviteController extends Controller
 		$Sejour = $repository->findOneBy(array('id' => $id));
 		
 		$activite = new Activite();
-		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite);
+		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite, array('attr' => array('edit' => false)));
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em = $this->getDoctrine()->getManager();
@@ -275,7 +274,7 @@ class ActiviteController extends Controller
     }
 	public function creerActiviteAction(Request $request){
 		$activite = new Activite();
-		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite);
+		$form   = $this->get('form.factory')->create(ActiviteType::class, $activite, array('attr' => array('edit' => false)));
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 		  $em = $this->getDoctrine()->getManager();

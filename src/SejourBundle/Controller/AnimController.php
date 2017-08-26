@@ -29,7 +29,6 @@ use SejourBundle\Form\Type\ModifierEvenementType;
 use SejourBundle\Form\Type\AjoutFicheType;
 use SejourBundle\Form\Type\EnfantType;
 use SejourBundle\Form\Type\EvenementType;
-use SejourBundle\Form\Type\EditActiviteType;
 use SejourBundle\Form\Type\ProblemesEnfantType;
 use SejourBundle\Form\Type\RecruterType;
 use SejourBundle\Form\Type\SoinType;
@@ -162,7 +161,7 @@ class AnimController extends Controller
 		}
 
 		
-		$form = $this->get('form.factory')->create(EditActiviteType::class, $activite);
+		$form = $this->get('form.factory')->create(ActiviteType::class, $activite, array('attr' => array('edit' => true)));
 
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {

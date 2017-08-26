@@ -27,8 +27,15 @@ class ActiviteType extends AbstractType
 				->add('materiel', null, array('label'=>'Matéreil necessaire'))
 				->add('nbEnfantMin', null, array('label'=>'Nombre d\'enfants minimum'))
 				->add('nbEnfantMax', null, array('label'=>'Nombre d\'enfants maximum'))
-				->add('nbAnim', null, array('label'=>'Nombre d\'animateur prévisionnel'))
-				->add('Ajouter l\'activite !',      SubmitType::class);
+				->add('nbAnim', null, array('label'=>'Nombre d\'animateur prévisionnel'));
+				if (isset($options['attr']['edit']) && ($options['attr']['edit'] === true))
+				{
+					$builder->add('Modifier l\'activite !',      SubmitType::class);
+				}
+				else
+				{
+					$builder->add('Ajouter l\'activite !',      SubmitType::class);
+				}
     }
     
     /**

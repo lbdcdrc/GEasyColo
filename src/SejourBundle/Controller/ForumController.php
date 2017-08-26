@@ -29,7 +29,6 @@ use SejourBundle\Form\Type\ModifierEvenementType;
 use SejourBundle\Form\Type\AjoutFicheType;
 use SejourBundle\Form\Type\EnfantType;
 use SejourBundle\Form\Type\EvenementType;
-use SejourBundle\Form\Type\EditActiviteType;
 use SejourBundle\Form\Type\ProblemesEnfantType;
 use SejourBundle\Form\Type\RecruterType;
 use SejourBundle\Form\Type\SoinType;
