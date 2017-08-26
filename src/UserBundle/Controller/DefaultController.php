@@ -36,6 +36,9 @@ class DefaultController extends Controller
 			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'my_thumb');
 			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'md_thumb');
 			$cacheManager->remove($this->getUser()->getImage()->getwebPath(), 'lg_thumb');
+			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $this->getUser()->getImage()->getwebPath(), 'my_thumb');
+			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $this->getUser()->getImage()->getwebPath(), 'md_thumb');
+			$imagemanagerResponse = $this->container->get('liip_imagine.controller')->filterAction($request, $this->getUser()->getImage()->getwebPath(), 'lg_thumb'); 
 			
 			return $this->redirectToRoute('fos_user_profile_show');
 		}		
