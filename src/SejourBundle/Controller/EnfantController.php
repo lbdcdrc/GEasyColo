@@ -242,7 +242,7 @@ class EnfantController extends Controller
 		array('enfant' => $Enfant), // Critere
 		array('date' => 'desc'));
 		
-		$URLImage = $this->Image($Enfant);
+		$URLImage = $this->image($Enfant);
 
 		$probleme = new ProblemesEnfant();
 		$probleme->setEncours(true)
@@ -284,7 +284,7 @@ class EnfantController extends Controller
 		
 	}
 	
-	private function Image($Enfant)
+	private function image($Enfant)
 	{
 		if($Enfant->getImage())
 		{
