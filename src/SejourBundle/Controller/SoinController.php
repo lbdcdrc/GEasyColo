@@ -129,8 +129,6 @@ class SoinController extends Controller
 		return $this->redirectToRoute('sejour_soins', array('id' => $id, 'jour'=>$jour));
 	}
 	public function traitementAction($id, $jour, Request $request){
-		// Verification des droits
-		// Seul le Directeur et les admins ont accès à cette page
 		$this->container->get('sejour.droits')->AllowedUser($id);
 		if( !$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
@@ -167,244 +165,19 @@ class SoinController extends Controller
 		}
 		$ListeTraitements = $repository4->traitementsejour($id, $JourEnCours->getId());
 		
-		if ($request->isMethod('POST')) {
-			$data = $request->request->all();
-			$NbLigne=$data['nbligne'];
-			
-			$EnfantId=$data['enfant'];
-			
-			if (isset($data['matin']))
-			{
-				$Matin=true;
-				$MatinPosologie=$data['matinposologie'];
-			}
-			else
-			{
-				$Matin=false;
-				$MatinPosologie=null;
-			}
-			if (isset($data['midi']))
-			{
-				$MidiPosologie=$data['midiposologie'];
-				$Midi=true;
-			}
-			else
-			{
-				$Midi=false;
-				$MidiPosologie=null;
-			}
-			if (isset($data['soir']))
-			{
-				$Soir=true;
-				$SoirPosologie=$data['soirposologie'];
-			}
-			else
-			{
-				$Soir=false;
-				$SoirPosologie=null;
-			}
-			if (isset($data['couche']))
-			{
-				$Couche=true;
-				$CouchePosologie=$data['coucheposologie'];
-			}
-			else
-			{
-				$Couche=false;
-				$CouchePosologie=null;
-			}
-			if (isset($data['autre']))
-			{
-				$Autre=true;
-				$AutrePosologie=$data['autreposologie'];
-			}
-			else
-			{
-				$Autre=false;
-				$AutrePosologie=null;
-			}
-			
-			$Objet=$data['objet'];
-			
-			$Traitement=new Traitement();
-			$Traitement->setTraitement($Objet);
-			$Traitement->setMatin($Matin);
-			$Traitement->setMatinPosologie($MatinPosologie);
-			$Traitement->setMidi($Midi);
-			$Traitement->setMidiPosologie($MidiPosologie);
-			$Traitement->setSoir($Soir);
-			$Traitement->setSoirPosologie($SoirPosologie);
-			$Traitement->setCouche($Couche);
-			$Traitement->setCouchePosologie($CouchePosologie);
-			$Traitement->setAutre($Autre);
-			$Traitement->setAutrePosologie($AutrePosologie);
-			
-			$Enfant= $repository2->findOneBy(array('id'=>$EnfantId));
-			
-			$Traitement->setEnfant($Enfant);
-			
+		if ($request->isMethod('POST')) 
+		{
+			$data = $request->request->all();		
+			$NbLigne=$data['nbligne'];	
 			$em = $this->getDoctrine()->getManager();
-			$em->persist($Traitement);
-			$em->flush();		
+			$em=$this->creerLigneTraitement("", $data,$em, $Sejour);
 			
-			$JourDebut=$data['datedebut'];
-			$JourFin=$data['datefin'];
-			
-			$DateDebut=$repository3->findOneBy(array('id'=>$JourDebut))->getDate();
-			$DateFin=$repository3->findOneBy(array('id'=>$JourFin))->getDate();
-			
-
-
-			$NbJours = date_diff($DateDebut, $DateFin);
-			$Days=$NbJours->format("%a");		
-			$DateTravail = $DateDebut;
-			$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail, 'sejour'=>$Sejour->getId()));
-			$TraitementJour = new TraitementJour();
-			$TraitementJour->setJour($JourTravail);
-			$TraitementJour->setTraitement($Traitement);
-			
-			$TraitementJour->setMatinCheck(false);
-			$TraitementJour->setMidiCheck(false);
-			$TraitementJour->setSoirCheck(false);
-			$TraitementJour->setCoucheCheck(false);
-			$TraitementJour->setAutreCheck(false);
-			
-			$em->persist($TraitementJour);
-			$em->flush();
-			
-			for($i = 1; $i < $Days+1; $i += 1)
-			{
-				$NewDate = $DateTravail->modify('+1 day');
-				$JourTravail = $repository3->findOneBy(array('date'=>$NewDate, 'sejour'=>$Sejour->getId()));
-				$TraitementJour = new TraitementJour();
-				$TraitementJour->setJour($JourTravail);
-				$TraitementJour->setTraitement($Traitement);
-				$TraitementJour->setMatinCheck(false);
-				$TraitementJour->setMidiCheck(false);
-				$TraitementJour->setSoirCheck(false);
-				$TraitementJour->setCoucheCheck(false);
-				$TraitementJour->setAutreCheck(false);
-				$em->persist($TraitementJour);			
-			}
-			$em->flush();
 			if($NbLigne>1)
 			{
 				for($j = 1; $j < $NbLigne; $j += 1)
 				{
-					$EnfantId=$data[$j.'enfant'];
-					
-					if (isset($data[$j.'matin']))
-					{
-						$Matin=true;
-						$MatinPosologie=$data[$j.'matinposologie'];
-					}
-					else
-					{
-						$Matin=false;
-						$MatinPosologie=null;
-					}
-					if (isset($data[$j.'midi']))
-					{
-						$Midi=true;
-						$MidiPosologie=$data[$j.'midiposologie'];
-					}
-					else
-					{
-						$Midi=false;
-						$MidiPosologie=null;
-					}
-					if (isset($data[$j.'soir']))
-					{
-						$Soir=true;
-						$SoirPosologie=$data[$j.'soirposologie'];
-					}
-					else
-					{
-						$Soir=false;
-						$SoirPosologie=null;
-					}
-					if (isset($data[$j.'couche']))
-					{
-						$Couche=true;
-						$CouchePosologie=$data[$j.'coucheposologie'];
-					}
-					else
-					{
-						$Couche=false;
-						$CouchePosologie=null;
-					}
-					if (isset($data[$j.'autre']))
-					{
-						$Autre=true;
-						$AutrePosologie=$data[$j.'autreposologie'];
-					}
-					else
-					{
-						$Autre=false;
-						$AutrePosologie=null;
-					}
-
-					$Objet=$data[$j.'objet'];
-					
-					$Traitement=new Traitement();
-					$Traitement->setTraitement($Objet);
-					$Traitement->setMatin($Matin);
-					$Traitement->setMatinPosologie($MatinPosologie);
-					$Traitement->setMidi($Midi);
-					$Traitement->setMidiPosologie($MidiPosologie);
-					$Traitement->setSoir($Soir);
-					$Traitement->setSoirPosologie($SoirPosologie);
-					$Traitement->setCouche($Couche);
-					$Traitement->setCouchePosologie($CouchePosologie);
-					$Traitement->setAutre($Autre);
-					$Traitement->setAutrePosologie($AutrePosologie);
-					
-					$Enfant= $repository2->findOneBy(array('id'=>$EnfantId));
-					
-					$Traitement->setEnfant($Enfant);
-					
-					$em = $this->getDoctrine()->getManager();
-					$em->persist($Traitement);		
-					$JourDebut=$data[$j.'datedebut'];
-					$JourFin=$data[$j.'datefin'];
-					
-					$DateDebut=$repository3->findOneBy(array('id'=>$JourDebut))->getDate();
-					$DateFin=$repository3->findOneBy(array('id'=>$JourFin))->getDate();
-					
-
-
-					$NbJours = date_diff($DateDebut, $DateFin);
-					$Days=$NbJours->format("%a");		
-					$DateTravail = $DateDebut;
-					$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail, 'sejour'=>$Sejour->getId()));
-					$TraitementJour = new TraitementJour();
-					$TraitementJour->setJour($JourTravail);
-					$TraitementJour->setTraitement($Traitement);
-					
-					$TraitementJour->setMatinCheck(false);
-					$TraitementJour->setMidiCheck(false);
-					$TraitementJour->setSoirCheck(false);
-					$TraitementJour->setCoucheCheck(false);
-					$TraitementJour->setAutreCheck(false);
-					
-					$em->persist($TraitementJour);					
-					for($i = 1; $i < $Days+1; $i += 1)
-					{
-						$NewDate = $DateTravail->modify('+1 day');
-						$JourTravail = $repository3->findOneBy(array('date'=>$NewDate, 'sejour'=>$Sejour->getId()));
-						$TraitementJour = new TraitementJour();
-						$TraitementJour->setJour($JourTravail);
-						$TraitementJour->setTraitement($Traitement);
-						$TraitementJour->setMatinCheck(false);
-						$TraitementJour->setMidiCheck(false);
-						$TraitementJour->setSoirCheck(false);
-						$TraitementJour->setCoucheCheck(false);
-						$TraitementJour->setAutreCheck(false);
-						$em->persist($TraitementJour);			
-					}
-	
+					$em=$this->creerLigneTraitement($j, $data,$em, $Sejour);
 				}
-
 			}
 			$em->flush();
 			$request->getSession()->getFlashBag()->add('notice', $NbLigne.' traitement(s) ont étés ajoutés !');
@@ -433,6 +206,122 @@ class SoinController extends Controller
 		$em = $this->getDoctrine()->getManager();	
 		$em->flush();
 		return $this->redirectToRoute('sejour_traitement', array('id' => $Sejour, 'jour' =>$Jour->getId()));
+	}
+	
+	private function creerLigneTraitement($ligne, $data,$em, $Sejour)
+	{
+		$repository2 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Enfant');
+		
+		$repository3 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Jour');
+	
+		$EnfantId=$data[$ligne.'enfant'];
+		
+		if (isset($data[$ligne.'matin']))
+		{
+			$Matin=true;
+			$MatinPosologie=$data[$ligne.'matinposologie'];
+		}
+		else
+		{
+			$Matin=false;
+			$MatinPosologie=null;
+		}
+		if (isset($data[$ligne.'midi']))
+		{
+			$MidiPosologie=$data[$ligne.'midiposologie'];
+			$Midi=true;
+		}
+		else
+		{
+			$Midi=false;
+			$MidiPosologie=null;
+		}
+		if (isset($data[$ligne.'soir']))
+		{
+			$Soir=true;
+			$SoirPosologie=$data[$ligne.'soirposologie'];
+		}
+		else
+		{
+			$Soir=false;
+			$SoirPosologie=null;
+		}
+		if (isset($data[$ligne.'couche']))
+		{
+			$Couche=true;
+			$CouchePosologie=$data[$ligne.'coucheposologie'];
+		}
+		else
+		{
+			$Couche=false;
+			$CouchePosologie=null;
+		}
+		if (isset($data[$ligne.'autre']))
+		{
+			$Autre=true;
+			$AutrePosologie=$data[$ligne.'autreposologie'];
+		}
+		else
+		{
+			$Autre=false;
+			$AutrePosologie=null;
+		}
+		
+		$Objet=$data[$ligne.'objet'];
+		
+		$Traitement=new Traitement();
+		$Traitement	->setTraitement($Objet)
+					->setMatin($Matin)
+					->setMatinPosologie($MatinPosologie)
+					->setMidi($Midi)
+					->setMidiPosologie($MidiPosologie)
+					->setSoir($Soir)
+					->setSoirPosologie($SoirPosologie)
+					->setCouche($Couche)
+					->setCouchePosologie($CouchePosologie)
+					->setAutre($Autre)	
+					->setAutrePosologie($AutrePosologie)
+					->setEnfant($repository2->findOneBy(array('id'=>$EnfantId)));
+		
+		$em->persist($Traitement);		
+		$JourDebut=$data[$ligne.'datedebut'];
+		$JourFin=$data[$ligne.'datefin'];
+		$DateDebut=$repository3->findOneBy(array('id'=>$JourDebut))->getDate();
+		$DateFin=$repository3->findOneBy(array('id'=>$JourFin))->getDate();
+		
+		$NbJours = date_diff($DateDebut, $DateFin);
+		$Days=$NbJours->format("%a");		
+		$DateTravail = $DateDebut;
+		$JourTravail = $repository3->findOneBy(array('date'=>$DateTravail, 'sejour'=>$Sejour->getId()));
+		$TraitementJour = new TraitementJour();
+		$TraitementJour	->setJour($JourTravail)
+						->setTraitement($Traitement)	
+						->setMatinCheck(false)
+						->setMidiCheck(false)
+						->setSoirCheck(false)
+						->setCoucheCheck(false)
+						->setAutreCheck(false);
+		
+		$em->persist($TraitementJour);		
+		for($i = 1; $i < $Days+1; $i += 1)
+		{
+			$NewDate = $DateTravail->modify('+1 day');
+			$JourTravail = $repository3->findOneBy(array('date'=>$NewDate, 'sejour'=>$Sejour->getId()));
+			$TraitementJour = new TraitementJour();
+			$TraitementJour	->setJour($JourTravail)
+							->setTraitement($Traitement)
+							->setMatinCheck(false)
+							->setMidiCheck(false)
+							->setSoirCheck(false)
+							->setCoucheCheck(false)
+							->setAutreCheck(false);
+			$em->persist($TraitementJour);			
+		}		
+		return $em;
 	}
 }
 
