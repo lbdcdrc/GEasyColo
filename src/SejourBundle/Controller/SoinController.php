@@ -62,31 +62,22 @@ class SoinController extends Controller
 		$repository4 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Soin');
-
+		$Sejour=$repository->findOneById($id);
 		$this->verifDroit($repository->findOneById($id), 'ROLE_ASSISTANT_SANITAIRE');
-		
-		$ListeEnfant = $repository2->findBy(array('sejour'=>$Sejour));
-		
 
 		$ListeJour = $repository3->findBy(array('sejour'=>$Sejour, 'SoinValide'=>false));
 		$ListeJourComplet = $repository3->findBy(array('sejour'=>$Sejour));
-		if($jour === null)
-		{
-			$JourEnCours = current($ListeJourComplet);
-		}
-		else
-		{
-			$JourEnCours = $repository3->findOneById($jour);
-		}
+		
+		$JourEnCours=$this->pageEnCours($jour, $ListeJourComplet);
 		
 		$ListeSoins = $repository4->findBy(array('jour'=>$JourEnCours));
 			
 		
 			
 		$Soin = new Soin();	
-		$Soin->setDate(new \DateTime('now'));	
-		$Soin->setUser($this->getUser());
-		$form   = $this->get('form.factory')->create(SoinType::class, $Soin, ['ListeEnfant' => $ListeEnfant, 'ListeJour' => $ListeJour]);
+		$Soin	->setDate(new \DateTime('now'))	
+				->setUser($this->getUser());
+		$form   = $this->get('form.factory')->create(SoinType::class, $Soin, ['ListeEnfant' => $repository2->findBy(array('sejour'=>$Sejour)), 'ListeJour' => $ListeJour]);
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em = $this->getDoctrine()->getManager();
@@ -137,7 +128,7 @@ class SoinController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:TraitementJour');	
 		
-		
+		$JourEnCours=$this->pageEnCours($jour, $ListeJour);
 		if($jour === null)
 		{
 			$JourEnCours = current($ListeJour);
@@ -318,6 +309,23 @@ class SoinController extends Controller
 		{
 			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
 		}		
+	}
+	
+	private function pageEnCours ($jour, $ListeJour)
+	{
+		$repository3 = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Jour');
+		
+		if($jour === null)
+		{
+			$JourEnCours = current($ListeJour);
+		}
+		else
+		{
+			$JourEnCours = $repository3->findOneById($jour);
+		}
+		return $JourEnCours;
 	}
 }
 
