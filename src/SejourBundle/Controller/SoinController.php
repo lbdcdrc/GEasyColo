@@ -65,19 +65,12 @@ class SoinController extends Controller
 		$Sejour=$repository->findOneById($id);
 		$this->verifDroit($repository->findOneById($id), 'ROLE_ASSISTANT_SANITAIRE');
 
-		$ListeJour = $repository3->findBy(array('sejour'=>$Sejour, 'SoinValide'=>false));
 		$ListeJourComplet = $repository3->findBy(array('sejour'=>$Sejour));
 		
-		$JourEnCours=$this->pageEnCours($jour, $ListeJourComplet);
-		
-		$ListeSoins = $repository4->findBy(array('jour'=>$JourEnCours));
-			
-		
-			
 		$Soin = new Soin();	
 		$Soin	->setDate(new \DateTime('now'))	
 				->setUser($this->getUser());
-		$form   = $this->get('form.factory')->create(SoinType::class, $Soin, ['ListeEnfant' => $repository2->findBy(array('sejour'=>$Sejour)), 'ListeJour' => $ListeJour]);
+		$form   = $this->get('form.factory')->create(SoinType::class, $Soin, ['ListeEnfant' => $repository2->findBy(array('sejour'=>$Sejour)), 'ListeJour' => $repository3->findBy(array('sejour'=>$Sejour, 'SoinValide'=>false))]);
 		
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em = $this->getDoctrine()->getManager();
@@ -89,7 +82,12 @@ class SoinController extends Controller
 			
 		}
 				
-		return $this->render('SejourBundle:Soins:RegistreSoins.html.twig', array('Sejour'=>$Sejour, 'form'=>$form->createView(),'ListeJour' => $ListeJour, 'ListeJourComplet' => $ListeJourComplet,  'JourEnCours'=>$JourEnCours, 'ListeSoins'=>$ListeSoins));
+		return $this->render('SejourBundle:Soins:RegistreSoins.html.twig', array(	'Sejour'=>$Sejour,
+																					'form'=>$form->createView(),
+																					'ListeJour' => $repository3->findBy(array('sejour'=>$Sejour, 'SoinValide'=>false)),
+																					'ListeJourComplet' => $ListeJourComplet,
+																					'JourEnCours'=>$this->pageEnCours($jour, $ListeJourComplet),
+																					'ListeSoins'=>$repository4->findBy(array('jour'=>$this->pageEnCours($jour, $ListeJourComplet)))));
 		
 	}
 	public function clotureSoinsAction($id, $jour, Request $request){
