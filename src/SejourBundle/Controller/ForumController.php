@@ -162,10 +162,10 @@ class ForumController extends Controller
 	public function discussionAction($id, $idForum, $page, Request $request)
 	{
 		$this->container->get('sejour.droits')->AllowedUser($id);
-		$repository = $this->getDoctrine()
+		$Sejour = $this->getDoctrine()
 		->getManager()
-		->getRepository('SejourBundle:Sejour');
-		$Sejour = $repository->findOneBy(array('id' => $id));
+		->getRepository('SejourBundle:Sejour')
+		->findOneBy(array('id' => $id));
 		
 		$repository2 = $this->getDoctrine()
 		->getManager()
@@ -175,10 +175,10 @@ class ForumController extends Controller
 															$request->query->getInt('page', $page),
 															10);													
 		$pagination->setUsedRoute('sejour_discussion');
-		$repository3 = $this->getDoctrine()
+		$Categorie = $this->getDoctrine()
 		->getManager()
-		->getRepository('SejourBundle:ForumCategorie');
-		$Categorie = $repository3->findOneBy(array('id' => $idForum));
+		->getRepository('SejourBundle:ForumCategorie')
+		->findOneBy(array('id' => $idForum));
 		
 		$repository4 = $this->getDoctrine()
 		->getManager()
