@@ -4,11 +4,15 @@ admin:
 
 sejour:
     resource: "@SejourBundle/Resources/config/routing.yml"
+    prefix:   /sejour
+
+home:
+    resource: "@SejourBundle/Resources/config/routingHome.yml"
     prefix:   /
 
 user:
     resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /user/
     
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.yaml"

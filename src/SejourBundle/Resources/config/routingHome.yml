@@ -1,0 +1,3 @@
+sejour_homepage:
+    path:     /
+    defaults: { _controller: SejourBundle:Sejour:index }
