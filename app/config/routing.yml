@@ -12,7 +12,7 @@ home:
 
 user:
     resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /user/
+    prefix:   /user
     
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.yaml"
