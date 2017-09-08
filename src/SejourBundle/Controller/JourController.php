@@ -45,9 +45,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class JourController extends Controller
 {
-	public function jourAction($id){
-		
-				    // On récupère le repository
+	public function jourAction($idSejour, $id){
+	$this->container->get('sejour.droits')->AllowedUser($idSejour);
     $repository = $this->getDoctrine()
       ->getManager()
       ->getRepository('SejourBundle:Evenement')
@@ -75,13 +74,14 @@ class JourController extends Controller
 	
 	list($listInscriptionsComplete, $listInscriptionsIncomplete, $listInscriptionsNulle) = $this->triInscriptionsEnfant($listEnfants);
 		
-	return $this->render('SejourBundle:Default:jour.html.twig', array(	'listeEvenements' => $listEvenement, 'jour' => $jour, 
+	return $this->render('SejourBundle:Default:jour.html.twig', array(	'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),
+																		'listeEvenements' => $listEvenement, 'jour' => $jour, 
 																		'listeEnfantsComplet' => $listInscriptionsComplete,
 																		'listeEnfantsIncomplet' => $listInscriptionsIncomplete,
 																		'listeEnfantsNulle' => $listInscriptionsNulle
 																	));
 	}
-	public function jourAddEventAction($id, Request $request){
+	public function jourAddEventAction($idSejour, $id, Request $request){
 	$repository2 = $this->getDoctrine()
 	->getManager()
 	->getRepository('SejourBundle:Jour');
@@ -151,7 +151,7 @@ class JourController extends Controller
 	  return $this->redirectToRoute('jour_indexjour', array('id' => $id));
 	}
 
-	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
+	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour, 'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),));
 	}
 	public function jourDellEventAction($id, Request $request){
 		$repository = $this->getDoctrine()

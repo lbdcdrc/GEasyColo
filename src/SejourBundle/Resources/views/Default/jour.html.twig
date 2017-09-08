@@ -1,21 +1,12 @@
-{% extends "::base.html.twig" %}
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
 
-{% block body %}
+{% block titre %}Planning journalier {% endblock titre %}
+{% block soustitre %} Activités prévues le {{ jour.date| localizeddate('full', 'none') }}{% endblock soustitre %}
+{% block coeur %}
 
- <div class="row">
-	<div class="col-sm-4"></div>
-	<div class="col-sm-4">
-		<center>
-			<h1> Gestion du séjour {{ jour.sejour.id }} </h1>
-			<h4> Débute le {{ jour.sejour.DateDebut|date('d/m/Y') }} se termine le {{ jour.sejour.DateFin|date('d/m/Y') }} </h4>
-			<h4> Thématiques : {{ jour.sejour.NomThema }} </h4>
-		</center>
-	</div>
-	<div class="col-sm-4"></div>
-</div> 
 
 <div class="container">
-	<h2>Liste des activités prévues le {{ jour.date|date('D d F Y') }} <a href="{{ path('jour_addevent', {'id' : jour.id }) }}" class="btn btn-info" role="button"><span class="glyphicon glyphicon-plus"</span></a> </h2>         
+	<a class="button" href="{{ path('jour_addevent', {'idSejour': Sejour.id, 'id' : jour.id }) }}"><i class="fa fa-calendar-plus-o fa-lg"></i> Ajouter une activité</a>
 
 	{% include "SejourBundle:RecapJour:TableauActi.html.twig" %}
 
@@ -77,6 +68,6 @@
 </div>
 
 <center>
-	<a href="{{ path('sejour_edit', { 'id': jour.sejour.id }) }}" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+<a class="button" href="{{ path('sejour_edit', { 'id': jour.sejour.id }) }}"><i class="fa fa-angle-double-left fa-lg"></i> Retour au séjour</a>
 </center>
 {% endblock %}

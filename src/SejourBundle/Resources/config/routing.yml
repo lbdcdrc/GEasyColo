@@ -104,10 +104,10 @@ activite_creer:
     path:   /activite/creer
     defaults: { _controller: SejourBundle:Activite:creerActivite }
 jour_indexjour:
-    path:   /jour/{id}
+    path:   /{idSejour}/jour/{id}
     defaults: { _controller: SejourBundle:Jour:jour }
 jour_addevent:
-    path:   /jour/{id}/add
+    path:   /{idSejour}/jour/{id}/add
     defaults: { _controller: SejourBundle:Jour:jourAddEvent }
 jour_dellevent:
     path:   /jour/{id}/dell

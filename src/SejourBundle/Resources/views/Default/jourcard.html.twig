@@ -15,7 +15,7 @@
 								<li>Journée + 1/2 : <span>{{ jour.NbActJour }}</span></li>
 							</ul>
 						</li>
-						<li class="button-card"><a href="{{ path('jour_indexjour', { 'id': jour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
+						<li class="button-card"><a href="{{ path('jour_indexjour', { 'idSejour': Sejour.id, 'id': jour.id }) }}"><i class="fa fa-search-plus" aria-hidden="true">Consulter</i></a></li>
 					</ul>
 				</li>
 			{% endfor %}

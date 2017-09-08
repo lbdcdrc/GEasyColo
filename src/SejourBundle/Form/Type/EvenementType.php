@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Doctrine\ORM\EntityRepository;
 
 
 class EvenementType extends AbstractType
@@ -18,19 +19,25 @@ class EvenementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('Moment', ChoiceType::class, array('choices' => array('Matin Premier Creneau' =>1, 'Matin Deuxième Creneau' => 2, 'Après Midi' => 3, 'Journée et demi'=>4, 'Journée'=>5), 'expanded' => true, 'multiple' => false))
+        $builder->add('Moment', EntityType::class, array(
+								'class' => 'SejourBundle:MomentActivite',
+								'choice_label' => 'nomMoment',
+								'expanded' => false,
+								'required' => false,))
 				->add('activite', EntityType::class, array(
-			// query choices from this entity
-			'class' => 'SejourBundle:Activite',
-
-			// use the User.username property as the visible option string
-			'choice_label' => 'Nom',
-
-			// used to render a select box, check boxes or radios
-			// 'multiple' => true,
-			// 'expanded' => true,
-		))
-				->add('NbPlaces', null, array('label'=>"Nombre de places"))
+								'class' => 'SejourBundle:Activite',
+								'choice_label' => 'Nom',
+								'expanded' => false,
+								'required' => false,
+								'query_builder' => function (EntityRepository $er){
+								return $er->createQueryBuilder('u')
+									->addSelect('s')
+									->join('u.sejour', 's')
+									->where('s.id = :moment')
+									->setParameter('moment', '4')
+									->orderBy('u.id', 'ASC');
+					}))
+				->add('NbPlaces', null, array('label'=>"Nombre de places", 'attr' => array('min' => 0)))
 				->add('Ajouter l\'activite !',      SubmitType::class);
     }
     
