@@ -76,7 +76,7 @@ Débute le {{ Sejour.DateDebut|date('d/m/Y') }} se termine le {{ Sejour.DateFin|
 																<a class="button" href="{{ path('listingComplet_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
 																<i class="fa fa-stethoscope fa-2x pull-left"></i> Trombinoscope<br>Complet</a>
 																<a class="button" href="{{ path('listingRegimes_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
-																<i class="fa fa-cutlery fa-2x"></i> Régimes Alimentaires<br>spéciaux</a>
+																<i class="fa fa-cutlery fa-2x pull-left"></i> Régimes Alimentaires<br>spéciaux</a>
 																{% endif %}
 																</center>
 																</br>
