@@ -53,7 +53,7 @@ class User extends BaseUser
 	 *
 	 * @ORM\Column(name="Telephone", type="string", length=255)
 	 * @Assert\Regex(
-     *     pattern="/^((\+)33\s?|0)[67](\s?\d{2}){4}$/",
+     *     pattern="/^((\+)33\s?)[67](\s?\d{2}){4}$/",
      *     match=true,
      *     message="Le téléphone doit être au format international (+33601020304)"
      * )

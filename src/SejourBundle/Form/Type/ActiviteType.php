@@ -25,9 +25,9 @@ class ActiviteType extends AbstractType
 														))
 				->add('description', CKEditorType::class, array('config' => array('uiColor' => '#ffffff'), 'label'=>'Description du déroulement', 'config_name'=>'bbcode'))
 				->add('materiel', null, array('label'=>'Matéreil necessaire'))
-				->add('nbEnfantMin', null, array('label'=>'Nombre d\'enfants minimum'))
-				->add('nbEnfantMax', null, array('label'=>'Nombre d\'enfants maximum'))
-				->add('nbAnim', null, array('label'=>'Nombre d\'animateur prévisionnel'));
+				->add('nbEnfantMin', null, array('label'=>'Nombre d\'enfants minimum', 'attr' => array('min' => 0)))
+				->add('nbEnfantMax', null, array('label'=>'Nombre d\'enfants maximum', 'attr' => array('min' => 0)))
+				->add('nbAnim', null, array('label'=>'Nombre d\'animateur prévisionnel', 'attr' => array('min' => 0)));
 				if (isset($options['attr']['edit']) && ($options['attr']['edit'] === true))
 				{
 					$builder->add('Modifier l\'activite !',      SubmitType::class);

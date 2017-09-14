@@ -68,9 +68,10 @@ class Image
       }
     }
     // On déplace le fichier envoyé dans le répertoire de notre choix
+	$pass=hash('sha512', 'alea'.$this->id.'photo');
     $this->file->move(
       $this->getUploadRootDir(), // Le répertoire de destination
-      $this->id.'.'.$this->url   // Le nom du fichier à créer, ici « id.extension »
+      $pass.'.'.$this->url   // Le nom du fichier à créer, ici « id.extension »
     );
   }
   /**
@@ -104,7 +105,8 @@ class Image
   }
   public function getWebPath()
   {
-    return $this->getUploadDir().'/'.$this->getId().'.'.$this->getUrl();
+	$pass=hash('sha512', 'alea'.$this->id.'photo');
+    return $this->getUploadDir().'/'.$pass.'.'.$this->getUrl();
   }
   /**
    * @return int
