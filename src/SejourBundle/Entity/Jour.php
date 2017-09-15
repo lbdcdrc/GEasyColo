@@ -34,29 +34,19 @@ class Jour
     private $date;
 
 	/**
-	* @ORM\Column(name="nb_act_matin1", type="integer")
+	* @ORM\Column(name="nb_act_matin", type="integer")
 	*/
-	private $nbActM1 = 0;
-	
-	/**
-	* @ORM\Column(name="nb_act_matin2", type="integer")
-	*/
-	private $nbActM2 = 0;
-	
+	private $nbActMatin = 0;
+		
 	/**
 	* @ORM\Column(name="nb_act_am", type="integer")
 	*/
 	private $nbActAM = 0;
-	
+		
 	/**
-	* @ORM\Column(name="nb_act_jour_matin", type="integer")
+	* @ORM\Column(name="nb_act_soir", type="integer")
 	*/
-	private $nbActJourMatin = 0;
-	
-	/**
-	* @ORM\Column(name="nb_act_journee", type="integer")
-	*/
-	private $nbActJour = 0;
+	private $nbActSoir = 0;
 	
     /**
      * @var bool
@@ -78,24 +68,14 @@ class Jour
      */
     private $SoinValideDate=null;	
 
-	public function increaseM1()
+	public function increaseMatin()
 	{
-		$this->nbActM1++;
+		$this->nbActMatin++;
 	}
 
-	public function decreaseM1()
+	public function decreaseMatin()
 	{
-		$this->nbActM1--;
-	}
-	
-	public function increaseM2()
-	{
-		$this->nbActM2++;
-	}
-
-	public function decreaseM2()
-	{
-		$this->nbActM2--;
+		$this->nbActMatin--;
 	}
 
 	public function increaseAM()
@@ -108,24 +88,14 @@ class Jour
 		$this->nbActAM--;
 	}
 
-	public function increaseJourMatin()
+	public function increaseSoir()
 	{
-		$this->nbActJourMatin++;
+		$this->nbActSoir++;
 	}
 
-	public function decreaseJourMatin()
+	public function decreaseSoir()
 	{
-		$this->nbActJourMatin--;
-	}
-
-	public function increaseJour()
-	{
-		$this->nbActJour++;
-	}
-
-	public function decreaseJour()
-	{
-		$this->nbActJour--;
+		$this->nbActSoir--;
 	}
 	
     /**
@@ -184,150 +154,6 @@ class Jour
     public function getSejour()
     {
         return $this->sejour;
-    }
-
-    /**
-     * Set nbActM1
-     *
-     * @param integer $nbActM1
-     *
-     * @return Jour
-     */
-    public function setNbActM1($nbActM1)
-    {
-        $this->nbActM1 = $nbActM1;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActM1
-     *
-     * @return integer
-     */
-    public function getNbActM1()
-    {
-        return $this->nbActM1;
-    }
-
-    /**
-     * Set nbActM2
-     *
-     * @param integer $nbActM2
-     *
-     * @return Jour
-     */
-    public function setNbActM2($nbActM2)
-    {
-        $this->nbActM2 = $nbActM2;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActM2
-     *
-     * @return integer
-     */
-    public function getNbActM2()
-    {
-        return $this->nbActM2;
-    }
-
-    /**
-     * Set nbActAM
-     *
-     * @param integer $nbActAM
-     *
-     * @return Jour
-     */
-    public function setNbActAM($nbActAM)
-    {
-        $this->nbActAM = $nbActAM;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActAM
-     *
-     * @return integer
-     */
-    public function getNbActAM()
-    {
-        return $this->nbActAM;
-    }
-
-    /**
-     * Set nbActSoir
-     *
-     * @param integer $nbActSoir
-     *
-     * @return Jour
-     */
-    public function setNbActSoir($nbActSoir)
-    {
-        $this->nbActSoir = $nbActSoir;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActSoir
-     *
-     * @return integer
-     */
-    public function getNbActSoir()
-    {
-        return $this->nbActSoir;
-    }
-
-    /**
-     * Set nbActJour
-     *
-     * @param integer $nbActJour
-     *
-     * @return Jour
-     */
-    public function setNbActJour($nbActJour)
-    {
-        $this->nbActJour = $nbActJour;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActJour
-     *
-     * @return integer
-     */
-    public function getNbActJour()
-    {
-        return $this->nbActJour;
-    }
-
-    /**
-     * Set nbActJourMatin
-     *
-     * @param integer $nbActJourMatin
-     *
-     * @return Jour
-     */
-    public function setNbActJourMatin($nbActJourMatin)
-    {
-        $this->nbActJourMatin = $nbActJourMatin;
-
-        return $this;
-    }
-
-    /**
-     * Get nbActJourMatin
-     *
-     * @return integer
-     */
-    public function getNbActJourMatin()
-    {
-        return $this->nbActJourMatin;
     }
 
     /**
@@ -406,4 +232,76 @@ class Jour
 	{
 		return $this->getDate()->format('d/m');
 	}
+
+    /**
+     * Set nbActMatin
+     *
+     * @param integer $nbActMatin
+     *
+     * @return Jour
+     */
+    public function setNbActMatin($nbActMatin)
+    {
+        $this->nbActMatin = $nbActMatin;
+
+        return $this;
+    }
+
+    /**
+     * Get nbActMatin
+     *
+     * @return integer
+     */
+    public function getNbActMatin()
+    {
+        return $this->nbActMatin;
+    }
+
+    /**
+     * Set nbActAM
+     *
+     * @param integer $nbActAM
+     *
+     * @return Jour
+     */
+    public function setNbActAM($nbActAM)
+    {
+        $this->nbActAM = $nbActAM;
+
+        return $this;
+    }
+
+    /**
+     * Get nbActAM
+     *
+     * @return integer
+     */
+    public function getNbActAM()
+    {
+        return $this->nbActAM;
+    }
+
+    /**
+     * Set nbActSoir
+     *
+     * @param integer $nbActSoir
+     *
+     * @return Jour
+     */
+    public function setNbActSoir($nbActSoir)
+    {
+        $this->nbActSoir = $nbActSoir;
+
+        return $this;
+    }
+
+    /**
+     * Get nbActSoir
+     *
+     * @return integer
+     */
+    public function getNbActSoir()
+    {
+        return $this->nbActSoir;
+    }
 }

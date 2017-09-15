@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 
 class EvenementType extends AbstractType
@@ -19,11 +20,22 @@ class EvenementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('Moment', EntityType::class, array(
-								'class' => 'SejourBundle:MomentActivite',
-								'choice_label' => 'nomMoment',
-								'expanded' => false,
-								'required' => false,))
+        $builder->add('heureDebut', TimeType::class, array( 'widget' => 'single_text',
+                    'label' => 'Heure de début :',
+                    'required' => true,
+                    'html5' => true,
+                    'attr' => array(
+						'class' => 'timepicker',
+						'data-toggle' => 'timepicker',
+                    ),))
+				->add('heureFin', TimeType::class, array( 'widget' => 'single_text',
+                    'label' => 'Heure de fin :',
+                    'required' => true,
+                    'html5' => true,
+                    'attr' => array(
+						'class' => 'timepicker',
+						'data-toggle' => 'timepicker',
+                    ),))
 				->add('activite', EntityType::class, array(
 								'class' => 'SejourBundle:Activite',
 								'choice_label' => 'Nom',

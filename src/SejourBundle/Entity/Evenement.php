@@ -35,18 +35,7 @@ class Evenement
 	 * @ORM\JoinColumn(onDelete="CASCADE")
 	*/
 	protected $activite;
-	
-	/**
-     * @var int
-     *
-     * @ORM\Column(name="Moment", type="integer")
-	 * @Assert\Range(
-     *      min = 1,
-     *      max = 5,
-     * )
-     */
-    private $Moment;
-	
+		
 	/**
      * @var int
      *
@@ -62,6 +51,22 @@ class Evenement
 	 *
      */
     private $NbInscrits=0;
+
+	/**
+     * @var time
+     *
+     * @ORM\Column(name="heureDebut", type="time")
+	 *
+     */
+    private $heureDebut;
+	
+	/**
+     * @var time
+     *
+     * @ORM\Column(name="heureFin", type="time")
+	 *
+     */
+    private $heureFin;
 	
 	/**
 	* @ORM\ManyToOne(targetEntity="SejourBundle\Entity\Jour")
@@ -84,30 +89,6 @@ class Evenement
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set moment
-     *
-     * @param integer $moment
-     *
-     * @return Evenement
-     */
-    public function setMoment($moment)
-    {
-        $this->Moment = $moment;
-
-        return $this;
-    }
-
-    /**
-     * Get moment
-     *
-     * @return integer
-     */
-    public function getMoment()
-    {
-        return $this->Moment;
     }
 
     /**
@@ -205,26 +186,35 @@ class Evenement
 	*/
 	public function increase()
 	{
-		$Moment=$this->getMoment();
-		if($Moment == 1)
+		$HeureDebut=$this->getheureDebut();
+		$HeureFin=$this->getheureFin();
+		$HeureDebutMatin = new \DateTime('1970-01-01 07:00');
+		$HeureFinMatin = new \DateTime('1970-01-01 13:00');
+		$HeureDebutAM = new \DateTime('1970-01-01 12:00');
+		$HeureFinAM = new \DateTime('1970-01-01 19:00');
+		$HeureDebutSoir = new \DateTime('1970-01-01 19:00');
+		if($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinMatin )
 		{
-			$this->getJour()->increaseM1();
+			$this->getJour()->increaseMatin();
 		}
-		elseif($Moment == 2)
-		{
-			$this->getJour()->increaseM2();
-		}
-		elseif($Moment == 3)
+		elseif($HeureDebut >= $HeureDebutAM and $HeureFin <= $HeureFinAM )
 		{
 			$this->getJour()->increaseAM();
 		}
-		elseif($Moment == 4)
+		elseif($HeureDebut >= $HeureDebutSoir)
 		{
-			$this->getJour()->increaseJourMatin();
+			$this->getJour()->increaseSoir();
 		}
-		elseif($Moment == 5)
+		elseif($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinAM)
 		{
-			$this->getJour()->increaseJour();
+			$this->getJour()->increaseMatin();
+			$this->getJour()->increaseAM();
+		}
+		else
+		{
+			$this->getJour()->increaseMatin();
+			$this->getJour()->increaseAM();
+			$this->getJour()->increaseSoir();
 		}
 	}
 	
@@ -233,26 +223,35 @@ class Evenement
 	*/
 	public function decrease()
 	{
-		$Moment=$this->getMoment();
-		if($Moment == 1)
+		$HeureDebut=$this->getheureDebut();
+		$HeureFin=$this->getheureFin();
+		$HeureDebutMatin = new \DateTime('1970-01-01 07:00');
+		$HeureFinMatin = new \DateTime('1970-01-01 13:00');
+		$HeureDebutAM = new \DateTime('1970-01-01 12:00');
+		$HeureFinAM = new \DateTime('1970-01-01 19:00');
+		$HeureDebutSoir = new \DateTime('1970-01-01 19:00');
+		if($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinMatin )
 		{
-			$this->getJour()->decreaseM1();
+			$this->getJour()->decreaseMatin();
 		}
-		elseif($Moment == 2)
-		{
-			$this->getJour()->decreaseM2();
-		}
-		elseif($Moment == 3)
+		elseif($HeureDebut >= $HeureDebutAM and $HeureFin <= $HeureFinAM )
 		{
 			$this->getJour()->decreaseAM();
 		}
-		elseif($Moment == 4)
+		elseif($HeureDebut >= $HeureDebutSoir)
 		{
-			$this->getJour()->decreaseJourMatin();
+			$this->getJour()->decreaseSoir();
 		}
-		elseif($Moment == 5)
+		elseif($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinAM)
 		{
-			$this->getJour()->decreaseJour();
+			$this->getJour()->decreaseMatin();
+			$this->getJour()->decreaseAM();
+		}
+		else
+		{
+			$this->getJour()->decreaseMatin();
+			$this->getJour()->decreaseAM();
+			$this->getJour()->decreaseSoir();
 		}
 	}
 
@@ -326,5 +325,53 @@ class Evenement
     public function getEstlie()
     {
         return $this->estlie;
+    }
+
+    /**
+     * Set heureDebut
+     *
+     * @param \DateTime $heureDebut
+     *
+     * @return Evenement
+     */
+    public function setHeureDebut($heureDebut)
+    {
+        $this->heureDebut = $heureDebut;
+
+        return $this;
+    }
+
+    /**
+     * Get heureDebut
+     *
+     * @return \DateTime
+     */
+    public function getHeureDebut()
+    {
+        return $this->heureDebut;
+    }
+
+    /**
+     * Set heureFin
+     *
+     * @param \DateTime $heureFin
+     *
+     * @return Evenement
+     */
+    public function setHeureFin($heureFin)
+    {
+        $this->heureFin = $heureFin;
+
+        return $this;
+    }
+
+    /**
+     * Get heureFin
+     *
+     * @return \DateTime
+     */
+    public function getHeureFin()
+    {
+        return $this->heureFin;
     }
 }

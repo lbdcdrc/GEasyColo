@@ -53,8 +53,7 @@ class JourController extends Controller
     ;
 	
 	$listEvenement = $repository->findBy(
-	array('jour' => $id), // Critere
-	array('Moment' => 'asc'));
+	array('jour' => $id));
 	
 	$repository2 = $this->getDoctrine()
 		->getManager()
@@ -96,59 +95,9 @@ class JourController extends Controller
 	  $evenement->setJour($jour);
 	  $em->persist($evenement);
 	  $em->flush();
-	  
-	  if($evenement->getMoment() == 4)
-	  {
-			$Date=$jour->getDate();
-			$Sejour=$jour->getSejour();
-			
-			$NewDate=$Date;
-			$NewDate = $NewDate->modify('+1 day');
-			
-			$ListeJourDate=$repository2->findBy(
-			array('date' => $NewDate),
-			array('sejour'=>'asc'));
-			
-			$NewJour=Null;
-			
-			foreach($ListeJourDate as $j)
-			{
-				if($j->getSejour() == $Sejour)
-				{
-					$NewJour=$j;
-				}
-			}
-
-		$evenementFilsM1 = new Evenement();
-		$evenementFilsM1->setJour($NewJour);
-		$evenementFilsM1->setMoment(1);
-		$evenementFilsM1->setEstlie(True);
-		$evenementFilsM1->setNbPlaces($evenement->getNbPlaces());
-		$evenementFilsM1->setActivite($evenement->getActivite());
-		$em->persist($evenementFilsM1);
-		$em->flush();
-		
-		$evenementFilsM2 = new Evenement();
-		$evenementFilsM2->setJour($NewJour);
-		$evenementFilsM2->setMoment(2);
-		$evenementFilsM2->setEstlie(True);
-		$evenementFilsM2->setNbPlaces($evenement->getNbPlaces());
-		$evenementFilsM2->setActivite($evenement->getActivite());
-		$em->persist($evenementFilsM2);
-		$em->flush();
-		
-		$Link= new EvenementLies();
-		$Link->setJour($evenement);
-		$Link->setMatin1($evenementFilsM1);
-		$Link->setMatin2($evenementFilsM2);
-		$em->persist($Link);
-		$em->flush();
-			
-	  }
-
 	  $request->getSession()->getFlashBag()->add('notice', 'L\'activité a bien été ajoutée à la journée.');
 
-	  return $this->redirectToRoute('jour_indexjour', array('id' => $id));
+	  return $this->redirectToRoute('jour_indexjour', array('idSejour' => $idSejour, 'id' => $id));
 	}
 
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour, 'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),));
