@@ -83,13 +83,13 @@ enfant_edit:
     path:   /enfant/edit/{id}
     defaults: { _controller: SejourBundle:Enfant:editEnfant }
 enfant_probleme_list:
-    path:   /sejour/enfant/{id}
+    path:   /enfant/{id}
     defaults: { _controller: SejourBundle:Enfant:problemeEnfant }
 enfant_check_probleme:
     path:   /enfant/{id}/check
     defaults: { _controller: SejourBundle:Enfant:problemeEnfantCheck }
 enfant_supprimer:
-    path:   /enfant/supprimer/{id}
+    path:   /{idSejour}/enfant/{id}/supprimer
     defaults: { _controller: SejourBundle:Enfant:supprimerEnfant }
 enfant_planning_enfant:
     path:   /enfant/{id}/planning

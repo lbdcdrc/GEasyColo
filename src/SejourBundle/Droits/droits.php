@@ -4,9 +4,12 @@
 namespace SejourBundle\Droits;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 class Droits
 {
+	protected $authorizationChecker;
+
 	// Fonction de contrôle d'accès à toute la partie "séjour"
 	public function allowedUser($SejourId){
 		// Pour accéder :
@@ -24,20 +27,24 @@ class Droits
 		$Utilisateur = $this->currentUser;
 		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
 		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
-				
-		if( $ListeDir === null && $ListeAnim === null && !$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') )
+		
+		$Admin = $this->authorizationChecker->isGranted('ROLE_ADMIN');
+		
+
+		if( empty($ListeDir) and empty($ListeAnim) and !$Admin)
 		{
 			throw new AccessDeniedException('Tu n\'as pas accés à cette page !');
 		}
-		
+	
 		
 	}
 	private $em;
 	protected $currentUser;
 	// constructor
-	public function __construct(\Doctrine\ORM\EntityManager $em, $user)  {
+	public function __construct(\Doctrine\ORM\EntityManager $em, $user, AuthorizationChecker $authorizationChecker)  {
 		$this->em = $em;
 		$this->currentUser = $user;
+		$this->authorizationChecker = $authorizationChecker;
 	}
 
 }

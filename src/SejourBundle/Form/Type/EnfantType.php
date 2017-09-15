@@ -27,6 +27,7 @@ class EnfantType extends AbstractType
 					->add('infos')
 					->add('regimes', null, array('label'=>'Régimes Alimentaires :'))
 					->add('chambre')
+					->add('image',  ImageType::class, array('required'=>false, 'label'=> "Photo de l'enfant :"))
 		->add('Enregistrer les modifications',      SubmitType::class);
 		}
 		else
@@ -37,7 +38,7 @@ class EnfantType extends AbstractType
 					->add('infos')
 					->add('regimes', null, array('label'=>'Régimes Alimentaires :'))
 					->add('chambre')
-					->add('image',  ImageType::class, array('required'=>false))
+					->add('image',  ImageType::class, array('required'=>false, 'label'=> "Photo de l'enfant :"))
 					->add('Creer l\'enfant',      SubmitType::class);			
 		}
 		

@@ -78,29 +78,31 @@ class EnfantController extends Controller
 		return $this->render('SejourBundle:Default:editenfant.html.twig', array('enfant' => $enfant, 'form' => $form->createView(),));
     }
 	// Supprimer un enfant
-	public function supprimerEnfantAction($id, Request $request){
-		    // On récupère le repository
+	public function supprimerEnfantAction($id,$idSejour, Request $request){
+	$this->container->get('sejour.droits')->AllowedUser($idSejour);
     $repository = $this->getDoctrine()
       ->getManager()
-      ->getRepository('SejourBundle:Enfant')
-    ;
+      ->getRepository('SejourBundle:Enfant');
 
     // On récupère l'entité correspondante à l'id $id
     $enfant = $repository->find($id);
+	$enfant = $repository->findOneBy(array('sejour' => $idSejour, 'id'=> $id));
 
+	
     // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
     // ou null si l'id $id  n'existe pas, d'où ce if :
     if (null === $enfant) {
       throw new NotFoundHttpException("L'enfant d'id ".$id." n'existe pas.");
     }
-	
+
 	$em = $this->getDoctrine()->getManager();
+	$this->removeAllAboutEnfant($enfant->getId());
 	$em->remove($enfant);
 	$em->flush();
 	
 	
 	$request->getSession()->getFlashBag()->add('notice', 'L\'enfant a été supprimé.');
-	return $this->redirectToRoute('enfant_indexenfant');
+	return $this->redirectToRoute('sejour_liste_enfants', array('id' => $idSejour));
 
 	}
 	private function tableEnfants($id) {
@@ -293,6 +295,52 @@ class EnfantController extends Controller
 		{
 			return null;
 		}
+	}
+	
+	private function removeAllAboutEnfant($Enfant)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$repository = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:ProblemesEnfant');
+		$repository2 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:Soin');
+		$repository3 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:Traitement');	  
+		$repository4 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:TraitementJour');	
+
+		$ListeTraitementEnfant = $repository3->findBy(array("enfant" => $Enfant));
+		
+		foreach($ListeTraitementEnfant as $Traitement)
+		{
+			$ListeTraitementJourEnfant = $repository4->findBy(array("traitement" => $Traitement->getId()));
+			foreach($ListeTraitementJourEnfant as $TraitementJour)
+			{
+				$em->remove($TraitementJour);
+			}
+			$em->remove($Traitement);
+		}
+		$em->flush();
+		
+		$ListeSoin = $repository2 -> findby(array("enfant" => $Enfant));
+		
+		foreach($ListeSoin as $Soin)
+		{
+			$em->remove($Soin);
+		}
+		$em->flush();
+		
+		$ListeProblemeEnfant = $repository->findby(array("enfant"=>$Enfant));
+		
+		foreach($ListeProblemeEnfant as $Probleme)
+		{
+			$em->remove($Probleme);
+		}
+		$em->flush();	
 	}
 }
 

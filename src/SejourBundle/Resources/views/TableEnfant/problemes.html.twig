@@ -3,3 +3,6 @@
 {% else %}
 <a class="button" href="{{ path('enfant_probleme_list', {'id':dt_obj.id}) }}" style="background:#E5BE19;"><i class="fa fa-user" aria-hidden="true"></i> {{ dt_item }} problème(s)</a>
 {% endif %}
+{% if is_granted('ROLE_DIRECTEUR') %}
+<a class="button" href="{{ path('enfant_supprimer', {'id':dt_obj.id, 'idSejour':dt_obj.sejour }) }}" style="background:#F44242;" onclick="return confirm('Tu vas supprimer cet enfant. \n Toutes les informations le concernant seront donc supprimées (Soins, Activités, Problèmes, etc.) \n Cette action est définitive. Confirmes tu la suppression ? ?')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+{% endif %}

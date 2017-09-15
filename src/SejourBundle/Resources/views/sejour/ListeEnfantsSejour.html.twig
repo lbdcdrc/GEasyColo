@@ -5,6 +5,10 @@
 
 {% block coeur %}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.9/datatables.min.css"/>
+	{% if is_granted('ROLE_ADJOINT') %}
+	<button id="myBtnModal1" class="openmodal1">Ajouter un enfant</button>
+	{% endif %}
+	
     {{ datatable_html({
             'id' : 'dta-offres',
         })
@@ -39,7 +43,7 @@
 
 															// Get the button that opens the modal
 															var btnModal = document.getElementById("myBtnModal");
-
+															var btnModal1 = document.getElementById("myBtnModal1");
 															// Get the <span> element that closes the modal
 															var spanModal = document.getElementById("closeModal");
 
@@ -47,13 +51,15 @@
 															btnModal.onclick = function() {
 																modalModal.style.display = "block";
 															}
-
+															btnModal1.onclick = function() {
+																modalModal.style.display = "block";
+															}
 															// When the user clicks on <span> (x), close the modal
 															spanModal.onclick = function() {
 																modalModal.style.display = "none";
 															}
 															</script>
-{% endif %}
+	{% endif %}
 															
 {% endblock %}
 
