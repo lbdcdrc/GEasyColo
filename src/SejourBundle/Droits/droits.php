@@ -31,7 +31,7 @@ class Droits
 		$Admin = $this->authorizationChecker->isGranted('ROLE_ADMIN');
 		
 
-		if( empty($ListeDir) and empty($ListeAnim) and !$Admin)
+		if( empty($ListeDir) && empty($ListeAnim) && !$Admin)
 		{
 			throw new AccessDeniedException('Tu n\'as pas accés à cette page !');
 		}

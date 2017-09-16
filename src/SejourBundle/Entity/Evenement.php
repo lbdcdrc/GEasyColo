@@ -194,11 +194,11 @@ class Evenement
 		$HeureDebutAM = new \DateTime('1970-01-01 12:00');
 		$HeureFinAM = new \DateTime('1970-01-01 19:00');
 		$HeureDebutSoir = new \DateTime('1970-01-01 19:00');
-		if($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinMatin )
+		if($HeureDebut >= $HeureDebutMatin && $HeureFin <= $HeureFinMatin )
 		{
 			$this->getJour()->increaseMatin();
 		}
-		elseif($HeureDebut >= $HeureDebutAM and $HeureFin <= $HeureFinAM )
+		elseif($HeureDebut >= $HeureDebutAM && $HeureFin <= $HeureFinAM )
 		{
 			$this->getJour()->increaseAM();
 		}
@@ -206,7 +206,7 @@ class Evenement
 		{
 			$this->getJour()->increaseSoir();
 		}
-		elseif($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinAM)
+		elseif($HeureDebut >= $HeureDebutMatin && $HeureFin <= $HeureFinAM)
 		{
 			$this->getJour()->increaseMatin();
 			$this->getJour()->increaseAM();
@@ -231,11 +231,11 @@ class Evenement
 		$HeureDebutAM = new \DateTime('1970-01-01 12:00');
 		$HeureFinAM = new \DateTime('1970-01-01 19:00');
 		$HeureDebutSoir = new \DateTime('1970-01-01 19:00');
-		if($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinMatin )
+		if($HeureDebut >= $HeureDebutMatin && $HeureFin <= $HeureFinMatin )
 		{
 			$this->getJour()->decreaseMatin();
 		}
-		elseif($HeureDebut >= $HeureDebutAM and $HeureFin <= $HeureFinAM )
+		elseif($HeureDebut >= $HeureDebutAM && $HeureFin <= $HeureFinAM )
 		{
 			$this->getJour()->decreaseAM();
 		}
@@ -243,7 +243,7 @@ class Evenement
 		{
 			$this->getJour()->decreaseSoir();
 		}
-		elseif($HeureDebut >= $HeureDebutMatin and $HeureFin <= $HeureFinAM)
+		elseif($HeureDebut >= $HeureDebutMatin && $HeureFin <= $HeureFinAM)
 		{
 			$this->getJour()->decreaseMatin();
 			$this->getJour()->decreaseAM();

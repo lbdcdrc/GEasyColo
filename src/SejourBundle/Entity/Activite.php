@@ -368,11 +368,11 @@ class Activite
 	*/
 	public function checkNullPU()
 	{
-		if($this->materiel==null)
+		if($this->materiel===null)
 		{
 			$this->materiel="";
 		}
-		if($this->description==null)
+		if($this->description===null)
 		{
 			$this->description="";
 		}
@@ -382,11 +382,11 @@ class Activite
 	*/
 	public function checkNullPP()
 	{
-		if($this->materiel==null)
+		if($this->materiel===null)
 		{
 			$this->materiel="";
 		}
-		if($this->description==null)
+		if($this->description===null)
 		{
 			$this->description="";
 		}

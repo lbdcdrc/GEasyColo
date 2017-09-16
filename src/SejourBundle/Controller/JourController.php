@@ -61,8 +61,6 @@ class JourController extends Controller
 	
 	$jour=$repository2->find($id);
 	
-	$Sejour = $jour->getSejour()->getId();
-		
 	return $this->render('SejourBundle:Default:jour.html.twig', array(	'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),
 																		'listeEvenements' => $listEvenement, 'jour' => $jour, 
 																	));
