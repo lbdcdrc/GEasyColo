@@ -58,8 +58,8 @@
 				{% for evenement in listeEvenements %}
 				{
 					title: '{{ evenement.activite.nom }}',
-					start: "{{ (evenement.heureDebut | date('U')) // 3600 }}:{{ (evenement.heureDebut | date('U') % 3600 )/60 }}",
-					end: "{{ (evenement.heureFin | date('U')) // 3600 }}:{{ (evenement.heureDebut | date('U') % 3600 )/60 }}",
+					start: "{{ evenement.heureDebut | date('H:i')}}",
+					end: "{{ evenement.heureFin | date('H:i') }}",
 					color: "{{ evenement.activite.categorie.couleur }}",
 					id: "ev{{ evenement.id }}",
 				},

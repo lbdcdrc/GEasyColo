@@ -75,7 +75,7 @@ class JourController extends Controller
 	$jour=$repository2->find($id);
 		
 	$evenement = new Evenement();
-	$form   = $this->get('form.factory')->create(EvenementType::class, $evenement);
+	$form   = $this->get('form.factory')->create(EvenementType::class, $evenement, ['Sejour' => $idSejour]);
 
 	if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 	  $em = $this->getDoctrine()->getManager();

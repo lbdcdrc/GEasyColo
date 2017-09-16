@@ -20,6 +20,7 @@ class EvenementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+		$Sejour=$options['Sejour'];
         $builder->add('heureDebut', TimeType::class, array( 'widget' => 'single_text',
                     'label' => 'Heure de début :',
                     'required' => true,
@@ -41,12 +42,12 @@ class EvenementType extends AbstractType
 								'choice_label' => 'Nom',
 								'expanded' => false,
 								'required' => false,
-								'query_builder' => function (EntityRepository $er){
+								'query_builder' => function (EntityRepository $er) use ($Sejour){
 								return $er->createQueryBuilder('u')
 									->addSelect('s')
 									->join('u.sejour', 's')
 									->where('s.id = :moment')
-									->setParameter('moment', '4')
+									->setParameter('moment', $Sejour)
 									->orderBy('u.id', 'ASC');
 					}))
 				->add('NbPlaces', null, array('label'=>"Nombre de places", 'attr' => array('min' => 0)))
@@ -60,7 +61,8 @@ class EvenementType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'SejourBundle\Entity\Evenement'
-        ));
+        ))
+			->setRequired(['Sejour']);
     }
 
     /**

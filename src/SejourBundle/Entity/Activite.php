@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="activite")
  * @ORM\Entity(repositoryClass="SejourBundle\Repository\ActiviteRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Activite
 {
@@ -362,4 +363,32 @@ class Activite
     {
         return $this->nbEnfantMax;
     }
+	/**
+	 * @ORM\PreUpdate
+	*/
+	public function checkNullPU()
+	{
+		if($this->materiel==null)
+		{
+			$this->materiel="";
+		}
+		if($this->description==null)
+		{
+			$this->description="";
+		}
+	}
+	/**
+	 * @ORM\PrePersist
+	*/
+	public function checkNullPP()
+	{
+		if($this->materiel==null)
+		{
+			$this->materiel="";
+		}
+		if($this->description==null)
+		{
+			$this->description="";
+		}
+	}
 }

@@ -3,7 +3,8 @@
 
 <center>
 <h2> Ajout d'une activité le {{ jour.date|date('d/m/Y') }}</h2>
-{{ form(form) }}
+{{ form_start(form, {'action': path('jour_addevent', { 'idSejour': Sejour.id, 'id': jour.id } ), 'method': 'POST'}) }}
+{{ form_end(form)}}
 </center>
 
 <center>

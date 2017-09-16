@@ -4,6 +4,7 @@ namespace SejourBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Image
@@ -30,6 +31,7 @@ class Image
   private $alt;
   /**
    * @var UploadedFile
+   * @Assert\Image
    */
   private $file;
   // On ajoute cet attribut pour y stocker le nom du fichier temporairement
