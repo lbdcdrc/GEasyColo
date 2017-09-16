@@ -2,12 +2,119 @@
 
 {% block titre %}Planning journalier {% endblock titre %}
 {% block soustitre %} Activités prévues le {{ jour.date| localizeddate('full', 'none') }}{% endblock soustitre %}
+{% block style %}
+<meta charset='utf-8' />
+<link rel='stylesheet' href='/bundles/fullcalendar/fullcalendar.css' />
+<script src='/bundles/fullcalendar/lib/jquery.min.js'></script>
+<script src='/bundles/fullcalendar/lib/moment.min.js'></script>
+<script src='/bundles/fullcalendar/fullcalendar.js'></script>
+<script src='/bundles/fullcalendar/locale/fr.js'></script>
+<script>
+	$(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+			locale: 'fr',
+			height: 'auto',
+			slotEventOverlap:false,
+			header: {
+				left: '',
+				center: '',
+				right: ''
+			},
+			viewRender: function(view, element) {
+				element.find('.fc-day-header').html('');
+				element.find('.fc-head').html('');
+			},
+			allDaySlot : false,
+			minTime : "06:30",
+			maxTime : "23:30",
+			nowIndicator : true,
+			defaultView:'agendaDay',
+			timeFormat: 'H:mm',
+			defaultDate: "{{ jour.date|date('m/d/Y') }}",
+			editable: false,
+			eventLimit: true, 
+			eventMouseover: function(calEvent) {
+			$("body").css("cursor", "pointer");
+            $(this).css('background-color', '#ABCADD');
+			$(this).css('transform', 'scale(1.05)');
+			$(this).css('z-index', '1000');
+			$(this).css('box-shadow', '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)');
+			$(this).css('border-color', '#ABCADD');
+			},
+			eventMouseout: function(calEvent) {
+			$("body").css("cursor", "default");
+			$(this).css('background-color', calEvent.color);
+			$(this).css('box-shadow', 'none');
+			$(this).css('transform', 'scale(1)');
+			$(this).css('z-index', '1');
+			$(this).css('border-color', calEvent.color);
+			},
+			eventClick: function(calEvent) {
+				$("a[href='#" + calEvent.id + "'][rel='modal:open']").click();
+				
+			},
+			events: [
+				{% for evenement in listeEvenements %}
+				{
+					title: '{{ evenement.activite.nom }}',
+					start: "{{ (evenement.heureDebut | date('U')) // 3600 }}:{{ (evenement.heureDebut | date('U') % 3600 )/60 }}",
+					end: "{{ (evenement.heureFin | date('U')) // 3600 }}:{{ (evenement.heureDebut | date('U') % 3600 )/60 }}",
+					color: "{{ evenement.activite.categorie.couleur }}",
+					id: "ev{{ evenement.id }}",
+				},
+				{% endfor %}
+				
+			]
+		});
+		
+	});
+
+</script>
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: auto;
+		margin: 0 auto;
+	}
+
+</style>
+{% endblock style %}
 {% block coeur %}
-
-
-<div class="container">
-	<a class="button" href="{{ path('jour_addevent', {'idSejour': Sejour.id, 'id' : jour.id }) }}"><i class="fa fa-calendar-plus-o fa-lg"></i> Ajouter une activité</a>
-
-	{% include "SejourBundle:RecapJour:TableauActi.html.twig" %}
-
+<center><a href="#AddActi" rel="modal:open"  class="button"><i class="fa fa-calendar-plus-o fa-lg"></i> Ajouter une activité</a></center>
+<div id="AddActi" style="display:none;">
+	<center>
+	<div style="width:80%;">
+	    {{ render(controller('SejourBundle:Jour:jourAddEvent',{ 'idSejour': Sejour.id, 'id' : jour.id })) }}
+	</br>
+	</div>
+	</center>
+	<div class="modal-footer">
+	</div>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<div id='calendar' style="width: 100%; display: inline-block;"></div>
+	
+  
+{% for evenement in listeEvenements %}
+<a href="#ev{{ evenement.id }}" rel="modal:open" style="display:none;"></a>
+  <div id="ev{{ evenement.id }}" style="display:none;">
+    <p>En construction </p>
+  </div>
+{% endfor %} 
+  
 {% endblock %}

@@ -27,6 +27,13 @@ class CateActi
      * @ORM\Column(name="Categorie", type="string", length=255, unique=true)
      */
     private $categorie;
+	
+	/**
+     * @var string
+     *
+     * @ORM\Column(name="Couleur", type="string", length=255)
+     */
+    private $couleur;
 
 
     /**
@@ -62,5 +69,28 @@ class CateActi
     {
         return $this->categorie;
     }
-}
 
+    /**
+     * Set couleur
+     *
+     * @param string $couleur
+     *
+     * @return CateActi
+     */
+    public function setCouleur($couleur)
+    {
+        $this->couleur = $couleur;
+
+        return $this;
+    }
+
+    /**
+     * Get couleur
+     *
+     * @return string
+     */
+    public function getCouleur()
+    {
+        return $this->couleur;
+    }
+}

@@ -12,15 +12,10 @@
         })
     }}
 	
-
-
-<button id="Actibtn" class="openmodal">Créer une fiche d'activité</button>
-<div id="Actimodal" class="modal">
-
-  <!-- Modal content -->
+<a href="#Actibtn" rel="modal:open"  class="button">Créer une fiche d'activité</a>
+<div id="Actibtn" style="display:none;">
   <div class="modal-content">
 	<div class="modal-header">
-		<span class="close" id="closeActi" >&times;</span>
 	  <center><h2>Ajout d'une fiche d'activité :</h2></center>
 	</div>
 	<center>
@@ -32,38 +27,12 @@
 	<div class="modal-footer">
 	</div>
   </div>
-	
-
 </div>
 
-<script>
-// Get the modal
-var varActimodal = document.getElementById('Actimodal');
 
-// Get the button that opens the modal
-var varActibtn = document.getElementById("Actibtn");
-
-// Get the <span> element that closes the modal
-var varcloseActi = document.getElementById("closeActi");
-
-// When the user clicks the button, open the modal 
-varActibtn.onclick = function() {
-	varActimodal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-varcloseActi.onclick = function() {
-	varActimodal.style.display = "none";
-}
-</script>
-
-<button id="AddActibtn" class="openmodal">Ajouter une de mes fiches</button>
-<div id="AddActimodal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
+<a href="#AddActi" rel="modal:open"  class="button">Ajouter une de mes fiches</a>
+<div id="AddActi" style="display:none;">
 	<div class="modal-header">
-		<span class="close" id="AddcloseActi" >&times;</span>
 	  <center><h2>Ajout d'une fiche d'activité :</h2></center>
 	</div>
 	<center>
@@ -74,31 +43,7 @@ varcloseActi.onclick = function() {
 	</center>
 	<div class="modal-footer">
 	</div>
-  </div>
-	
-
 </div>
-
-<script>
-// Get the modal
-var varAddActimodal = document.getElementById('AddActimodal');
-
-// Get the button that opens the modal
-var varAddActibtn = document.getElementById("AddActibtn");
-
-// Get the <span> element that closes the modal
-var varAddcloseActi = document.getElementById("AddcloseActi");
-
-// When the user clicks the button, open the modal 
-varAddActibtn.onclick = function() {
-	varAddActimodal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-varAddcloseActi.onclick = function() {
-	varAddActimodal.style.display = "none";
-}
-</script>
 
 	
 	{% endblock %}

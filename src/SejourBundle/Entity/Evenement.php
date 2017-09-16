@@ -4,6 +4,7 @@ namespace SejourBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Evenement
@@ -374,4 +375,19 @@ class Evenement
     {
         return $this->heureFin;
     }
+	/**
+	 * @Assert\Callback
+	*/
+	public function isHeureValid(ExecutionContextInterface $context)
+	{
+		if ($this->getHeureDebut() >= $this->getHeureFin()) {
+		  // La règle est violée, on définit l'erreur
+		  $context
+			->buildViolation('L\'heure de début ne peut être supérieure à l\'heure de fin !') // message
+			->atPath('heureDebut')                                                   // attribut de l'objet qui est violé
+			->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+		  ;
+		}
+	}	
+
 }

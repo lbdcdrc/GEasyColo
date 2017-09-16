@@ -41,13 +41,11 @@ th, td {
 	
 	</table>
 	
-	<button id="myBtnModal" class="openmodal">Créer une discussion</button>
-															<div id="AjoutEnfant" class="modal">
 
-															  <!-- Modal content -->
+<a href="#Discussion" rel="modal:open"  class="button">Créer une discussion</a>
+<div id="Discussion" style="display:none;">
 															  <div class="modal-content">
 																<div class="modal-header">
-																	<span class="close" id="closeModal" >&times;</span>
 																  <center><h2>Création d'une discussion</h2></center>
 																</div>
 																<center>
@@ -59,28 +57,5 @@ th, td {
 																<div class="modal-footer">
 																</div>
 															  </div>
-															    
-
-															</div>
-
-															<script>
-															// Get the modal
-															var modalModal = document.getElementById('AjoutEnfant');
-
-															// Get the button that opens the modal
-															var btnModal = document.getElementById("myBtnModal");
-
-															// Get the <span> element that closes the modal
-															var spanModal = document.getElementById("closeModal");
-
-															// When the user clicks the button, open the modal 
-															btnModal.onclick = function() {
-																modalModal.style.display = "block";
-															}
-
-															// When the user clicks on <span> (x), close the modal
-															spanModal.onclick = function() {
-																modalModal.style.display = "none";
-															}
-															</script>									
+</div>															
 {% endblock %}

@@ -1,54 +1,7 @@
-<!-- Trigger/Open The Modal -->
-<button id="btnfiche{{ dt_item }}"><i class="fa fa-newspaper-o " aria-hidden="true"></i></button>
-
-{% if app.user.id ==  dt_obj.createur.id  or is_granted('ROLE_ADJOINT') %}
-<a href="{{ path('sejour_suppr_activite', {'id':  sejour , 'idActi':  dt_item  }) }}"  onclick="return confirm('Retirer la fiche du séjour ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i> Retirer</button></a>
-<button id="btnEditfiche{{ dt_item }}"><i class="fa fa-pencil-square-o " aria-hidden="true"></i></button>
-<div id="modalEditfiche{{ dt_item }}" class="modal">
-
-  <!-- Modal content -->
+<a href="#modalfiche{{ dt_item }}" rel="modal:open"  class="button"><i class="fa fa-newspaper-o"></i></a>
+<div id="modalfiche{{ dt_item }}" style="display:none;">
   <div class="modal-content">
     <div class="modal-header">
-      <span class="close" id="spanEditacti{{ dt_item }}">&times;</span>
-      <h2>{{ dt_obj.nom }}</h2>
-    </div>
-    <div class="modal-body">
-		{{ render(controller('SejourBundle:Sejour:editActiviteSejour',{ 'id':sejour, 'idActi': dt_item })) }}
-    </div>
-  </div>
-
-</div>
-
-<script>
-// Get the modal
-var varmodalEditfiche{{ dt_item }} = document.getElementById('modalEditfiche{{ dt_item }}');
-
-// Get the button that opens the modal
-var varbtnEditfiche{{ dt_item }} = document.getElementById("btnEditfiche{{ dt_item }}");
-
-// Get the <span> element that closes the modal
-var varspanEditacti{{ dt_item }} = document.getElementById("spanEditacti{{ dt_item }}");
-
-// When the user clicks the button, open the modal 
-varbtnEditfiche{{ dt_item }}.onclick = function() {
-    varmodalEditfiche{{ dt_item }}.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-varspanEditacti{{ dt_item }}.onclick = function() {
-    varmodalEditfiche{{ dt_item }}.style.display = "none";
-}
-</script>
-
-{% endif %}
-
-<!-- The Modal -->
-<div id="modalfiche{{ dt_item }}" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close" id="spanacti{{ dt_item }}">&times;</span>
       <h2>{{ dt_obj.nom }}</h2>
     </div>
     <div class="modal-body">
@@ -60,28 +13,20 @@ varspanEditacti{{ dt_item }}.onclick = function() {
 	  <p>{{ dt_obj.nbAnim }}/{{ dt_obj.nbEnfantMin }}/{{ dt_obj.nbEnfantMax }}</p>
     </div>
   </div>
+</div>
+{% if app.user.id ==  dt_obj.createur.id  or is_granted('ROLE_ADJOINT') %}
+<a href="{{ path('sejour_suppr_activite', {'id':  sejour , 'idActi':  dt_item  }) }}"  onclick="return confirm('Retirer la fiche du séjour ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i> Retirer</button></a>
 
+<a href="#modalEditfiche{{ dt_item }}" rel="modal:open"  class="button"><i class="fa fa-pencil-square-o"></i></a>
+<div id="modalEditfiche{{ dt_item }}" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ dt_obj.nom }}</h2>
+    </div>
+    <div class="modal-body">
+		{{ render(controller('SejourBundle:Sejour:editActiviteSejour',{ 'id':sejour, 'idActi': dt_item })) }}
+    </div>
+  </div>
 </div>
 
-
-<script>
-// Get the modal
-var varmodalfiche{{ dt_item }} = document.getElementById('modalfiche{{ dt_item }}');
-
-// Get the button that opens the modal
-var varbtnfiche{{ dt_item }} = document.getElementById("btnfiche{{ dt_item }}");
-
-// Get the <span> element that closes the modal
-var varspanacti{{ dt_item }} = document.getElementById("spanacti{{ dt_item }}");
-
-// When the user clicks the button, open the modal 
-varbtnfiche{{ dt_item }}.onclick = function() {
-    varmodalfiche{{ dt_item }}.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-varspanacti{{ dt_item }}.onclick = function() {
-    varmodalfiche{{ dt_item }}.style.display = "none";
-}
-
-</script>
+{% endif %}

@@ -18,11 +18,10 @@
 </section>
 
 {% if is_granted('ROLE_ADJOINT') %}
-<button id="recrutementboutton">Recruter un animateur</button>
-<div id="recrutement" class="modal">
+<a href="#recrutement" rel="modal:open"  class="button">Recruter un animateur</a>
+<div id="recrutement" style="display:none;">
 	<div class="modal-content">
 		<div class="modal-header">
-			<span class="close" id="closerecrutement" >&times;</span>
 			<center><h4>Recrutement sur le séjour {{ Sejour.nomThema }}</h4></center>
 		</div>
 		<br>
@@ -35,13 +34,6 @@
 	</div>
 </div>
 
-<script>
-	var modalRe = document.getElementById('recrutement');
-	var btnRe = document.getElementById("recrutementboutton");
-	var spanRe = document.getElementById("closerecrutement");
-	btnRe.onclick = function() {modalRe.style.display = "block";}
-	spanRe.onclick = function() {modalRe.style.display = "none";}
-</script>
 
 {% endif %}														
 {% endblock %}

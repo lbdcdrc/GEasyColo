@@ -25,10 +25,9 @@ Dérecruter?</button></a></li>
 	</ul>
 </li>
 
-<div id="modalanim{{ user.id }}" class="modal">
+<div id="modalanimbutton{{ user.id }}" style="display:none;">
 	<div class="modal-content">
 		<div class="modal-header">
-			<span class="close" id="modalanimclose{{ user.id }}" >&times;</span>
 			<center><h4>{{ user.prenom }} {{ user.nom }}</h4></center>
 		</div>
 		<br>
@@ -44,11 +43,3 @@ Dérecruter?</button></a></li>
 		<br>
 	</div>
 </div>
-
-<script>
-	var modalvaranim{{ user.id }} = document.getElementById('modalanim{{ user.id }}');
-	var varbtnanim{{ user.id }} = document.getElementById("modalanimbutton{{ user.id }}");
-	var varspananim{{ user.id }} = document.getElementById("modalanimclose{{ user.id }}");
-	varbtnanim{{ user.id }}.onclick = function() {modalvaranim{{ user.id }}.style.display = "block";}
-	varspananim{{ user.id }}.onclick = function() {modalvaranim{{ user.id }}.style.display = "none";}
-</script>

@@ -28,8 +28,8 @@ Débute le {{ Sejour.DateDebut|date('d/m/Y') }} se termine le {{ Sejour.DateFin|
 													<li {% block enfants %} {%endblock%}><a href="{{ path('sejour_liste_enfants', { 'id': Sejour.id }) }}" class="icon fa-child"><span class="label">Enfants</span></a></li>
 													<li {% block equipe %} {%endblock%}><a href="{{ path('sejour_equipe', { 'id': Sejour.id }) }}" class="icon fa-users"><span class="label">L'équipe</span></a></li>
 													<li {% block forum %} {%endblock%}><a href="{{ path('sejour_forum', { 'id': Sejour.id }) }}" class="icon fa-comments-o"><span class="label">Forum</span></a></li>
-													{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}<li {% block infirmerie %} {%endblock%}><a id="myBtn1" class="icon fa-ambulance fa-flip-horizontal" style="cursor: pointer;"><span class="label">Infirmerie</span></a></li>{% endif %}
-													<li {% block trombinoscope %} {%endblock%}><a id="myBtn" class="icon fa-address-book-o" style="cursor: pointer;"><span class="label">Tombinoscope</span></a></li>
+													{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}<li {% block infirmerie %} {%endblock%}><a id="myBtn1" href="#infirmerie" rel="modal:open" class="icon fa-ambulance fa-flip-horizontal" style="cursor: pointer;"><span class="label">Infirmerie</span></a></li>{% endif %}
+													<li {% block trombinoscope %} {%endblock%}><a id="myBtn" href="#trombi" rel="modal:open" class="icon fa-address-book-o" style="cursor: pointer;"><span class="label">Tombinoscope</span></a></li>
 												</ul>
 											</section>
 								</div>
@@ -58,109 +58,46 @@ Débute le {{ Sejour.DateDebut|date('d/m/Y') }} se termine le {{ Sejour.DateFin|
 				</div>
 
 		</div>
+  <div id="trombi" style="display:none;">
+	<div class="modal-header">
+	  <center><h2>Édition des trombinoscopes :</h2></center>
+	</div>
+	</br>
+	<center>
+	<a class="button" href="{{ path('listing_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
+	<i class="fa fa-universal-access fa-2x pull-left"></i> Trombinoscope<br>Général</a>
+	{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
+	<a class="button" href="{{ path('listingComplet_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
+	<i class="fa fa-stethoscope fa-2x pull-left"></i> Trombinoscope<br>Complet</a>
+	<a class="button" href="{{ path('listingRegimes_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
+	<i class="fa fa-cutlery fa-2x pull-left"></i> Régimes Alimentaires<br>spéciaux</a>
+	{% endif %}
+	</center>
+	</br>
+	<div class="modal-footer">
+	<center><h4>Attention, ces documents sont confidentiels</h4></center>
+	</div>
+  </div>
 
-																	<!-- The Modal -->
-															<div id="myModal" class="modal">
+{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
+<div id="infirmerie" style="display:none;">
+  <div class="modal-content">
+	<div class="modal-header">
+	  <center><h2>Registres d'infirmerie</h2></center>
+	</div>
+	</br>
+	<center>
+	<a class="button" href="{{ path('sejour_soins', { 'id': Sejour.id }) }}">
+	<i class="fa fa-thermometer-half fa-2x pull-left"></i> Registres des <br>soins</a>
+	<a class="button" href="{{ path('sejour_traitement', { 'id': Sejour.id }) }}">
+	<i class="fa fa-medkit fa-2x pull-left"></i> Traitements <br> journaliers</a>
+	</center>
+	</br>
+	<div class="modal-footer">
+	<center><h4>Accès réservé à l'assistant sanitaire et à la direction</h4></center>
+	</div>
+  </div>
 
-															  <!-- Modal content -->
-															  <div class="modal-content">
-																<div class="modal-header">
-																	<span class="close" id="closetrombi" >&times;</span>
-																  <center><h2>Édition des trombinoscopes :</h2></center>
-																</div>
-																</br>
-																<center>
-																<a class="button" href="{{ path('listing_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
-																<i class="fa fa-universal-access fa-2x pull-left"></i> Trombinoscope<br>Général</a>
-																{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-																<a class="button" href="{{ path('listingComplet_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
-																<i class="fa fa-stethoscope fa-2x pull-left"></i> Trombinoscope<br>Complet</a>
-																<a class="button" href="{{ path('listingRegimes_toPdf', { 'idSej': Sejour.id }) }}" target="_blank">
-																<i class="fa fa-cutlery fa-2x pull-left"></i> Régimes Alimentaires<br>spéciaux</a>
-																{% endif %}
-																</center>
-																</br>
-																<div class="modal-footer">
-																<center><h4>Attention, ces documents sont confidentiels</h4></center>
-																</div>
-															  </div>
-
-															</div>
-															{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-															<div id="myModal1" class="modal">
-
-															  <!-- Modal content -->
-															  <div class="modal-content">
-																<div class="modal-header">
-																	<span class="close" id="closesoin" >&times;</span>
-																  <center><h2>Registres d'infirmerie</h2></center>
-																</div>
-																</br>
-																<center>
-																<a class="button" href="{{ path('sejour_soins', { 'id': Sejour.id }) }}">
-																<i class="fa fa-thermometer-half fa-2x pull-left"></i> Registres des <br>soins</a>
-																<a class="button" href="{{ path('sejour_traitement', { 'id': Sejour.id }) }}">
-																<i class="fa fa-medkit fa-2x pull-left"></i> Traitements <br> journaliers</a>
-																</center>
-																</br>
-																<div class="modal-footer">
-																<center><h4>Accès réservé à l'assistant sanitaire et à la direction</h4></center>
-																</div>
-															  </div>
-
-															</div>
-															{% endif %}
-															<script>
-															// Get the modal
-															var modal = document.getElementById('myModal');
-
-															// Get the button that opens the modal
-															var btn = document.getElementById("myBtn");
-
-															// Get the <span> element that closes the modal
-															var span = document.getElementById("closetrombi");
-
-															// When the user clicks the button, open the modal 
-															btn.onclick = function() {
-																modal.style.display = "block";
-															}
-
-															// When the user clicks on <span> (x), close the modal
-															span.onclick = function() {
-																modal.style.display = "none";
-															}
-															{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-															// Get the modal
-															var modal1 = document.getElementById('myModal1');
-
-															// Get the button that opens the modal
-															var btn1 = document.getElementById("myBtn1");
-
-															// Get the <span> element that closes the modal
-															var span1 = document.getElementById("closesoin");
-
-															// When the user clicks the button, open the modal 
-															btn1.onclick = function() {
-																modal1.style.display = "block";
-															}
-
-															// When the user clicks on <span> (x), close the modal
-															span1.onclick = function() {
-																modal1.style.display = "none";
-															}
-															{% endif %}
-
-															// When the user clicks anywhere outside of the modal, close it
-															window.onclick = function(event) {
-																if (event.target == modal) {
-																	modal.style.display = "none";
-																}
-																{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-																if (event.target == modal1) {
-																	modal1.style.display = "none";
-																}
-																{% endif %}
-															}
-															</script>
-
+</div>
+{% endif %}								
 {% endblock body %}

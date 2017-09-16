@@ -5,6 +5,8 @@ namespace SejourBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use SejourBundle\Entity\Jour;
 use SejourBundle\Entity\Activite;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Sejour
@@ -247,4 +249,18 @@ class Sejour
     {
         return $this->activites;
     }
+	/**
+	 * @Assert\Callback
+	*/
+	public function isDateValid(ExecutionContextInterface $context)
+	{
+		if ($this->getDateDebut() >= $this->getDateFin()) {
+		  // La règle est violée, on définit l'erreur
+		  $context
+			->buildViolation('La date de début ne peut être supérieure à la date de fin !') // message
+			->atPath('dateDebut')                                                   // attribut de l'objet qui est violé
+			->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+		  ;
+		}
+	}		
 }
