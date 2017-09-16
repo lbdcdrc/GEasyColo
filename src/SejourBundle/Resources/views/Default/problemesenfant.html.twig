@@ -19,10 +19,9 @@
 	  style="width:204px"
 	/>
 	{% endif %}<br><hr>
-	<button id="{{ enfant.id }}enfant{{ enfant.id }}"><i class="fa fa-calendar" aria-hidden="true"></i></button>
-
+	<a href="#enfant{{ enfant.id }}" rel="modal:open"  class="button"><i class="fa fa-calendar"></i></a>
 	{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}
-	<button id="buttonenfant{{ enfant.id }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+	<a href="#modalenfant{{ enfant.id }}" rel="modal:open"  class="button"><i class="fa fa-pencil-square-o"></i></a>
 	{% endif %}
 </center>
 <br>

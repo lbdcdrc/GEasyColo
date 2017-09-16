@@ -1,3 +1,7 @@
+<center>
+{% if listeProblemes|length == 0 %}
+<h1> Aucune information concernant cet enfant ! </h1>
+{% else %}
 <table>
 	<thead>
 		<tr>
@@ -8,20 +12,22 @@
 	</thead>
 	<tbody>
 	{% for probleme in listeProblemes %}
-		<tr {% if probleme.encours %} style="background:#ffd9d1;" {% endif %} >
-			<td>{{ probleme.date|date("d/m/y g:ia", "Europe/Paris") }}</br> Problème n°{{ probleme.id }}</br> Déclaré par :</br>{{probleme.ecrivain.prenom}} {{probleme.ecrivain.nom}}</td>
-			<td>{{ probleme.probleme }}</td>
-			<td>
-				{% if probleme.encours %}
-				<a href="{{ path('enfant_check_probleme', { 'id': probleme.id }) }}" class="button" role="button">Régler ?</a>
-				{% else %}
-				<span class="fa fa-check" aria-hidden="true"></span></br>
-				{{ probleme.datefin|date("d/m/y g:ia", "Europe/Paris") }}</br>
-				Réglé par :</br>
-				{{probleme.reglepar.prenom}} {{probleme.reglepar.nom}}
-				{% endif %}
-			</td>
-		</tr>
+	<tr {% if probleme.encours %} style="background:#ffd9d1;" {% endif %} >
+		<td>{{ probleme.date|date("d/m/y g:ia", "Europe/Paris") }}</br> Problème n°{{ probleme.id }}</br> Déclaré par :</br>{{probleme.ecrivain.prenom}} {{probleme.ecrivain.nom}}</td>
+		<td>{{ probleme.probleme }}</td>
+		<td>
+			{% if probleme.encours %}
+			<a href="{{ path('enfant_check_probleme', { 'id': probleme.id }) }}" class="button" role="button">Régler ?</a>
+			{% else %}
+			<span class="fa fa-check" aria-hidden="true"></span></br>
+			{{ probleme.datefin|date("d/m/y g:ia", "Europe/Paris") }}</br>
+			Réglé par :</br>
+			{{probleme.reglepar.prenom}} {{probleme.reglepar.nom}}
+			{% endif %}
+		</td>
+	</tr>
 	{% endfor %}
 	</tbody>
 </table>
+{% endif %}
+</center>
