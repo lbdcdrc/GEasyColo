@@ -25,13 +25,12 @@ class Droits
 		->getRepository('SejourBundle:AnimSejour')
 		;
 		$Utilisateur = $this->currentUser;
-		$ListeDir = $repository->findBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur));
-		$ListeAnim = $repository2->findBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur));
+		$ListeDir = $repository->findOneBy(array('id'=>$SejourId, 'directeur'=>$Utilisateur->getId()));
+		$ListeAnim = $repository2->findOneBy(array('sejour'=>$SejourId, 'user'=>$Utilisateur->getId()));
 		
 		$Admin = $this->authorizationChecker->isGranted('ROLE_ADMIN');
-		
 
-		if( empty($ListeDir) && empty($ListeAnim) && !$Admin)
+		if(!$Admin === true && empty($ListeDir)===true && empty($ListeAnim)===true)
 		{
 			throw new AccessDeniedException('Tu n\'as pas accés à cette page !');
 		}

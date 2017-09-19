@@ -28,6 +28,7 @@ use SejourBundle\Form\Type\ModifierAffectationType;
 use SejourBundle\Form\Type\ModifierEvenementType;
 use SejourBundle\Form\Type\AjoutFicheType;
 use SejourBundle\Form\Type\EnfantType;
+use SejourBundle\Form\Type\SmsType;
 use SejourBundle\Form\Type\EvenementType;
 use SejourBundle\Form\Type\ProblemesEnfantType;
 use SejourBundle\Form\Type\RecruterType;
@@ -50,6 +51,51 @@ class SejourController extends Controller
 		
         return $this->render('SejourBundle:Default:index.html.twig');
     }
+	public function planningAction($id)
+	{
+		$this->container->get('sejour.droits')->AllowedUser($id);
+		$repository3 = $this
+		  ->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:Sejour');
+		  
+		$Sejour = $repository3->findOneBy(array('id'=>$id));
+		
+		list($listEvenementSejour, $NbJours) = $this->evenementPlanning($id);
+		
+		return $this->render('SejourBundle:Default:planning.html.twig', array('Sejour' => $Sejour, 'NbJours'=>$NbJours, 'listEvenementSejour'=>$listEvenementSejour));
+		
+	}
+	
+	public function planningPdfAction($id)
+	{
+		$this->container->get('sejour.droits')->AllowedUser($id);
+		$repository3 = $this
+		  ->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:Sejour');
+		  
+		$Sejour = $repository3->findOneBy(array('id'=>$id));
+		
+		list($listEvenementSejour, $NbJours) = $this->evenementPlanning($id);
+		
+		$html = $this->renderView(
+		'SejourBundle:Default:planningPdf.html.twig', 
+		array('Sejour' => $Sejour, 'NbJours'=>$NbJours, 'listEvenementSejour'=>$listEvenementSejour)
+		);
+
+        $filename = sprintf('Activite-'.$Sejour->getNomThema().'.pdf');
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array('orientation'=>'Landscape', 'default-header'=>false)),
+            200,
+            [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $filename),
+            ]
+        );
+	}
+	
 	// Acceuil espace séjour
 	public function indexSejourAction(){
 		$repository = $this
@@ -215,6 +261,31 @@ class SejourController extends Controller
 	
 	return $this->render('SejourBundle:Default:editsejour.html.twig', array('listeJours' => $listJours, 'Sejour' => $sejour));
 	}
+	public function smsAction($id, Request $request){
+	$this->container->get('sejour.droits')->AllowedUser($id);
+	if( !$this->get('security.authorization_checker')->isGranted('ROLE_DIRECTEUR') )
+	{
+		throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
+	}
+	$repository = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:Sejour');	
+	$Sejour=$repository->findOneBy(array('id'=>$id));
+	if( null === $Sejour )
+	{
+		throw new NotFoundHttpException("Le séjour n'existe pas.");
+	}
+	$form   = $this->get('form.factory')->create(SmsType::class, $Sejour);
+	if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+		$em = $this->getDoctrine()->getManager();
+		$em->flush();
+		$request->getSession()->getFlashBag()->add('notice', 'Les paramètres des SMS ont bien étés modifiés.');
+	  return $this->redirectToRoute('sejour_sms', array('id' => $Sejour->getId()));
+	}		
+
+	return $this->render('SejourBundle:Default:sms.html.twig', array('Sejour' => $Sejour, 'form' => $form->createView(),));	
+	
+	}
 	private function creerJourSejour($D, $s)
 	{
 		$repository6 = $this->getDoctrine()
@@ -232,6 +303,34 @@ class SejourController extends Controller
 					->setMoment($MomentTravail);
 		$em->persist($LigneConges);
 		$em->flush();
+	}
+	private function evenementPlanning($id)
+	{
+		$repository = $this
+		  ->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:Jour');
+		  
+		$repository2 = $this
+		  ->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:Evenement');
+		  		  
+		$listJours = $repository->findBy(array('sejour'=>$id));
+		
+		$NbJours = sizeof($listJours);
+		$listEvenementSejour=array();
+		foreach($listJours as $Jour)
+		{
+			$date=$Jour->getDate();
+			$listEvenement=$repository2->findBy(array('jour'=>$Jour->getId()));
+			foreach($listEvenement as $evenement)
+			{
+				array_push($listEvenementSejour, array($date, $evenement));
+			}
+		}
+
+		return array($listEvenementSejour, $NbJours);
 	}
 }
 

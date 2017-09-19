@@ -5,7 +5,7 @@
 			<h2>Édition d'une fiche enfant :</h2>
 		</div>
 		<div class="modal-body">
-			{{ render(controller('SejourBundle:Enfant:editEnfant',{ 'id': enfant.id })) }}
+			{{ render(controller('SejourBundle:Enfant:editEnfant',{ 'id': enfant.id, 'idSejour': sejour })) }}
 		</div>
 		<div class="modal-footer">
 			<h3>{{ enfant.nom }} {{ enfant.prenom }}</h3>

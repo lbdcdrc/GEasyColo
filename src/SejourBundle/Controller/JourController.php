@@ -49,9 +49,8 @@ class JourController extends Controller
 	$this->container->get('sejour.droits')->AllowedUser($idSejour);
     $repository = $this->getDoctrine()
       ->getManager()
-      ->getRepository('SejourBundle:Evenement')
-    ;
-	
+      ->getRepository('SejourBundle:Evenement');
+	$prevNextJours = $this->prevNextJours($id, $idSejour);
 	$listEvenement = $repository->findBy(
 	array('jour' => $id));
 	
@@ -59,10 +58,15 @@ class JourController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Jour');
 	
-	$jour=$repository2->find($id);
+	$jour=$repository2->findOneBy(array('sejour'=>$idSejour, 'id'=>$id));
+	
+	if(null === $jour)
+	{
+		throw new NotFoundHttpException("La journée n'existe pas.");
+	}
 	
 	return $this->render('SejourBundle:Default:jour.html.twig', array(	'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),
-																		'listeEvenements' => $listEvenement, 'jour' => $jour, 
+																		'listeEvenements' => $listEvenement, 'jour' => $jour, 'nav'=>$prevNextJours,
 																	));
 	}
 	public function jourAddEventAction($idSejour, $id, Request $request){
@@ -428,5 +432,29 @@ class JourController extends Controller
 
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
     }
+	private function prevNextJours($id, $idSejour)
+	{
+		$repository = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:Jour');
+		
+		$jour=$repository->find($id)->getDate();
+		$dateDep=$jour;
+		$datePrev = $dateDep->modify('-1 day');
+		$JourPrev=$repository->findOneBy(array('date'=>$datePrev, 'sejour'=>$idSejour));
+		$datePrev = $dateDep->modify('+2 day');
+		$JourNext=$repository->findOneBy(array('date'=>$datePrev, 'sejour'=>$idSejour));
+
+		if($JourPrev)
+		{
+			$JourPrev=$JourPrev->getId();
+		}
+		if($JourNext)
+		{
+			$JourNext=$JourNext->getId();
+		}
+		$datePrev = $dateDep->modify('-1 day');
+		return array($JourPrev, $JourNext);
+	}
 }
 

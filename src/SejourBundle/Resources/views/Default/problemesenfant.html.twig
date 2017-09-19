@@ -32,7 +32,7 @@
 </center>
 
 {% include "SejourBundle:ProblemesEnfant:ModalPlanningEnfant.html.twig" with {'enfant': enfant } only %}
-{% include "SejourBundle:ProblemesEnfant:ModalEditEnfant.html.twig" with {'enfant': enfant } only %}
+{% include "SejourBundle:ProblemesEnfant:ModalEditEnfant.html.twig" with {'enfant': enfant, 'sejour': Sejour } only %}
 
 {% endblock %}
 

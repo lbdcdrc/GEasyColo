@@ -46,14 +46,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class EnfantController extends Controller
 {
 	// Edition d'un enfant
-	public function editEnfantAction($id, Request $request){
+	public function editEnfantAction($idSejour, $id, Request $request){
 		$repository = $this->getDoctrine()
 		  ->getManager()
 		  ->getRepository('SejourBundle:Enfant')
 		;
 		$enfant = $repository->find($id);
 		//verification des droits
-		$this->container->get('sejour.droits')->AllowedUser($id);
+		$this->container->get('sejour.droits')->AllowedUser($idSejour);
 		if(!$this->get('security.authorization_checker')->isGranted('ROLE_ASSISTANT_SANITAIRE') )
 		{
 			throw new AccessDeniedException('Accès réservé à la direction');
@@ -71,11 +71,22 @@ class EnfantController extends Controller
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();
+			if(!$enfant->getImage()===null){
+				echo($enfant->getImage()->getwebPath());
+				toto;
+			$cacheManager = $this->get('liip_imagine.cache.manager');
+			$cacheManager->remove($enfant->getImage()->getwebPath(), 'my_thumb');
+			$cacheManager->remove($enfant->getImage()->getwebPath(), 'md_thumb');
+			$cacheManager->remove($enfant->getImage()->getwebPath(), 'lg_thumb');
+			$this->container->get('liip_imagine.controller')->filterAction($request, $enfant->getImage()->getwebPath(), 'my_thumb');
+			$this->container->get('liip_imagine.controller')->filterAction($request, $enfant->getImage()->getwebPath(), 'md_thumb');
+			$this->container->get('liip_imagine.controller')->filterAction($request, $enfant->getImage()->getwebPath(), 'lg_thumb'); }
+	
 			$request->getSession()->getFlashBag()->add('notice', 'L\'enfant a bien été modifié');
 		  return $this->redirectToRoute('enfant_probleme_list', array('id' => $id));
 		}		
 
-		return $this->render('SejourBundle:Default:editenfant.html.twig', array('enfant' => $enfant, 'form' => $form->createView(),));
+		return $this->render('SejourBundle:Default:editenfant.html.twig', array('enfant' => $enfant,'sejour' => $idSejour, 'form' => $form->createView(),));
     }
 	// Supprimer un enfant
 	public function supprimerEnfantAction($id,$idSejour, Request $request){
@@ -233,6 +244,7 @@ class EnfantController extends Controller
 		->getManager()
 		->getRepository('SejourBundle:Enfant');
 		$Enfant=$repository2->findOneById($id);
+		
 		$this->container->get('sejour.droits')->AllowedUser($Enfant->getSejour());
 		
 		$repository3 = $this->getDoctrine()
@@ -312,6 +324,12 @@ class EnfantController extends Controller
 		$repository4 = $this->getDoctrine()
 			->getManager()
 			->getRepository('SejourBundle:TraitementJour');	
+		$repository5 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:Image');	
+		$repository6 = $this->getDoctrine()
+			->getManager()
+			->getRepository('SejourBundle:Enfant');
 
 		$ListeTraitementEnfant = $repository3->findBy(array("enfant" => $Enfant));
 		
@@ -340,7 +358,15 @@ class EnfantController extends Controller
 		{
 			$em->remove($Probleme);
 		}
-		$em->flush();	
+		$em->flush();
+		$enf=$repository6->findOneBy(array("id"=>$Enfant));
+		$enf->setImage(null);
+		$Image = $repository5->findOneBy(array("id"=>$repository6->findOneBy(array("id"=>$Enfant))->getImage()));
+		if($Image)
+		{
+			$em->remove($Image);
+		}
+		$em->flush();
 	}
 }
 

@@ -30,6 +30,7 @@ Débute le {{ Sejour.DateDebut|date('d/m/Y') }} se termine le {{ Sejour.DateFin|
 													<li {% block forum %} {%endblock%}><a href="{{ path('sejour_forum', { 'id': Sejour.id }) }}" class="icon fa-comments-o"><span class="label">Forum</span></a></li>
 													{% if is_granted('ROLE_ASSISTANT_SANITAIRE') %}<li {% block infirmerie %} {%endblock%}><a id="myBtn1" href="#infirmerie" rel="modal:open" class="icon fa-ambulance fa-flip-horizontal" style="cursor: pointer;"><span class="label">Infirmerie</span></a></li>{% endif %}
 													<li {% block trombinoscope %} {%endblock%}><a id="myBtn" href="#trombi" rel="modal:open" class="icon fa-address-book-o" style="cursor: pointer;"><span class="label">Tombinoscope</span></a></li>
+													{% if is_granted('ROLE_DIRECTEUR') %} <li {% block sms %} {%endblock%}><a href="{{ path('sejour_sms', { 'id': Sejour.id }) }}" class="icon fa-phone"><span class="label">SMS</span></a></li>{% endif %}
 												</ul>
 											</section>
 								</div>

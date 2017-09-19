@@ -73,6 +73,53 @@ class ForumController extends Controller
 		return $this->redirectToRoute('sejour_forum', array('id' => $Sejour->getId()));
 	}
 	return $this->render('SejourBundle:sejour:Forum.html.twig', array('Sejour' => $Sejour, 'Categorie' => $ListeCategorieAvecVues,  'form' => $form->createView(),));
+	}
+	// Forum séjour - Supprimer
+	public function supprimerAction($id, $idForum){
+	$em = $this->getDoctrine()->getManager();
+	$this->container->get('sejour.droits')->AllowedUser($id);
+
+	$repository = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:ForumCategorie');
+	
+	$repository2 = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:ForumMessage');
+
+	$repository3 = $this->getDoctrine()
+	->getManager()
+	->getRepository('SejourBundle:ForumUserMessageVu');
+	
+	$Categorie = $repository->findOneBy(array('sejour' => $id, 'id'=>$idForum));
+
+	
+	if(null === $Categorie)
+	{
+		throw new NotFoundHttpException("La discussion n'existe pas.");
+	}
+	$Categorie->setDernierMessage(null);
+	$em->flush();	
+	$ListeMessageVu = $repository3->findBy(array('categorie'=>$Categorie));
+	
+	foreach($ListeMessageVu as $Mes)
+	{
+		$em->remove($Mes);
+	}
+	$em->flush();
+	$ListeMessage = $repository2->findBy(array('categorie'=>$Categorie));
+	
+	foreach($ListeMessage as $Mes)
+	{
+		$em->remove($Mes);
+	}
+	$em->flush();
+	$em->remove($Categorie);
+	$em->flush();
+	
+
+
+	return $this->redirectToRoute('sejour_forum', array('id' => $id));
 	}	
 	// Forum séjour - Affichage Discussion
 	public function discussionAction($id, $idForum, $page, Request $request)

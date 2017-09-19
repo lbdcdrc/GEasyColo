@@ -15,18 +15,35 @@
 		$('#calendar').fullCalendar({
 			locale: 'fr',
 			height: 'auto',
+			customButtons: 
+				{
+				{% if nav[0] %}
+				prevButton: 
+					{
+					icon: 'left-single-arrow',
+					click: function() {window.location.href = "{{ path('jour_indexjour', { 'idSejour': Sejour.id, 'id': nav[0] }) }}";}
+					},
+				{% endif %}
+				{% if nav [1] %}
+				nextButton: 
+					{
+					icon: 'right-single-arrow',
+					click: function() {window.location.href = "{{ path('jour_indexjour', { 'idSejour': Sejour.id, 'id': nav[1] }) }}";}
+					}
+				{% endif %}
+				},
 			slotEventOverlap:false,
 			header: {
-				left: '',
+				left: '{% if nav[0] %}prevButton{% endif %}',
 				center: '',
-				right: ''
+				right: '{% if nav [1] %}nextButton{% endif %}'
 			},
 			viewRender: function(view, element) {
 				element.find('.fc-day-header').html('');
 				element.find('.fc-head').html('');
 			},
 			allDaySlot : false,
-			minTime : "06:30",
+			minTime : "07:00",
 			maxTime : "23:30",
 			nowIndicator : true,
 			defaultView:'agendaDay',
@@ -70,6 +87,11 @@
 		
 	});
 
+
+
+
+
+
 </script>
 <style>
 
@@ -105,16 +127,12 @@
 	
 	
 	
-	
-	
 	<div id='calendar' style="width: 100%; display: inline-block;"></div>
 	
-  
 {% for evenement in listeEvenements %}
 <a href="#ev{{ evenement.id }}" rel="modal:open" style="display:none;"></a>
   <div id="ev{{ evenement.id }}" style="display:none;">
     <p>En construction </p>
   </div>
 {% endfor %} 
-  
 {% endblock %}

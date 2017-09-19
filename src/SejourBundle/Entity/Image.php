@@ -89,6 +89,8 @@ class Image
    */
   public function removeUpload()
   {
+	  echo($this->tempFilename);
+	  toto;
     // En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
     if (file_exists($this->tempFilename)) {
       // On supprime le fichier

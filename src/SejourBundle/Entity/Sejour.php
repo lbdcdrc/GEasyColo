@@ -66,6 +66,34 @@ class Sejour
     {
         return $this->id;
     }
+	
+	/**
+     * @var bool
+     *
+     * @ORM\Column(name="J15", type="boolean")
+     */
+    private $J15=true;
+	
+	/**
+     * @var bool
+     *
+     * @ORM\Column(name="J3", type="boolean")
+     */
+    private $J3=true;
+	
+	/**
+     * @var bool
+     *
+     * @ORM\Column(name="JProblemes", type="boolean")
+     */
+    private $JProblemes=true;
+	
+	/**
+     * @var bool
+     *
+     * @ORM\Column(name="JTraitements", type="boolean")
+     */
+    private $JTraitements=true;
 
     /**
      * Set dateDebut
@@ -263,4 +291,100 @@ class Sejour
 		  ;
 		}
 	}		
+
+    /**
+     * Set j15
+     *
+     * @param boolean $j15
+     *
+     * @return Sejour
+     */
+    public function setJ15($j15)
+    {
+        $this->J15 = $j15;
+
+        return $this;
+    }
+
+    /**
+     * Get j15
+     *
+     * @return boolean
+     */
+    public function getJ15()
+    {
+        return $this->J15;
+    }
+
+    /**
+     * Set j3
+     *
+     * @param boolean $j3
+     *
+     * @return Sejour
+     */
+    public function setJ3($j3)
+    {
+        $this->J3 = $j3;
+
+        return $this;
+    }
+
+    /**
+     * Get j3
+     *
+     * @return boolean
+     */
+    public function getJ3()
+    {
+        return $this->J3;
+    }
+
+    /**
+     * Set jProblemes
+     *
+     * @param boolean $jProblemes
+     *
+     * @return Sejour
+     */
+    public function setJProblemes($jProblemes)
+    {
+        $this->JProblemes = $jProblemes;
+
+        return $this;
+    }
+
+    /**
+     * Get jProblemes
+     *
+     * @return boolean
+     */
+    public function getJProblemes()
+    {
+        return $this->JProblemes;
+    }
+
+    /**
+     * Set jTraitements
+     *
+     * @param boolean $jTraitements
+     *
+     * @return Sejour
+     */
+    public function setJTraitements($jTraitements)
+    {
+        $this->JTraitements = $jTraitements;
+
+        return $this;
+    }
+
+    /**
+     * Get jTraitements
+     *
+     * @return boolean
+     */
+    public function getJTraitements()
+    {
+        return $this->JTraitements;
+    }
 }

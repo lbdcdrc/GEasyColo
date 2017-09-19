@@ -19,11 +19,18 @@ th, td {
 	<thead>
 		<th scope='col' style="width:5%"> Abonné </th>
 		<th scope='col' style="width:5%"> État </th>
+		{% if is_granted('ROLE_DIRECTEUR') %}
+		<th scope='col' style="width:50%"> Sujet </th>
+		{% else %}
 		<th scope='col' style="width:55%"> Sujet </th>
+		{% endif %}
 		<th scope='col' style="width:5%"> Réponses </th>
 		<th scope='col' style="width:15%"> Auteur </th>
 		<th scope='col' style="width:5%"> Vues </th>
 		<th scope='col' style="width:15%"> Dernier Messages </th>
+		{% if is_granted('ROLE_DIRECTEUR') %}
+		<th scope='col' style="width:5%"> Action </th>
+		{% endif %}
 	</thead>
 	{% for cate in Categorie %}
 	<tr>
@@ -34,6 +41,9 @@ th, td {
 		<td data-label="Auteur"> {{ cate.categorie.createur.PN }} </td>
 		<td data-label="Vues"> {{ cate.categorie.vues }} </td>
 		<td data-label="Dernier Message"> {% if cate.categorie.dernierMessage %} {{ cate.categorie.dernierMessage.DateCreation|date('d/m/Y à H:i:s') }} </br> {{ cate.categorie.dernierMessage.user.PN }} {% else %} Pas de message {% endif %}</td>
+		{% if is_granted('ROLE_DIRECTEUR') %}
+		<td><a href="{{ path('sejour_supprimer_forum', { 'id': Sejour.id, 'idForum' : cate.categorie.id }) }}" onclick="return confirm('Supprimer la catégorie ainsi que tout ses messages ?')"><button style="background-color:#FFD9D1;"> <i class="fa fa-trash" aria-hidden="true"></i></button></a></td>
+		{% endif %}
 	</tr>
 	{% endfor %}
 	

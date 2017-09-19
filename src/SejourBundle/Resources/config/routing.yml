@@ -1,6 +1,9 @@
 sejour_indexsejour:
     path:   /indexsejour
     defaults: { _controller: SejourBundle:Sejour:indexSejour }
+sejour_sms:
+    path:   /{id}/sms
+    defaults: { _controller: SejourBundle:Sejour:sms }
 table_acti_util:
     path:   /json/activite/datatable
     defaults: { _controller: SejourBundle:Activite:tableActiUtil }
@@ -25,12 +28,21 @@ sejour_equipe:
 sejour_forum:
     path:   /{id}/forum
     defaults: { _controller: SejourBundle:Forum:accueilForum }
+sejour_planning:
+    path:   /{id}/planning
+    defaults: { _controller: SejourBundle:Sejour:planning }
+sejour_planning_pdf:
+    path:   /{id}/planning/pdf
+    defaults: { _controller: SejourBundle:Sejour:planningPdf }    
 abonnement_forum:
     path:   /{id}/forum/{forum}/gestionAbo
     defaults: { _controller: SejourBundle:Forum:forumAbonnement }
 sejour_discussion:
     path:   /{id}/forum{idForum}/{page}
     defaults: { _controller: SejourBundle:Forum:discussion, page: 1}
+sejour_supprimer_forum:
+    path:   /{id}/forum/{idForum}/supprimer
+    defaults: { _controller: SejourBundle:Forum:supprimer}
 sejour_activite:
     path:   /{id}/activite
     defaults: { _controller: SejourBundle:Activite:fichesActiSejour }
@@ -80,7 +92,7 @@ sejour_supprimer:
     path:   /supprimer/{id}
     defaults: { _controller: SejourBundle:Sejour:supprimerSejour }
 enfant_edit:
-    path:   /enfant/edit/{id}
+    path:   /{idSejour}/enfant/edit/{id}
     defaults: { _controller: SejourBundle:Enfant:editEnfant }
 enfant_probleme_list:
     path:   /enfant/{id}

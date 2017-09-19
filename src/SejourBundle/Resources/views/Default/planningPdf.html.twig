@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta charset='utf-8' />
+<link rel='stylesheet' href='/var/www/Telligo/web/bundles/fullcalendar/fullcalendar.min.css' />
+<script src='/var/www/Telligo/web/bundles/fullcalendar/lib/jquery.min.js'></script>
+<script src='/var/www/Telligo/web/bundles/fullcalendar/lib/moment.min.js'></script>
+<script src='/var/www/Telligo/web/bundles/fullcalendar/fullcalendar.js'></script>
+<script src='/var/www/Telligo/web/bundles/fullcalendar/locale/fr.js'></script>
+<script>
+	$(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+			locale: 'fr',
+			height: 'auto',
+			header: {
+				center: 'month,agendaFourDay' // buttons for switching between views
+			},
+			defaultView : 'agendaFourDay',
+			views: 	{
+					agendaFourDay: 	{
+									type: 'agenda',
+									duration: { days: {{ NbJours }} },
+									buttonText: '4 day'
+									}
+					},
+					
+			slotEventOverlap:false,
+			header: {
+				left: '',
+				center: 'title',
+				right: ''
+			},
+			defaultDate: "{{ Sejour.dateDebut|date('m/d/Y') }}",
+			allDaySlot : false,
+			minTime : "07:00",
+			maxTime : "23:00",
+			nowIndicator : false,
+			columnFormat : 'ddd D/M',
+			timeFormat: 'H:mm',
+			editable: false,
+			eventLimit: true,			
+			events: [
+				{% for evenement in listEvenementSejour %}
+				{
+					title: '{{ evenement[1].activite.nom }}',
+					start: "{{ evenement[0] | date('Y-m-d') }}T{{evenement[1].heureDebut | date('H:i')}}",
+					end: "{{ evenement[0] | date('Y-m-d') }}T{{ evenement[1].heureFin | date('H:i') }}",
+					color: "{{ evenement[1].activite.categorie.couleur }}",
+					id: "ev{{ evenement[1].id }}",
+				},
+				{% endfor %}
+				
+			]
+		});
+		
+	});
+</script>
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: auto;
+		margin: 0 auto;
+	}
+
+</style>
+</head>
+<body>	
+<div id='calendar' style="display: inline-block;"></div>	
+</body>
+</html>

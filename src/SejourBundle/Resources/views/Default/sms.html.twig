@@ -1,0 +1,15 @@
+{% extends "SejourBundle:sejour:basesejour.html.twig" %}
+{% block sms %} class="current" {% endblock %}
+{% block titre %}Paramètres SMS {% endblock titre %}
+{% block coeur %}
+<p> L'application EasyColo est prévue pour envoyer des SMS de manière automatique lorsque cela peut s'avérer utile ! <br>
+Voici les différents SMS qui peuvent être envoyés : </p>
+<ul>
+{{ form_start(form) }}
+	<li> <table style="vertical-align:center;"> <tr> <td> <b>{{ form_widget(form.J15) }}</td> <td>J-15 : </b> SMS envoyé au directeur - <i> Rappel des obligations légales : déclaration des animateurs, impression du projet péda et des différents documents obligatoires </i> </td> </tr> </table> </li>
+	<li> <table style="vertical-align:center;"> <tr> <td> <b>{{ form_widget(form.J3) }}</td> <td>J-3 : </b> SMS envoyé aux animateurs - <i> Rappel des documents obligatoires : Papiers d'identité, diplômes, carnet de santé, bonne humeur et énergie </i> </td> </tr> </table> </li>
+	<li> <table style="vertical-align:center;"> <tr> <td> <b>{{ form_widget(form.JProblemes) }}</td> <td>Chaque jour : </b> SMS envoyé au directeur et à l'adjoint - <i> Nombre d'information concernant des enfants qui ne sont pas traités </i> </td> </tr> </table> </li>
+	<li> <table style="vertical-align:center;"> <tr> <td> <b>{{ form_widget(form.JTraitements) }}</td> <td>Plusieurs fois par jour : </b> SMS envoyé au directeur et à l'assistant sanitaire - <i> Rappel en cas d'oublis d'un traitement à donner à un enfant </i> </td> </tr> </table> </li>
+</ul>
+{{ form_end(form) }}
+{% endblock %}
