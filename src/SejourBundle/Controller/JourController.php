@@ -42,9 +42,77 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class JourController extends Controller
 {
+	public function listeEvenementAction($idSejour, $id, Request $req){
+		$repository = $this->getDoctrine()
+						  ->getManager()
+						  ->getRepository('SejourBundle:Evenement');
+		$listEvenements = $repository->findBy(array('jour' => $id));
+		
+		$listDef = array();
+		foreach($listEvenements as $ev)
+		{
+			$eve= array(
+						'title' => $ev->getActivite()->getNom(),
+						'start' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureDebut()->format('H:i'),
+						'end' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureFin()->format('H:i'),
+						'color' => $ev->getActivite()->getCategorie()->getCouleur(),
+						'id' => $ev->getId(),
+						);
+			array_push($listDef, $eve);
+		}
+		
+		$encoders = array(new JsonEncoder());
+		$normalizers = array(new GetSetMethodNormalizer());
+		$serializer = new Serializer($normalizers, $encoders);
+		$response = new Response($serializer->serialize($listDef, 'json'));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
+	public function modifieEvenementAction($idSejour, $id, Request $req){
+		$em = $this->getDoctrine()->getManager();
+		$repository = $this->getDoctrine()
+						  ->getManager()
+						  ->getRepository('SejourBundle:Evenement');
+		$listEvenements = $repository->findBy(array('jour' => $id));
+		$evenement = $req->get('ev');
+		$start = $req->get('start');
+		$end = $req->get('end');
+		
+
+		$evenementModifie= $repository->findOneById($evenement);
+		
+		$evenementModifie->setHeureDebut(new \datetime($start));
+
+		$evenementModifie->setHeureFin(new \datetime($end));
+
+		$em->flush();
+		$listDef = array();
+		foreach($listEvenements as $ev)
+		{
+			$eve= array(
+						'title' => $ev->getActivite()->getNom(),
+						'start' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureDebut()->format('H:i'),
+						'end' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureFin()->format('H:i'),
+						'color' => $ev->getActivite()->getCategorie()->getCouleur(),
+						'id' => $ev->getId(),
+						);
+			array_push($listDef, $eve);
+		}
+		
+		$encoders = array(new JsonEncoder());
+		$normalizers = array(new GetSetMethodNormalizer());
+		$serializer = new Serializer($normalizers, $encoders);
+		$response = new Response($serializer->serialize($listDef, 'json'));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
 	public function jourAction($idSejour, $id){
 	$this->container->get('sejour.droits')->AllowedUser($idSejour);
     $repository = $this->getDoctrine()

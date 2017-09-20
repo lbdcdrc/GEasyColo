@@ -118,6 +118,18 @@ jour_indexjour:
 jour_addevent:
     path:   /{idSejour}/jour/{id}/add
     defaults: { _controller: SejourBundle:Jour:jourAddEvent }
+jour_json_request:
+    path:   /{idSejour}/jour/{id}/listeEvenement
+    defaults: { _controller: SejourBundle:Jour:listeEvenement }
+    methods: [post]
+jour_json_modifie:
+    path:   /{idSejour}/jour/{id}/modifierEvenement
+    defaults: { _controller: SejourBundle:Jour:modifieEvenement }
+    methods: [post]
+jour_evenement_anim:
+    path:   /{idSejour}/jour/{id}/evements/{idEvenement}/anim
+    defaults: { _controller: SejourBundle:Jour:animEvenement }
+    methods: [post]
 jour_dellevent:
     path:   /jour/{id}/dell
     defaults: { _controller: SejourBundle:Jour:jourDellEvent }

@@ -4,10 +4,10 @@
 {% block soustitre %} Activités prévues le {{ jour.date| localizeddate('full', 'none') }}{% endblock soustitre %}
 {% block style %}
 <meta charset='utf-8' />
-<link rel='stylesheet' href='/bundles/fullcalendar/fullcalendar.css' />
+<link rel='stylesheet' href='/bundles/fullcalendar/fullcalendar.min.css' />
 <script src='/bundles/fullcalendar/lib/jquery.min.js'></script>
 <script src='/bundles/fullcalendar/lib/moment.min.js'></script>
-<script src='/bundles/fullcalendar/fullcalendar.js'></script>
+<script src='/bundles/fullcalendar/fullcalendar.min.js'></script>
 <script src='/bundles/fullcalendar/locale/fr.js'></script>
 <script>
 	$(document).ready(function() {
@@ -49,7 +49,7 @@
 			defaultView:'agendaDay',
 			timeFormat: 'H:mm',
 			defaultDate: "{{ jour.date|date('m/d/Y') }}",
-			editable: false,
+			editable: true,
 			eventLimit: true, 
 			eventMouseover: function(calEvent) {
 			$("body").css("cursor", "pointer");
@@ -68,29 +68,44 @@
 			$(this).css('border-color', calEvent.color);
 			},
 			eventClick: function(calEvent) {
-				$("a[href='#" + calEvent.id + "'][rel='modal:open']").click();
-				
+				$("a[href='#ev" + calEvent.id + "'][rel='modal:open']").click();	
 			},
-			events: [
-				{% for evenement in listeEvenements %}
-				{
-					title: '{{ evenement.activite.nom }}',
-					start: "{{ evenement.heureDebut | date('H:i')}}",
-					end: "{{ evenement.heureFin | date('H:i') }}",
-					color: "{{ evenement.activite.categorie.couleur }}",
-					id: "ev{{ evenement.id }}",
-				},
-				{% endfor %}
-				
-			]
+			{% if is_granted('ROLE_ADJOINT') %}
+			eventResize: function(event) {
+				changeDate(event);				
+			},
+			eventDrop: function(event) {
+				changeDate(event);
+			},
+			{% endif %}
+			events: {
+			url: "{{path('jour_json_request',{ 'idSejour': Sejour.id, 'id' : jour.id }) }}",
+			type : 'POST'
+			}
 		});
 		
 	});
 
+{% if is_granted('ROLE_ADJOINT') %}	
+function changeDate(event){
+	var data = {};
+	data['ev']=event.id;
+	data['start']=event.start.format('HH:mm');
+	data['end']=event.end.format('HH:mm');
+	$.ajax({
+		url: "{{path('jour_json_modifie',{ 'idSejour': Sejour.id, 'id' : jour.id }) }}",
+		method: "post",
+		data : data,
+		}).done(function(msg){
+		myfunction(msg);
+				});
+}
+function myfunction(msg){
+    $('#calendar').fullCalendar( 'refetchEventSources');
+	$('#calendar').fullCalendar( 'refetchEvents' );
+}
 
-
-
-
+{% endif %}
 
 </script>
 <style>
@@ -122,12 +137,7 @@
 	</div>
 </div>
 	
-	
-	
-	
-	
-	
-	<div id='calendar' style="width: 100%; display: inline-block;"></div>
+<div id='calendar' style="width: 100%; display: inline-block;"></div>
 	
 {% for evenement in listeEvenements %}
 <a href="#ev{{ evenement.id }}" rel="modal:open" style="display:none;"></a>

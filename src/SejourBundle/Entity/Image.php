@@ -81,16 +81,15 @@ class Image
    */
   public function preRemoveUpload()
   {
-    // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
-    $this->tempFilename = $this->getUploadRootDir().'/'.$this->id.'.'.$this->url;
+	$pass=hash('sha512', 'alea'.$this->id.'photo');
+	$this->tempFilename = $this->getUploadRootDir().'/'.$pass.'.'.$this->url;
+
   }
   /**
    * @ORM\PostRemove()
    */
   public function removeUpload()
   {
-	  echo($this->tempFilename);
-	  toto;
     // En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
     if (file_exists($this->tempFilename)) {
       // On supprime le fichier

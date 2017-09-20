@@ -35,6 +35,37 @@ class IdMoment
      */
     private $couleur;
 
+	 /**
+     * @var bool
+     *
+     * @ORM\Column(name="travail", type="boolean")
+     */
+    private $travail=false;	
+
+	 /**
+     * @var bool
+     *
+     * @ORM\Column(name="conges", type="boolean")
+     */
+    private $conges=false;	
+
+	/**
+     * @var time
+     *
+     * @ORM\Column(name="heureDebut", type="time")
+	 *
+     */
+    private $heureDebut;
+	
+	/**
+     * @var time
+     *
+     * @ORM\Column(name="heureFin", type="time")
+	 *
+     */
+    private $heureFin;	
+
+	
     /**
      * Get id
      *
@@ -91,5 +122,101 @@ class IdMoment
     public function getCouleur()
     {
         return $this->couleur;
+    }
+
+    /**
+     * Set travail
+     *
+     * @param boolean $travail
+     *
+     * @return IdMoment
+     */
+    public function setTravail($travail)
+    {
+        $this->travail = $travail;
+
+        return $this;
+    }
+
+    /**
+     * Get travail
+     *
+     * @return boolean
+     */
+    public function getTravail()
+    {
+        return $this->travail;
+    }
+
+    /**
+     * Set heureDebut
+     *
+     * @param \DateTime $heureDebut
+     *
+     * @return IdMoment
+     */
+    public function setHeureDebut($heureDebut)
+    {
+        $this->heureDebut = $heureDebut;
+
+        return $this;
+    }
+
+    /**
+     * Get heureDebut
+     *
+     * @return \DateTime
+     */
+    public function getHeureDebut()
+    {
+        return $this->heureDebut;
+    }
+
+    /**
+     * Set heureFin
+     *
+     * @param \DateTime $heureFin
+     *
+     * @return IdMoment
+     */
+    public function setHeureFin($heureFin)
+    {
+        $this->heureFin = $heureFin;
+
+        return $this;
+    }
+
+    /**
+     * Get heureFin
+     *
+     * @return \DateTime
+     */
+    public function getHeureFin()
+    {
+        return $this->heureFin;
+    }
+
+    /**
+     * Set conges
+     *
+     * @param boolean $conges
+     *
+     * @return IdMoment
+     */
+    public function setConges($conges)
+    {
+        $this->conges = $conges;
+
+        return $this;
+    }
+
+    /**
+     * Get conges
+     *
+     * @return boolean
+     */
+    public function getConges()
+    {
+        return $this->conges;
     }
 }

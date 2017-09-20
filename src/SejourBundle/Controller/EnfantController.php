@@ -360,8 +360,8 @@ class EnfantController extends Controller
 		}
 		$em->flush();
 		$enf=$repository6->findOneBy(array("id"=>$Enfant));
-		$enf->setImage(null);
 		$Image = $repository5->findOneBy(array("id"=>$repository6->findOneBy(array("id"=>$Enfant))->getImage()));
+		$enf->setImage(null);
 		if($Image)
 		{
 			$em->remove($Image);
