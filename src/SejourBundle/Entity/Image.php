@@ -111,6 +111,11 @@ class Image
 	$pass=hash('sha512', 'alea'.$this->id.'photo');
     return $this->getUploadDir().'/'.$pass.'.'.$this->getUrl();
   }
+   public function getWebPath2()
+  {
+	$pass=hash('sha512', 'alea'.$this->id.'photo');
+    return '/'.$this->getUploadDir().'/'.$pass.'.'.$this->getUrl();
+  }
   /**
    * @return int
    */

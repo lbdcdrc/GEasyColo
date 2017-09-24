@@ -1,10 +1,160 @@
-{% extends "::base.html.twig" %}
-{% block title %}
-EasyColo V2 - Profil d'un utilisateur
-{% endblock title %}
-{% block header %}
-<p id="logo">Mon Compte</p>
-{% endblock header %}
-{% block body %}
-{% include "AdminBundle:Profile:show_content.html.twig" %}
-{% endblock body %}
+{% extends "AdminBundle:Base:baseAdmin.html.twig" %}
+{% block titre %} <a href="{{ path('user_list') }}" class="tip_bottom">Utilisateurs</a> {% endblock titre %}
+{% block soustitre %} <a href="#" class="current">{{ user.username }}</a> {% endblock soustitre %}
+{% block menuUtilisateurs %}class="active" {% endblock menuUtilisateurs %}
+	{% block header %}
+		<h1> {{ user.PN }} </h1>	
+	{% endblock header %}
+{% block coeur %}
+<!--Action boxes-->
+   <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span6">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-user"></i> </span>
+            <h5>Informations Personnelles</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <ul class="recent-posts">
+              <li>	
+					<p><center><div style="height: auto;
+								margin-right: 10px;
+								margin-top: 5px;
+								margin-bottom: 5px;
+								padding: 2px;
+								width: 200px;"> 			
+					{% if user.Image %}			
+					<img src="{{ user.Image.webPath2 | imagine_filter('lg_thumb') }}" alt="{{ user.PN }}.jpg" width="200">
+					{% else %}
+					<img src="/anonyme.jpg" alt="{{ user.PN }}.jpg" width="200">		
+					{% endif %} 
+					</div></center></p>
+              </li>
+			  <li><i class="icon-time"></i> <strong>Dernière connexion :</strong> {{ user.lastLogin |localizeddate('full', 'none') }}</li>
+			  <li><i class="icon-star"></i> <strong>Nom d'utilisateur :</strong> {{ user.Username }}</li>
+              <li><i class="icon-user-md"></i> <strong>Prénom Nom :</strong> {{ user.PN }}</li>
+              <li><i class="icon-envelope"></i> <strong>Email :</strong> {{ user.Email }}</li>
+              <li><i class="icon-phone"></i> <strong>Téléphone :</strong> {{ user.Telephone }}</li>
+              <li><i class="icon-home"></i> <strong>Adresse :</strong> {{ user.Adresse1 }} {{ user.Adresse2 }} - {{ user.Codepostal }} {{ user.Ville }}</li>
+			  <li><i class="icon-calendar"></i> <strong>Date de naissance :</strong> {{ user.Naissance |localizeddate('full', 'none') }} - {{ user.Age }} ans</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-trophy"></i></span>
+            <h5>Diplômes - Qualifications</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="taskDesc"></i><center>Diplôme d'animation</center></td>
+                  <td class="taskStatus"><span class="in-progress">{{ user.Diplome.Nom }}</span></td>
+                </tr>
+                <tr>
+                  <td class="taskDesc"><center>PSC1</center></td>
+                  <td class="taskStatus">{% if user.Psc1 %} <span class="done">Obtenu</span> {% else %} <span class="pending">Non Obtenu</span> {% endif %} </td>
+				</tr>
+                <tr>
+                  <td class="taskDesc"><center>SB</center></td>
+                  <td class="taskStatus">{% if user.SB %} <span class="done">Obtenu</span> {% else %} <span class="pending">Non Obtenu</span> {% endif %}</td>
+				</tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="widget-box">
+          <div class="widget-title">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab1">Séjours en Direction ({{ listDir|length }})</a></li>
+              <li><a data-toggle="tab" href="#tab2">Séjours en Animation ({{ listSejour|length }})</a></li>
+            </ul>
+          </div>
+          <div class="widget-content tab-content">
+            <div id="tab1" class="tab-pane active">
+			{% if listDir|length > 0 %}
+              <table  class="table table-bordered table-striped">
+				<thead>
+					<th> Nom </th>
+					<th> Date de Début </th>
+					<th> Date de Fin </th>
+					<th> Nombre d'enfants </th>
+				</thead>
+				<tbody>
+					{% for sejour in listDir %}
+					<tr> 
+						<td> <center>{{ sejour.NomThema }}</center> </td>
+						<td> <center>{{ sejour.DateDebut|date("d/m/Y") }}</center> </td>
+						<td> <center>{{ sejour.DateFin|date("d/m/Y") }}</center> </td>
+						<td> <center>{{ sejour.NbEnfants }}</center> </td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			  </table>
+			{% else %}
+			  <center><strong> Pas de séjours à afficher </strong> </center>
+			  {% endif %}
+            </div>
+            <div id="tab2" class="tab-pane">
+			{% if listSejour|length > 0 %}
+			<table  class="table table-bordered table-striped">
+				<thead>
+					<th> Nom </th>
+					<th> Directeur </th>
+					<th> Date de Début </th>
+					<th> Date de Fin </th>
+					<th> Nombre d'enfants </th>
+				</thead>
+				<tbody>
+					{% for sejour in listSejour %}
+					<tr> 
+						<td> <center>{{ sejour.NomThema }}</center> </td>
+						<td> <center><a href='{{ path("voir_profil", {"id": sejour.Directeur.id})}}'>{{ sejour.Directeur.PN }}</a></center> </td>
+						<td> <center>{{ sejour.DateDebut|date("d/m/Y") }}</center> </td>
+						<td> <center>{{ sejour.DateFin|date("d/m/Y") }}</center> </td>
+						<td> <center>{{ sejour.NbEnfants }}</center> </td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			  </table>
+			  {% else %}
+			  <center><strong> Pas de séjours à afficher </strong> </center>
+			  {% endif %}
+            </div>
+          </div> 
+        </div>
+		<div class="accordion" id="collapse-group">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-group" href="#collapseGOne" data-toggle="collapse"> <span class="icon"><i class="icon-circle-arrow-right"></i></span>
+							<h5>Présentation de l'animateur</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseGOne">
+					<div class="widget-content">
+						{% if user.Presentation %}
+						<center> {{ user.Presentation|bbcode_filter('my_default_filter') }} </center>
+						{% else %}
+						<center><strong> L'utilisateur n'a pas renseigné de présentation </strong> </center>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+      </div>
+    </div>
+  </div>
+
+<!--End-Action boxes-->  
+{% endblock coeur %}

@@ -11,7 +11,6 @@
 <script src='/bundles/fullcalendar/locale/fr.js'></script>
 <script>
 	$(document).ready(function() {
-		
 		$('#calendar').fullCalendar({
 			locale: 'fr',
 			height: 'auto',
@@ -68,7 +67,8 @@
 			$(this).css('border-color', calEvent.color);
 			},
 			eventClick: function(calEvent) {
-				$("a[href='#ev" + calEvent.id + "'][rel='modal:open']").click();	
+				$("a[href='#choix'][rel='modal:open']").click();
+				$('.FormulaireAnim').attr('id', calEvent.id);				
 			},
 			{% if is_granted('ROLE_ADJOINT') %}
 			eventResize: function(event) {
@@ -83,15 +83,26 @@
 			type : 'POST'
 			}
 		});
-		
-	});
-
+	});	
 {% if is_granted('ROLE_ADJOINT') %}	
 function changeDate(event){
 	var data = {};
 	data['ev']=event.id;
 	data['start']=event.start.format('HH:mm');
-	data['end']=event.end.format('HH:mm');
+	var Year = {{ jour.date|date('Y') }};
+	var Month = {{ jour.date|date('m') }};
+	var Day = {{ jour.date|date('d') }};
+	if(event.end > new Date(Year+'-'+Month+'-'+Day+' '+'23:59:00'))
+	{
+		data['end']='23:30';
+	}
+	else
+	{
+		data['end']=event.end.format('HH:mm');
+	}
+	$("a[href='#evAnim'][rel='modal:open']").click();
+	$(".FormulaireAnim").empty();
+	$(".FormulaireAnim").append('<center><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i><br><strong> Modification de l\`évènement en cours</strong></center>');	
 	$.ajax({
 		url: "{{path('jour_json_modifie',{ 'idSejour': Sejour.id, 'id' : jour.id }) }}",
 		method: "post",
@@ -101,15 +112,86 @@ function changeDate(event){
 				});
 }
 function myfunction(msg){
+	if( msg['statut'] == 'ok')
+	{
+	$(".FormulaireAnim").empty();
+	$(".FormulaireAnim").append('<center><strong> L\'évènement a bien été modifié</strong></center>');	
     $('#calendar').fullCalendar( 'refetchEventSources');
 	$('#calendar').fullCalendar( 'refetchEvents' );
+	}
+	else if( msg['statut'] == 'conflit')
+	{
+	$(".FormulaireAnim").empty();
+	$(".FormulaireAnim").append(msg['data']);	
+    $('#calendar').fullCalendar( 'refetchEventSources');
+	$('#calendar').fullCalendar( 'refetchEvents' );	
+	}
 }
-
+function Anim(){
+			$("a[href='#choix'][rel='modal:close']").click();
+			$("a[href='#evAnim'][rel='modal:open']").click();
+			$(".FormulaireAnim").empty();
+			$(".FormulaireAnim").append('<center><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></center>');
+			$.ajax({
+			  type: "GET",
+			  url: "{{path('jour_evenement_anim',{ 'idSejour': Sejour.id, 'idJour' : jour.id }) }}",
+			  data: { ev : $('.FormulaireAnim').attr('id') },
+			  dataType: "json",
+			  success: function(data) {
+				$(".FormulaireAnim").empty();
+				$(".FormulaireAnim").append(data);
+			  }
+			});
+}
+function Enfant(){
+			$("a[href='#choix'][rel='modal:close']").click();
+			$("a[href='#evAnim'][rel='modal:open']").click();
+			$(".FormulaireAnim").empty();
+			$(".FormulaireAnim").append('<center><strong>En Cours de Construction</strong></center>');
+}
 {% endif %}
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+$(function() {
+    $(document).on("click", ".formAnimSubmit", function(e){
 
+		e.preventDefault();
+		var data = $('#formAnim').serializeObject();
+		var evId =  $('.FormulaireAnim').attr('id') ;
+		$(".FormulaireAnim").empty();
+		$(".FormulaireAnim").append('<center><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i><br><h3> Enregistrement des modifications </h3></center>');
+		$.ajax({
+		url : "{{path('jour_evenement_anim',{ 'idSejour': Sejour.id, 'idJour' : jour.id }) }}",
+		type: 'POST',
+		dataType: 'json',
+		data: {data},
+		success:function(data){
+			$(".FormulaireAnim").empty();
+		  if(data.status == 'ok'){
+			$(".FormulaireAnim").append('<center><h3> Les affectations ont bien étés enregistrées </h3></center>');
+		  }
+		}
+		});
+  
+  
+    });
+});
 </script>
 <style>
-
 	body {
 		margin: 40px 10px;
 		padding: 0;
@@ -121,7 +203,6 @@ function myfunction(msg){
 		max-width: auto;
 		margin: 0 auto;
 	}
-
 </style>
 {% endblock style %}
 {% block coeur %}
@@ -136,13 +217,18 @@ function myfunction(msg){
 	<div class="modal-footer">
 	</div>
 </div>
-	
+
 <div id='calendar' style="width: 100%; display: inline-block;"></div>
-	
-{% for evenement in listeEvenements %}
-<a href="#ev{{ evenement.id }}" rel="modal:open" style="display:none;"></a>
-  <div id="ev{{ evenement.id }}" style="display:none;">
-    <p>En construction </p>
-  </div>
-{% endfor %} 
+		
+<a href="#choix" rel="modal:open" style="display:none;"></a>
+<a href="#choix" rel="modal:close" style="display:none;"></a>
+<div id="choix" style="display:none;">
+<center><button id="Enfantbtn" onclick="Anim();"><i class="fa fa-calendar-plus-o fa-lg"></i> Affecter les animateurs</button>
+<button id="Enfantbtn" onclick="Enfant();"><i class="fa fa-calendar-plus-o fa-lg"></i> Affecter les enfants</button></center>
+</div>	
+
+<a href="#evAnim" rel="modal:open" style="display:none;"></a>
+<div id="evAnim" style="display:none;">
+	<div class="FormulaireAnim"></div>
+</div>
 {% endblock %}

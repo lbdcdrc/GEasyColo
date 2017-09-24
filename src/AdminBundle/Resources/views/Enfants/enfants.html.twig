@@ -1,0 +1,64 @@
+{% extends "AdminBundle:Base:baseAdmin.html.twig" %}
+{% block titre %}<a href="#" class="current">Enfants</a>{% endblock titre %}
+{% block menuEnfants %}class="active" {% endblock menuEnfants %}
+{% block datatable %}
+<script>$(document).ready(function() {
+    $('#enfantTab').DataTable( {
+	    language: {
+        processing:     "Traitement en cours...",
+        search:         "Rechercher&nbsp;:",
+        lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+        info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+        infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+        infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+        infoPostFix:    "",
+        loadingRecords: "Chargement en cours...",
+        zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+        emptyTable:     "Aucune donnée disponible dans le tableau",
+        paginate: {
+            first:      "Premier",
+            previous:   "Pr&eacute;c&eacute;dent",
+            next:       "Suivant",
+            last:       "Dernier"
+        },
+        aria: {
+            sortAscending:  ": activer pour trier la colonne par ordre croissant",
+            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+        }},
+        "ajax": '{{path("enfant_json_request")}}'
+    } );
+} );</script>
+{% endblock datatable %}
+{% block coeur %}
+<!--Action boxes-->
+ <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Liste des enfants</h5>
+			
+          </div>
+			<div class="widget-content nopadding">
+            <table id="enfantTab" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+				<th>Image</th>
+				<th>Séjour</th>
+				<th>Nom</th>
+				<th>Prénom</th>
+				<th>Âge</th>
+				<th>Problèmes en cours</th>
+            </tr>
+        </thead>
+    </table>
+          </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+
+<!--End-Action boxes-->  
+{% endblock coeur %}

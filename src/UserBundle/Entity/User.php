@@ -14,12 +14,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User extends BaseUser
 {
-  /**
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  protected $id;
+	/**
+	* @ORM\Column(name="id", type="integer")
+	* @ORM\Id
+	* @ORM\GeneratedValue(strategy="AUTO")
+	*/
+	protected $id;
+ 	/**
+	* @ORM\ManyToMany(targetEntity="SejourBundle\Entity\Evenement", mappedBy="animateurs")
+	*/
+	private $evenements;
   	
 	/**
 	* @ORM\OneToOne(targetEntity="SejourBundle\Entity\Image", cascade={"persist", "remove"})
@@ -484,5 +488,39 @@ class User extends BaseUser
     public function getDiplome()
     {
         return $this->diplome;
+    }
+
+    /**
+     * Add evenement
+     *
+     * @param \SejourBundle\Entity\Evenement $evenement
+     *
+     * @return User
+     */
+    public function addEvenement(\SejourBundle\Entity\Evenement $evenement)
+    {
+        $this->evenements[] = $evenement;
+
+        return $this;
+    }
+
+    /**
+     * Remove evenement
+     *
+     * @param \SejourBundle\Entity\Evenement $evenement
+     */
+    public function removeEvenement(\SejourBundle\Entity\Evenement $evenement)
+    {
+        $this->evenements->removeElement($evenement);
+    }
+
+    /**
+     * Get evenements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEvenements()
+    {
+        return $this->evenements;
     }
 }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<title>EasyColo - Admin</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/AdminPanel/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/AdminPanel/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="/AdminPanel/css/fullcalendar.css" />
+<link rel="stylesheet" href="/AdminPanel/css/matrix-style.css" />
+<link rel="stylesheet" href="/AdminPanel/css/matrix-media.css" />
+<link href="/AdminPanel/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/AdminPanel/css/jquery.gritter.css" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+<script src="/AdminPanel/js/excanvas.min.js"></script> 
+<script src="/AdminPanel/js/jquery.min.js"></script> 
+<script src="/AdminPanel/js/jquery.ui.custom.js"></script> 
+<script src="/AdminPanel/js/bootstrap.min.js"></script> 
+<script src="/AdminPanel/js/jquery.flot.min.js"></script> 
+<script src="/AdminPanel/js/jquery.flot.resize.min.js"></script> 
+<script src="/AdminPanel/js/jquery.peity.min.js"></script> 
+<script src="/AdminPanel/js/fullcalendar.min.js"></script> 
+<script src="/AdminPanel/js/matrix.js"></script> 
+<script src="/AdminPanel/js/matrix.dashboard.js"></script> 
+<script src="/AdminPanel/js/jquery.gritter.min.js"></script> 
+<script src="/AdminPanel/js/matrix.interface.js"></script> 
+<script src="/AdminPanel/js/matrix.chat.js"></script> 
+<script src="/AdminPanel/js/jquery.validate.js"></script> 
+<script src="/AdminPanel/js/matrix.form_validation.js"></script> 
+<script src="/AdminPanel/js/jquery.wizard.js"></script> 
+<script src="/AdminPanel/js/jquery.uniform.js"></script> 
+<script src="/AdminPanel/js/select2.min.js"></script> 
+<script src="/AdminPanel/js/matrix.popover.js"></script> 
+<script src="/AdminPanel/js/jquery.dataTables.min.js"></script> 
+<script src="/AdminPanel/js/matrix.tables.js"></script> 
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+<script src="/AdminPanel/js/jquery.min.js"></script> 
+<script src="/AdminPanel/js/jquery.ui.custom.js"></script> 
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+<script src='/bundles/fullcalendar/lib/moment.min.js'></script>
+<script src='/bundles/fullcalendar/fullcalendar.js'></script>
+<script src='/bundles/fullcalendar/locale/fr.js'></script>
+<link rel='stylesheet' href='/bundles/fullcalendar/fullcalendar.css' />
+{% block datatable %}
+{% endblock datatable %}
+</head>
+<body>
+
+<!--Header-part-->
+<div id="header">
+  <h1><a href="dashboard.html">EasyColo Admin</a></h1>
+</div>
+<!--close-Header-part--> 
+
+
+<!--top-Header-menu-->
+<div id="user-nav" class="navbar navbar-inverse">
+  <ul class="nav">
+    <li class=""><a title="" href="#"><i class="icon icon-cog"></i> <span class="text">Paramètres</span></a></li>
+	<li class=""><a title="" href="{{ path('sejour_homepage') }}"><i class="icon icon-share-alt"></i> <span class="text">Retour Front End</span></a></li>
+  </ul>
+</div>
+<!--close-top-Header-menu-->
+
+
+<!--sidebar-menu-->
+<div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Accueil</a>
+  <ul>
+    <li {% block menuAccueil %}{% endblock menuAccueil %}><a href="{{ path('index_admin') }}"><i class="icon icon-home"></i> <span>Tableau de bord</span></a> </li>
+    <li {% block menuSejours %}{% endblock menuSejours %}><a href="{{ path('sejour_list') }}"><i class="icon icon-globe"></i> <span>Séjours</span></a> </li>
+    <li {% block menuUtilisateurs %}{% endblock menuUtilisateurs %}><a href="{{ path('user_list') }}"><i class="icon icon-user"></i> <span>Utilisateurs</span></a> </li>
+    <li {% block menuEnfants %}{% endblock menuEnfants %}><a href="{{ path('enfant_list') }}"><i class="icon icon-group"></i> <span>Enfants</span></a> </li>
+    <li {% block menuActivites %}{% endblock menuActivites %}><a href="{{ path('activite_list') }}"><i class="icon icon-folder-open"></i> <span>Activités</span></a> </li>
+    <li class="content"> <span>Usage Disque</span>
+      <div class="progress progress-mini progress-danger active progress-striped">
+        <div style="width: {{ Disk[2] }}%;" class="bar"></div>
+      </div>
+      <span class="percent">{{ Disk[2] }}%</span>
+      <div class="stat">{{ Disk[1] }} / {{ Disk[0] }} </div>
+    </li>
+  </ul>
+</div>
+<!--sidebar-menu-->
+
+<div id="content">
+<!--breadcrumbs-->
+  <div id="content-header">
+    <div id="breadcrumb"> <a href="{{path('index_admin') }}" title="Retour à l'accueil" class="tip-bottom"><i class="icon-home"></i> Tableau de bord</a>
+	{% block titre %}{% endblock titre %}
+	{% block soustitre %}{% endblock soustitre %}
+	</div>
+	{% block header %}
+	{% endblock header %}
+  </div>
+<!--End-breadcrumbs-->
+{% block coeur %}
+{% endblock %}
+
+
+
+
+
+</div>
+<!--Footer-part-->
+<div class="row-fluid">
+  <div id="footer" class="span12"> 2013 &copy; Matrix Admin. Brought to you by <a href="http://themedesigner.in">Themedesigner.in</a> </div>
+</div>
+<!--end-Footer-part-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block javascripts %}
+{% endblock javascripts %}
+<script type="text/javascript">
+  // This function is called from the pop-up menus to transfer to
+  // a different page. Ignore if the value returned is a null string:
+  function goPage (newURL) {
+
+      // if url is empty, skip the menu dividers and reset the menu selection to default
+      if (newURL != "") {
+      
+          // if url is "-", it is this page -- reset the menu:
+          if (newURL == "-" ) {
+              resetMenu();            
+          } 
+          // else, send page to designated URL            
+          else {  
+            document.location.href = newURL;
+          }
+      }
+  }
+
+// resets the menu selection upon entry to this page:
+function resetMenu() {
+   document.gomenu.selector.selectedIndex = 2;
+}
+</script>
+</body>
+</html>

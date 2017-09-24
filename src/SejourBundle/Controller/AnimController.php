@@ -256,17 +256,79 @@ class AnimController extends Controller
 		$repository4 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:AnimConges');
-
+		$repository = $this->getDoctrine()
+		->getManager()
+		->getRepository('SejourBundle:IdMoment');
+		$repository2 = $this->getDoctrine()
+						  ->getManager()
+						  ->getRepository('SejourBundle:Evenement');
+		$listConges = $repository->findBy(array('travail'=>0, 'conges'=>0));
+		$lignesConges = $repository->findBy(array('conges'=>1));
+		$lignesTravail = $repository->findBy(array('travail'=>1));
 		$form = $this->createFormBuilder();
 		$listeAnimConges=array();
 			
 		$listeJ=array();
 		foreach($listeJour as $Jour){
+			$listeEvAnim = array();
+			$listeEvenement = $repository2->findBy(array('jour'=>$Jour->getId()));
+			foreach($listeEvenement as $evenement)
+			{
+				$LA = $evenement->getAnimateurs();
+				foreach($LA as $AnimEv)
+				{
+					if( $AnimEv->getId() == $Directeur->getId() )
+					{
+						array_push($listeEvAnim, $evenement);
+						break;
+					}
+				}
+			}
+			//Ici j'ai la liste des évènement d'un anim pour la journée
+			$listCongesOk = array();
+			if(count($listeEvAnim) == 0)
+			{
+				foreach($lignesConges as $lc)
+				{
+					array_push($listCongesOk, $lc);
+				}
+			}
+			foreach($lignesTravail as $lt)
+			{
+				array_push($listCongesOk, $lt);
+			}
+			foreach($listConges as $Conges)
+			{
+				$CongesOk = true;
+				foreach($listeEvAnim as $ev)
+				{
+					$DC = $Conges->getHeureDebut()->format('H:i:s');
+					$FC = $Conges->getHeureFin()->format('H:i:s');
+					$DE = $ev->getHeureDebut()->format('H:i:s');
+					$FE = $ev->getHeureFin()->format('H:i:s');
+					$Test = ((($DC <= $DE) && ($FC > $DE)) or 
+							(($DC >= $DE) && ($FC <= $FE)) or
+							(($DC < $FE) && ($FC >= $FE)) or
+							(($DC <= $DE) && ($FC >= $FE)));
+					if($Test)
+					{
+						$CongesOk = false;
+					}
+				}
+				if($CongesOk == true)
+				{
+					array_push($listCongesOk, $Conges);
+				}
+			}
+			
+			
+			
 			$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Directeur->getId()))->getMoment();
 			$listeJ[$Jour->getId()]=$CongesAnim;
 			$NomForm="A".$Directeur->getId()."J".$Jour->getId();
 			$form->add($NomForm, EntityType::class, array(
 					'class' => 'SejourBundle:IdMoment',
+					'choices' => $listCongesOk,
 					'choice_label'=>'moment',
 					'required'=>true,
 					'expanded'=>true,
@@ -280,11 +342,65 @@ class AnimController extends Controller
 		foreach($listeAnim as $Anim){
 			$listeJ=array();
 			foreach($listeJour as $Jour){
+				$listeEvAnim = array();
+				$listeEvenement = $repository2->findBy(array('jour'=>$Jour->getId()));
+				foreach($listeEvenement as $evenement)
+				{
+					$LA = $evenement->getAnimateurs();
+					foreach($LA as $AnimEv)
+					{
+						if( $AnimEv->getId() == $Anim->getUser()->getId() )
+						{
+							array_push($listeEvAnim, $evenement);
+							break;
+						}
+					}
+				}
+				//Ici j'ai la liste des évènement d'un anim pour la journée
+				$listCongesOk = array();
+				if(count($listeEvAnim) == 0)
+				{
+					foreach($lignesConges as $lc)
+					{
+						array_push($listCongesOk, $lc);
+					}
+				}
+				foreach($lignesTravail as $lt)
+				{
+					array_push($listCongesOk, $lt);
+				}
+				foreach($listConges as $Conges)
+				{
+					$CongesOk = true;
+					foreach($listeEvAnim as $ev)
+					{
+						$DC = $Conges->getHeureDebut()->format('H:i:s');
+						$FC = $Conges->getHeureFin()->format('H:i:s');
+						$DE = $ev->getHeureDebut()->format('H:i:s');
+						$FE = $ev->getHeureFin()->format('H:i:s');
+						$Test = ((($DC <= $DE) && ($FC > $DE)) or 
+								(($DC >= $DE) && ($FC <= $FE)) or
+								(($DC < $FE) && ($FC >= $FE)) or
+								(($DC <= $DE) && ($FC >= $FE)));
+						if($Test)
+						{
+							$CongesOk = false;
+						}
+					}
+					if($CongesOk == true)
+					{
+						array_push($listCongesOk, $Conges);
+					}
+				}
+				
+				
+				
 				$CongesAnim = $repository4->findOneBy(array('jour' => $Jour->getId(), 'user'=> $Anim->getUser()->getId()))->getMoment();
 				$listeJ[$Jour->getId()]=$CongesAnim;
 				$NomForm="A".$Anim->getUser()->getId()."J".$Jour->getId();
 				$form->add($NomForm, EntityType::class, array(
 						'class' => 'SejourBundle:IdMoment',
+						'choices' => $listCongesOk,
 						'choice_label'=>'moment',
 						'required'=>true,
 						'expanded'=>true,

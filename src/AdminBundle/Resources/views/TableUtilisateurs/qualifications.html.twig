@@ -1,12 +1,13 @@
-{# XXXMyBundle:Renderers:_actions.html.twig #}
-{{ dt_item }}
+<center>
+{{ diplome }}
 </br>
-{% if dt_obj.psc1 == 1 %}
+{% if psc1 == 1 %}
 PSC1
 {% endif %}
-{% if dt_obj.psc1 == 1 and dt_obj.sb == 1 %}
+{% if psc1 == 1 and sb == 1 %}
 -
 {% endif %}
-{% if dt_obj.sb == 1 %}
+{% if sb == 1 %}
 SB
 {% endif %}
+</center>

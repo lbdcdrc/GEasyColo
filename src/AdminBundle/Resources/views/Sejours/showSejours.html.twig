@@ -1,0 +1,312 @@
+{% extends "AdminBundle:Base:baseAdmin.html.twig" %}
+{% block titre %} <a href="{{ path('sejour_list') }}" class="tip_bottom">Séjours</a> {% endblock titre %}
+{% block soustitre %} <a href="#" class="current">{{ Sejour.NomThema }}</a> {% endblock soustitre %}
+{% block menuSejours %}class="active" {% endblock menuSejours %}
+{% block header %}
+	<h1> {{ Sejour.NomThema }} </h1>	
+{% endblock header %}
+{% block datatable %}
+<script>$(document).ready(function() {
+	$('#actiTab').DataTable( {
+	    language: {
+        processing:     "Traitement en cours...",
+        search:         "Rechercher&nbsp;:",
+        lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+        info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+        infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+        infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+        infoPostFix:    "",
+        loadingRecords: "Chargement en cours...",
+        zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+        emptyTable:     "Aucune donnée disponible dans le tableau",
+        paginate: {
+            first:      "Premier",
+            previous:   "Pr&eacute;c&eacute;dent",
+            next:       "Suivant",
+            last:       "Dernier"
+        },
+        aria: {
+            sortAscending:  ": activer pour trier la colonne par ordre croissant",
+            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+        }},
+        "ajax": '{{path("activite_sejour_json_request", {"id": Sejour.Id})}}'
+    } ),
+    $('#enfantTab').DataTable( {
+	    language: {
+        processing:     "Traitement en cours...",
+        search:         "Rechercher&nbsp;:",
+        lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+        info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+        infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+        infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+        infoPostFix:    "",
+        loadingRecords: "Chargement en cours...",
+        zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+        emptyTable:     "Aucune donnée disponible dans le tableau",
+        paginate: {
+            first:      "Premier",
+            previous:   "Pr&eacute;c&eacute;dent",
+            next:       "Suivant",
+            last:       "Dernier"
+        },
+        aria: {
+            sortAscending:  ": activer pour trier la colonne par ordre croissant",
+            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+        }},
+        "ajax": '{{path("enfant_sejour_json_request", {"id": Sejour.Id})}}'
+    } ),
+	$('#calendar').fullCalendar({
+		locale: 'fr',
+		height: 'auto',
+		header: {
+			center: 'month,agendaFourDay' // buttons for switching between views
+		},
+		defaultView : 'agendaFourDay',
+		views: 	{
+				agendaFourDay: 	{
+								type: 'agenda',
+								duration: { days: {{ NbJours }} },
+								buttonText: '4 day'
+								}
+				},
+				
+		slotEventOverlap:false,
+		header: {
+			left: '',
+			center: '',
+			right: ''
+		},
+		viewRender: function(view, element) {
+		},
+		defaultDate: "{{ Sejour.dateDebut|date('m/d/Y') }}",
+		allDaySlot : false,
+		minTime : "07:00",
+		maxTime : "23:30",
+		nowIndicator : true,
+		columnFormat : 'ddd D/M',
+		timeFormat: 'H:mm',
+		editable: false,
+		eventLimit: true, 
+		eventMouseover: function(calEvent) {
+		$("body").css("cursor", "pointer");
+		$(this).css('background-color', '#ABCADD');
+		$(this).css('transform', 'scale(1.05)');
+		$(this).css('z-index', '1000');
+		$(this).css('box-shadow', '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)');
+		$(this).css('border-color', '#ABCADD');
+		},
+		eventMouseout: function(calEvent) {
+		$("body").css("cursor", "default");
+		$(this).css('background-color', calEvent.color);
+		$(this).css('box-shadow', 'none');
+		$(this).css('transform', 'scale(1)');
+		$(this).css('z-index', '1');
+		$(this).css('border-color', calEvent.color);
+		},
+		eventClick: function(calEvent) {
+			$("a[href='#ev" + calEvent.id + "'][rel='modal:open']").click();	
+		},
+		events: {
+		url: "{{path('sejour_json_planning',{ 'id' : Sejour.id }) }}",
+		type : 'POST'
+		},
+	});
+} );</script>
+{% endblock datatable %}
+{% block coeur %}
+<!--Action boxes-->
+   <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span6">
+	  
+		<div class="accordion" id="collapse-group1">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-group1" href="#collapseGOne" data-toggle="collapse"> <span class="icon"><i class="icon-group"></i></span>
+							<h5>L'équipe ({{ Equipe|length }})</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseGOne">
+					<div class="widget-content nopadding">
+						<table class="table table-striped table-bordered">
+						  <thead>
+							<tr>
+							  <th>Animateur</th>
+							  <th>Rôle</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							{% for User in Equipe %}
+							<tr>
+							  <td class="taskDesc"></i><center><a href='{{ path("voir_profil", {"id": User[0].Id})}}'>{{ User[0].PN }}</a></center></td>
+							  <td class="taskStatus">{{ User[1] }}</span></td>
+							</tr>
+							{% endfor %}
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="accordion" id="collapse-group2">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-group2" href="#collapseG3" data-toggle="collapse"> <span class="icon"><i class="icon-folder-open"></i></span>
+							<h5>Les activités ({{ NbActi }})</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseG3">
+					<div class="widget-content">
+						<table id="actiTab" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Nom</th>
+									<th>Type</th>
+									<th>Créateur</th>
+									<th>Nombre d'Animateurs</th>
+									<th>Nb Enfants Min</th>
+									<th>Nb Enfants Max</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion" id="collapse-conge">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-conge" href="#collapseGConge" data-toggle="collapse"> <span class="icon"><i class="icon-group"></i></span>
+							<h5>Planning Congés</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseGConge">
+					<div class="widget-content nopadding">
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th> Animateur </th>
+									{% for jour in listeJours %}
+									<th> {{ jour.date|date('d/m') }} </th>
+									{% endfor %}
+								</tr>
+							</thead>
+							<tbody>
+								<tr onclick="show_hide_row('{{Directeur.id}}');" >
+									<td data-label="Directeur"><center> {{ Directeur.PN }} </center> </td>
+									{% for jour in listeJours %}
+									<td data-label="{{Directeur.PN}} le {{ jour.date |date('d/m') }}" style="background-color:#{{ jourDir[Directeur.id][jour.id].couleur }};" ><center>{{ jourDir[Directeur.id][jour.id].moment }}</center></td>
+									{% endfor %}
+								</tr>
+								{%for Anim in listeAnim %}
+								<tr onclick="show_hide_row('{{Anim.user.id}}');" >
+									<td data-label="Animateur"> <center>{{ Anim.user.PN }} </center></td>
+									{% for jour in listeJours %}
+									<td data-label="{{Anim.user.PN}} le {{ jour.date |date('d/m') }}" style="background-color:#{{ listeconges[Anim.user.id][jour.id].couleur }};" ><center>{{ listeconges[Anim.user.id][jour.id].moment }}</center></td>
+									{% endfor %}
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>						
+					</div>
+				</div>
+			</div>
+		</div>		
+      </div>
+      <div class="span6">
+	  
+	  
+		<div class="accordion" id="collapse-group">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-group" href="#collapseGTwo" data-toggle="collapse"> <span class="icon"><i class="icon-group"></i></span>
+							<h5>Les enfants ({{ NbEnfants }})</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseGTwo">
+					<div class="widget-content">
+						<table id="enfantTab" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Image</th>
+									<th>Nom</th>
+									<th>Prénom</th>
+									<th>Âge</th>
+									<th>Problèmes en cours</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion" id="collapse-forum">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-forum" href="#collapseGForum" data-toggle="collapse"> <span class="icon"><i class="icon-group"></i></span>
+							<h5>Forum ({{ Forum|length }})</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseGForum">
+					<div class="widget-content nopadding">
+						{% if Forum|length > 0 %}
+						<table class="table table-striped table-bordered">
+						  <thead>
+							<tr>
+							  <th>Nom</th>
+							  <th>Vues</th>
+							  <th>Nb Messages</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							{% for cate in Forum %}
+							<tr>
+							  <td class="taskDesc"></i><center>{{ cate.Nom }}</center></td>
+							  <td class="taskStatus">{{ cate.Vues }}</span></td>
+							  <td class="taskStatus">{{ cate.Reponses }}</span></td>
+							</tr>
+							{% endfor %}
+						  </tbody>
+						</table>
+						{% else %}
+						<center><strong> Il n'y a pas de forums sur ce séjour </strong></center>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+      </div>
+	  
+	 		<div class="accordion" id="collapse-group3">
+			<div class="accordion-group widget-box">
+				<div class="accordion-heading">
+					<div class="widget-title">
+						<a data-parent="#collapse-group3" href="#collapseG4" data-toggle="collapse"> <span class="icon"><i class="icon-calendar"></i></span>
+							<h5>Planning d'activités</h5>
+						</a> 
+					</div>
+				</div>
+				<div class="collapse accordion-body" id="collapseG4">
+					<div class="widget-content">
+						<div id='calendar' style="width: 100%; display: inline-block;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+
+<!--End-Action boxes-->  
+{% endblock coeur %}

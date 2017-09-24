@@ -1076,17 +1076,6 @@
 		line-height: 2em;
 	}
 
-		body.is-loading * {
-			-moz-transition: none !important;
-			-webkit-transition: none !important;
-			-ms-transition: none !important;
-			transition: none !important;
-			-moz-animation: none !important;
-			-webkit-animation: none !important;
-			-ms-animation: none !important;
-			animation: none !important;
-		}
-
 	input, textarea, select {
 		font-family: 'Open Sans', sans-serif;
 		font-weight: 400;

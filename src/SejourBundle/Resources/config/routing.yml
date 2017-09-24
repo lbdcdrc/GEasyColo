@@ -127,9 +127,8 @@ jour_json_modifie:
     defaults: { _controller: SejourBundle:Jour:modifieEvenement }
     methods: [post]
 jour_evenement_anim:
-    path:   /{idSejour}/jour/{id}/evements/{idEvenement}/anim
-    defaults: { _controller: SejourBundle:Jour:animEvenement }
-    methods: [post]
+    path:   /{idSejour}/jour/{idJour}/evenements/anim
+    defaults: { _controller: SejourBundle:Jour:jourEvenementAffecterAnim }
 jour_dellevent:
     path:   /jour/{id}/dell
     defaults: { _controller: SejourBundle:Jour:jourDellEvent }

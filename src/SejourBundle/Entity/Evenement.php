@@ -19,6 +19,10 @@ class Evenement
 	* @ORM\ManyToMany(targetEntity="SejourBundle\Entity\Enfant", cascade={"persist"}, inversedBy="evenements")
 	*/
 	private $enfant;
+	/**
+	* @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", cascade={"persist"}, inversedBy="evenements")
+	*/
+	private $animateurs;
     /**
      * @var int
      *
@@ -221,6 +225,7 @@ class Evenement
 	
 	/**
 	* @ORM\PreRemove
+	* @ORM\PreUpdate
 	*/
 	public function decrease()
 	{
@@ -390,4 +395,38 @@ class Evenement
 		}
 	}	
 
+
+    /**
+     * Add animateur
+     *
+     * @param \UserBundle\Entity\User $animateur
+     *
+     * @return Evenement
+     */
+    public function addAnimateur(\UserBundle\Entity\User $animateur)
+    {
+        $this->animateurs[] = $animateur;
+
+        return $this;
+    }
+
+    /**
+     * Remove animateur
+     *
+     * @param \UserBundle\Entity\User $animateur
+     */
+    public function removeAnimateur(\UserBundle\Entity\User $animateur)
+    {
+        $this->animateurs->removeElement($animateur);
+    }
+
+    /**
+     * Get animateurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAnimateurs()
+    {
+        return $this->animateurs;
+    }
 }

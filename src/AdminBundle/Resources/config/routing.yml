@@ -3,7 +3,16 @@ index_admin:
     defaults: { _controller: AdminBundle:Default:indexAdmin }
 user_list:
     path:   /users
-    defaults: { _controller: AdminBundle:Default:index }
+    defaults: { _controller: AdminBundle:Default:users }
+sejour_list:
+    path:   /sejours
+    defaults: { _controller: AdminBundle:Default:sejours }
+enfant_list:
+    path:   /enfants
+    defaults: { _controller: AdminBundle:Default:enfants }
+activite_list:
+    path:   /activites
+    defaults: { _controller: AdminBundle:Default:activites }
 datatable:
     path:   /json/user/datatable
     defaults: { _controller: AdminBundle:Default:grid }
@@ -13,3 +22,28 @@ show_roles:
 voir_profil:
     path:   /users/{id}/profile
     defaults: { _controller: AdminBundle:Default:profile }
+util_json_request:
+    path:   /users/json
+    defaults: { _controller: AdminBundle:Json:listeUsers }
+sejour_json_request:
+    path:   /sejours/json
+    defaults: { _controller: AdminBundle:Json:listeSejours }
+voir_sejours:
+    path:   /sejours/{id}/
+    defaults: { _controller: AdminBundle:Default:voirSejours }
+enfant_json_request:
+    path:   /enfants/json
+    defaults: { _controller: AdminBundle:Json:listeEnfants }
+activite_json_request:
+    path:   /activites/json
+    defaults: { _controller: AdminBundle:Json:listeActivites }
+activite_sejour_json_request:
+    path:   /activites/json/{id}
+    defaults: { _controller: AdminBundle:Json:listeActivitesSejours }
+enfant_sejour_json_request:
+    path:   /enfants/json/{id}/
+    defaults: { _controller: AdminBundle:Json:listeEnfantsSejours }
+sejour_json_planning:
+    path:   /sejours/{id}/planning/json
+    defaults: { _controller: AdminBundle:Json:listeEvenement }
+    methods: [post]

@@ -72,8 +72,6 @@ class EnfantController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->flush();
 			if(!$enfant->getImage()===null){
-				echo($enfant->getImage()->getwebPath());
-				toto;
 			$cacheManager = $this->get('liip_imagine.cache.manager');
 			$cacheManager->remove($enfant->getImage()->getwebPath(), 'my_thumb');
 			$cacheManager->remove($enfant->getImage()->getwebPath(), 'md_thumb');

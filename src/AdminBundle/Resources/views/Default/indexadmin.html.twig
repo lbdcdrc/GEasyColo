@@ -1,28 +1,20 @@
-{% extends "::base.html.twig" %}
-{% block title %}
-EasyColo V2 - Administration
-{% endblock title %}
-{% block header %}
-Espace d'<p id="logo">Administration</p>
-{% endblock header %}
-{% block body %}
-<div id="main-wrapper">
-	<div id="main" class="container">
-		<div class="row 200%">
-			<div class="12u">
-				<section class="box highlight">
-					<ul class="special">
-						<li><a href="{{ path('user_list') }}" class="icon fa fa-users"><span class="label">Utilisateurs</span></a></li>
-						<li><a href="#" class="icon fa-cog"><span class="label">Application</span></a></li>
-					</ul>
-					<header>
-						<h2>Administrer l'application</h2>
-					</header>
-				</section>
-			</div>
-		</div>
-	</div>
-</div>
-{% endblock body %}
+{% extends "AdminBundle:Base:baseAdmin.html.twig" %}
+{% block titre %} Tableau de bord {% endblock titre %}
+{% block menuAccueil %}class="active" {% endblock menuAccueil %}
+{% block coeur %}
+<!--Action boxes-->
+
+<div class="container-fluid">
+    <div class="quick-actions_homepage">
+		  <ul class="quick-actions">
+				<li class="bg_lb span8"> <a href="{{ path('sejour_list') }}"> <i class="icon-globe"></i> <span class="label label-success">{{ NbSejours }}</span> Séjours </a> </li>
+				<li class="bg_ly span8"> <a href="{{ path('user_list') }}"> <i class="icon-user"></i> <span class="label label-success">{{ NbUsers }}</span> Utilisateurs</a> </li>
+				<li class="bg_lo span8"> <a href="{{ path('enfant_list') }}"> <i class="icon-group"></i><span class="label label-success">{{ NbEnfants }}</span> Enfants </a> </li>
+				<li class="bg_lr span8"> <a href="{{ path('activite_list') }}"> <i class="icon-folder-open"></i> <span class="label label-success">{{ NbActivites }}</span> Activités</a> </li>
+		  </ul>
+    </div>
+
+<!--End-Action boxes-->  
+{% endblock coeur %}
 
 

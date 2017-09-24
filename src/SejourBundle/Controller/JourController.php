@@ -46,6 +46,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 
 class JourController extends Controller
 {
@@ -80,38 +82,114 @@ class JourController extends Controller
 		$repository = $this->getDoctrine()
 						  ->getManager()
 						  ->getRepository('SejourBundle:Evenement');
+		$repository2 = $this->getDoctrine()
+		  ->getManager()
+		  ->getRepository('SejourBundle:AnimConges');
 		$listEvenements = $repository->findBy(array('jour' => $id));
 		$evenement = $req->get('ev');
-		$start = $req->get('start');
-		$end = $req->get('end');
-		
-
+		$start = new \datetime($req->get('start'));
+		$end = new \datetime($req->get('end'));
+		$conflits = array();
 		$evenementModifie= $repository->findOneById($evenement);
 		
-		$evenementModifie->setHeureDebut(new \datetime($start));
+		$listeEvenementJ = $repository->findByJour($evenementModifie->getJour());
+		$listeAnim = $evenementModifie->getAnimateurs();
 
-		$evenementModifie->setHeureFin(new \datetime($end));
-
-		$em->flush();
-		$listDef = array();
-		foreach($listEvenements as $ev)
-		{
-			$eve= array(
-						'title' => $ev->getActivite()->getNom(),
-						'start' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureDebut()->format('H:i'),
-						'end' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureFin()->format('H:i'),
-						'color' => $ev->getActivite()->getCategorie()->getCouleur(),
-						'id' => $ev->getId(),
-						);
-			array_push($listDef, $eve);
+		
+		// Avant de valider la modification d'un évènement il faut vérifier si :
+		// 1) Les animateurs prévus sur l'activité ne sont pas en congés à ce moment
+		// 2) Les nouveaux horairres ne créent pas de conflits 
+		
+		
+		foreach($listeAnim as $Anim)
+		{	
+			$CongeAnim = $repository2->findOneBy(array('jour'=>$evenementModifie->getJour(), 'user'=>$Anim));
+			$DC = $CongeAnim->getMoment()->getHeureDebut()->format('H:i:s');
+			$FC = $CongeAnim->getMoment()->getHeureFin()->format('H:i:s');
+			$DE = $start->format('H:i:s');
+			$FE = $end->format('H:i:s');
+			$Test = ((($DC <= $DE) && ($FC > $DE)) or 
+					(($DC >= $DE) && ($FC <= $FE)) or
+					(($DC < $FE) && ($FC >= $FE)) or
+					(($DC <= $DE) && ($FC >= $FE)));
+			if( $Test  ) // **** 1 **** Vérification des congés 
+			{
+				array_push($conflits, '<li><strong> Problème avec l\'animateur '.$Anim->getPN().' : Conflit avec les congés de l\'animateur (Anim en '.$CongeAnim->getMoment()->getMoment(). ')<strong></li>');
+			}
+			// Verif des congés OK !! 
+		
+			//**** 2 **** Vérification autres événements des animateurs		
+			else
+			{
+				foreach($listeEvenementJ as $evJ) // On regarde tous les évènements de la journée
+				{
+					if($evJ->getId() == $evenementModifie->getId()) // On inhibe l'évènement en cours
+					{
+						continue;
+					}
+					else
+					{
+						$listeAnimAutreEv = $evJ->getAnimateurs();
+						foreach($listeAnimAutreEv as $AutreAnim) //On compare chaque animateur
+						{
+							if($AutreAnim->getId() === $Anim->getId()) //Quand on trouve deux anims identiques, on vérifie que les évènements soient compatibles
+							{
+								$DC = $evJ->getHeureDebut()->format('H:i:s');
+								$FC = $evJ->getHeureFin()->format('H:i:s');
+								$DE = $start->format('H:i:s');
+								$FE = $end->format('H:i:s');
+								$Test2 = ((($DC <= $DE) && ($FC > $DE)) or 
+										(($DC >= $DE) && ($FC <= $FE)) or
+										(($DC < $FE) && ($FC >= $FE)) or
+										(($DC <= $DE) && ($FC >= $FE)));
+								if( $Test2  ) // **** 1 **** Vérification des congés 
+								{
+									array_push($conflits, '<li><strong> Problème avec l\'animateur '.$Anim->getPN().' : Conflit avec les affectations sur une autre activité (Activité '.$evJ->getActivite()->getNom().')<strong></li>');
+								}								
+							}
+						}
+					}
+				}
+			}
+			
 		}
 		
-		$encoders = array(new JsonEncoder());
-		$normalizers = array(new GetSetMethodNormalizer());
-		$serializer = new Serializer($normalizers, $encoders);
-		$response = new Response($serializer->serialize($listDef, 'json'));
-		$response->headers->set('Content-Type', 'application/json');
-		return $response;
+		if( count($conflits) === 0 )
+		{		
+			$evenementModifie->setHeureDebut($start);
+			$evenementModifie->setHeureFin($end);
+			$em->flush();
+			$listDef = array();
+			$listDef['statut']='ok';
+			$listDef['liste']= array();
+			foreach($listEvenements as $ev)
+			{
+				$eve= array(
+							'title' => $ev->getActivite()->getNom(),
+							'start' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureDebut()->format('H:i'),
+							'end' => $ev->getJour()->getDate()->format('Y-m-d')."T".$ev->getHeureFin()->format('H:i'),
+							'color' => $ev->getActivite()->getCategorie()->getCouleur(),
+							'id' => $ev->getId(),
+							);
+				array_push($listDef['liste'], $eve);
+			}		
+			$encoders = array(new JsonEncoder());
+			$normalizers = array(new GetSetMethodNormalizer());
+			$serializer = new Serializer($normalizers, $encoders);
+			$response = new Response($serializer->serialize($listDef, 'json'));
+			$response->headers->set('Content-Type', 'application/json');
+			return $response;
+		}
+		else
+		{
+			$rep='<center><ul>';
+			foreach($conflits as $value)
+			{
+				$rep.=$value;
+			}
+			$rep.='</ul></center>';
+			return new JsonResponse(array('statut' => 'conflit', 'data'=>$rep));	
+		}
 	}
 	public function jourAction($idSejour, $id){
 	$this->container->get('sejour.droits')->AllowedUser($idSejour);
@@ -119,9 +197,7 @@ class JourController extends Controller
       ->getManager()
       ->getRepository('SejourBundle:Evenement');
 	$prevNextJours = $this->prevNextJours($id, $idSejour);
-	$listEvenement = $repository->findBy(
-	array('jour' => $id));
-	
+
 	$repository2 = $this->getDoctrine()
 		->getManager()
 		->getRepository('SejourBundle:Jour');
@@ -134,7 +210,7 @@ class JourController extends Controller
 	}
 	
 	return $this->render('SejourBundle:Default:jour.html.twig', array(	'Sejour' => $this->getDoctrine()->getManager()->getRepository('SejourBundle:Sejour')->findOneById($idSejour),
-																		'listeEvenements' => $listEvenement, 'jour' => $jour, 'nav'=>$prevNextJours,
+																		'jour' => $jour, 'nav'=>$prevNextJours,
 																	));
 	}
 	public function jourAddEventAction($idSejour, $id, Request $request){
@@ -500,6 +576,190 @@ class JourController extends Controller
 
 	return $this->render('SejourBundle:Default:creerevenement.html.twig', array('form' => $form->createView(), 'jour'=> $jour));
     }
+	public function jourEvenementAffecterAnimAction($idSejour, $idJour, Request $request){
+	$this->verifDroit($idSejour, 'ROLE_DIRECTEUR');	
+	if( null !==  $request->query->get('ev'))
+	{
+		$idEvenement =  $request->query->get('ev');
+	}
+	elseif( null !== $request->get("data")["form[Ev"])
+	{
+		$idEvenement =  $request->get("data")["form[Ev"];
+	}
+	else
+	{
+		$idEvenement = null;
+	}
+	
+    $repository = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('SejourBundle:Evenement');	
+    $repository2 = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('SejourBundle:Jour');
+    $repository3 = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('SejourBundle:AnimConges');
+    $repository4 = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('UserBundle:User');
+	$Evenement = $repository->findOneBy(array('jour'=>$idJour, 'id'=>$idEvenement));
+	$listeEvenements = $repository->findBy(array('jour'=>$idJour));
+	$Jour = $repository2->findOneBy(array('id'=>$idJour, 'sejour'=>$idSejour));
+	if(null === $Jour or null === $Evenement)
+	{
+		throw new NotFoundHttpException("L'evenement n'existe pas.");
+	}
+
+	$listeAnimAff = $Evenement->getAnimateurs();
+	$listeAnimAffecter = array();
+	foreach($listeAnimAff as $i)
+	{
+		array_push($listeAnimAffecter, $i);
+	}
+	$listeAnim = $repository3->findByJour($idJour);
+	$listeAnimPossible = array();
+	$listeAnimImpossible = array();
+	$DebutActi = $Evenement->getHeureDebut();
+	$FinActi = $Evenement ->getHeureFin();	
+	foreach($listeAnim as $Anim)
+		{	
+			$aff = false;
+			if($Anim->getMoment()->getConges() === true) // Animateur en congés
+			{
+				array_push($listeAnimImpossible, $Anim->getUser());	
+			}
+			else // Anim en RC ou travail 
+			{
+				$DC = $Anim->getMoment()->getHeureDebut();
+				$FC = $Anim->getMoment()->getHeureFin();
+				$DE = $DebutActi;
+				$FE = $FinActi;
+				$Test = ((($DC <= $DE) && ($FC > $DE)) or 
+						(($DC >= $DE) && ($FC <= $FE)) or
+						(($DC < $FE) && ($FC >= $FE)) or
+						(($DC <= $DE) && ($FC >= $FE)));
+				if($Anim->getMoment()->getTravail() === false and $Test  ) // RC en même temps que evenement
+				{
+					array_push($listeAnimImpossible, $Anim->getUser());
+				}
+				else // Travail ou RC compatible avec l'évènement
+				{
+					// Ici il faut regarder s'il y a d'autres évènements sur lequel l'animateur est affecté, qui ont lieux en même temps.
+					foreach($listeEvenements as $evJour)
+					{
+						if($evJour === $Evenement) // Si l'ev que l'on regarde est celui en cours, on passe
+						{
+							continue;
+						}
+						else //Ici on compare un autre évènement du même jour.
+						{
+							$LA = $evJour->getAnimateurs(); //récupération de la liste des anim
+							foreach($LA as $an)
+							{
+								if($an !== $Anim->getUser()) //On cherche l'anim en cours
+								{
+									continue;
+								}
+								else // Ici on regarde une affectation d'un même anim sur un évènement du même jour. Si les heures ne sont pas compatibles on jette.
+								{
+									$DebutEv = $evJour->getHeureDebut();
+									$FinEv = $evJour->getHeureFin();
+									$Test2 = ((($DebutEv <= $DE) && ($FinEv > $DE)) or 
+									(($DebutEv >= $DE) && ($FinEv <= $FE)) or
+									(($DebutEv < $FE) && ($FinEv >= $FE)) or
+									(($DebutEv <= $DE) && ($FinEv >= $FE)));
+									if($Test2)
+									{
+										array_push($listeAnimImpossible, $Anim->getUser());
+										$aff = true;
+										break;
+									}
+									
+								}
+							}
+						}
+					}
+					if ($aff === false)
+					{
+					array_push($listeAnimPossible, $Anim->getUser());
+					}
+				}
+			}
+		}
+	$form = $this->createFormBuilder();
+	
+	$form->add('Dispo', EntityType::class, array(
+			'class' => 'UserBundle:User',
+			'choices' => $listeAnimPossible,
+			'data' => $listeAnimAff,
+			'choice_label'=>'PN',
+			'label'=>'Animateurs Disponibles',
+			'required'=>true,
+			'expanded'=>true,
+			'multiple'=>true,
+			'disabled'=>false,
+			))		
+		->add('NonDispo', EntityType::class, array(
+			'class' => 'UserBundle:User',
+			'choices' => $listeAnimImpossible,
+			'data' => $listeAnimAff,
+			'choice_label'=>'PN',
+			'label'=>'Animateurs Indisponibles (repos ou autre activité au même moment)',
+			'required'=>false,
+			'expanded'=>true,
+			'multiple'=>true,
+			'disabled'=>true,
+			))
+		->add('Ev', HiddenType::class, array(
+			'data' => $idEvenement));
+
+	$form->add('Affecter les anims',SubmitType::class, array( 'attr' => array('id' => 'formAnimSubmit', 'class' => 'formAnimSubmit')));
+	
+	$form = $form->getForm();	
+	if ($request->isMethod('POST')) {
+		$em = $this->getDoctrine()->getManager();
+		if(isset($request->get("data")["form[Dispo"]))
+		{
+			$data = $request->get("data")["form[Dispo"] ;
+			$listAnimSelected=array();
+			foreach($data as $ani)
+			{
+				array_push($listAnimSelected, $repository4->findOneById($ani));
+			}
+			$listAnimEnMoins = array_diff($listeAnimAffecter, $listAnimSelected);
+			foreach($listAnimEnMoins as $moins)
+			{
+				$Evenement->removeAnimateur($moins); 
+			}
+			
+			foreach($data as $ani)
+			{
+				if(! in_array($repository4->findOneById($ani), $listeAnimAffecter))
+				{
+					$Evenement->addAnimateur($repository4->findOneById($ani));
+				}
+			}
+		}
+		else
+		{
+			foreach($listeAnimAffecter as $moins)
+			{
+				$Evenement->removeAnimateur($moins); 
+			}
+		}
+		$em->flush();
+		return new JsonResponse(array('status' => 'ok'));
+	}
+	$HTML = $this->renderView('SejourBundle:Default:affecterAnim.html.twig', array('form' => $form->createView(), 'Evenement'=>$Evenement, 'Jour' => $idJour, 'Sejour'=>$idSejour ));	
+	
+	$encoders = array(new JsonEncoder());
+	$normalizers = array(new GetSetMethodNormalizer());
+	$serializer = new Serializer($normalizers, $encoders);
+	$response = new Response($serializer->serialize($HTML, 'json'));
+	$response->headers->set('Content-Type', 'application/json');
+	return $response;	
+	}
 	private function prevNextJours($id, $idSejour)
 	{
 		$repository = $this->getDoctrine()
@@ -523,6 +783,14 @@ class JourController extends Controller
 		}
 		$datePrev = $dateDep->modify('-1 day');
 		return array($JourPrev, $JourNext);
+	}
+	private function verifDroit($id, $role)
+	{
+		$this->container->get('sejour.droits')->AllowedUser($id);
+		if( !$this->get('security.authorization_checker')->isGranted($role) )
+		{
+			throw new AccessDeniedException('Tu n\'as pas accès à cette page !');
+		}		
 	}
 }
 
